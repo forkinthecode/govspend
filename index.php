@@ -74,24 +74,7 @@ echo"<table class='basic' border='0'><tbody>
 
 ?>
 
- <?php/*
-$agor = "SELECT * FROM `fed_budget` ";
-$result = mysqli_query($db, $agor );
- while ($row = $result->fetch_assoc()) 
-    {
-
-echo"<table class='basic' border='0'><tbody>
-  <tr><td>".$row['Portfolio']."</td></tr>
-  <tr><td><a href='".$row['URL']." target='_blank'>".$row['Agency']."</a></td></tr>
-  
-  <tr><td><a href='program.php?program=".$row['Program']."'>".$row['Program']."
-</td></tr>
-    <tr><td><span style='float:right'>$".number_format($row['2014_15']).",000</td></span></tr>
-
- </tbody></table><br><hr class='short'><br> ";
-}
-*/
-?>
+ 
  
 
  

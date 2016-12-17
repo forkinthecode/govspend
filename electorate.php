@@ -159,51 +159,6 @@ echo"
 
 
 
-    <?php
-       // if(isset($_GET['table']) && !isset($_GET['portfolio']) && !isset($_GET['agency']) && !isset($_GET['program']) && !isset($_GET['outcome'])  && !isset($_GET['search_term']))
-        
-        {
-echo"<br>Commonwealth Grants & Tenders by Postcode
-          <form action='' target='_blank' method='GET'>
-
-            <input type='text'  id='postcode' name='postcode' value='postcode' />
-              
-
-        
-             <input type='submit' name='submit' value='All Results' id='submit' />
- 
-  
-   
-          </form>Find agency by key word:
-          <form action='' target='_blank' method='GET'>
-
-            <input type='text'  id='agency' name='agency' value='health' />
-              
-
-        <input type='hidden'  id='table' name='table' value='FY2016-17' />
-        
-             <input type='submit' name='submit' value='Agency Results' id='submit' />
- 
-  
-   
-          </form>
-          Find program by key word:
-             <form action='' target='_blank' method='GET'>
-
-            <input type='text'  id='program' name='program' value='health' />
-              
-
-        <input type='hidden'  id='table' name='table' value='FY2016-17' />
-        
-             <input type='submit' name='submit' value='Program Results' id='submit' />
- 
-  
-   
-          </form>";
-     }
-
-      ?>
-
   
            
 
@@ -216,7 +171,178 @@ echo"<br>Commonwealth Grants & Tenders by Postcode
  </div>
  <div class='right'>
   
-<br><br><br><br>
+<!--<div class='box'>
+<p>Click on <a class='button' href='#popup_search'>Quick Search</a> to choose electorate <img src='outcome_search_large.png' height='40px'></img> </p> 
+</div>
+<div id='popup_search'  class='overlay'>
+<div class='popup_search'>
+<div class='content' >-->
+    <h2>Electorate Search</h2>
+  
+    <div class='content'>
+     <form action='electorate.php'  method='GET'>
+    <lable for='electorate'>
+      <select name='electorate' >
+    
+      <option>  Adelaide  </option>
+      <option>  Aston </option>
+      <option>  Ballarat  </option>
+      <option>  Banks </option>
+      <option>  Barker  </option>
+      <option>  Barton  </option>
+      <option>  Bass  </option>
+      <option>  Batman  </option>
+      <option>  Bendigo </option>
+      <option>  Bennelong </option>
+      <option>  Berowra </option>
+      <option>  Blair </option>
+      <option>  Blaxland  </option>
+      <option>  Bonner  </option>
+      <option>  Boothby </option>
+      <option>  Bowman  </option>
+      <option>  Braddon </option>
+      <option>  Bradfield </option>
+      <option>  Brand </option>
+      <option>  Brisbane  </option>
+      <option>  Bruce </option>
+      <option>  Calare  </option>
+      <option>  Calwell </option>
+      <option>  Canberra  </option>
+      <option>  Canning </option>
+      <option>  Capricornia </option>
+      <option>  Casey </option>
+      <option>  Charlton  </option>
+      <option>  Chifley </option>
+      <option>  Chisholm  </option>
+      <option>  Cook  </option>
+      <option>  Corangamite </option>
+      <option>  Corio </option>
+      <option>  Cowan </option>
+      <option>  Cowper  </option>
+      <option>  Cunningham  </option>
+      <option>  Curtin  </option>
+      <option>  Dawson  </option>
+      <option>  Deakin  </option>
+      <option>  Denison </option>
+      <option>  Dickson </option>
+      <option>  Dobell  </option>
+      <option>  Dunkley </option>
+      <option>  Durack  </option>
+      <option>  Eden-Monaro </option>
+      <option>  Fadden  </option>
+      <option>  Fairfax </option>
+      <option>  Farrer  </option>
+      <option>  Fisher  </option>
+      <option>  Flinders  </option>
+      <option>  Flynn </option>
+      <option>  Forde </option>
+      <option>  Forrest </option>
+      <option>  Fowler  </option>
+      <option>  Franklin  </option>
+      <option>  Fraser  </option>
+      <option>  Fremantle </option>
+      <option>  Gellibrand  </option>
+      <option>  Gilmore </option>
+      <option>  Gippsland </option>
+      <option>  Goldstein </option>
+      <option>  Gorton  </option>
+      <option>  Grayndler </option>
+      <option>  Greenway  </option>
+      <option>  Grey  </option>
+      <option>  Griffith  </option>
+      <option>  Groom </option>
+      <option>  Hasluck </option>
+      <option>  Herbert </option>
+      <option>  Higgins </option>
+      <option>  Hindmarsh </option>
+      <option>  Hinkler </option>
+      <option>  Holt  </option>
+      <option>  Hotham  </option>
+      <option>  Hughes  </option>
+      <option>  Hume  </option>
+      <option>  Hunter  </option>
+      <option>  Indi  </option>
+      <option>  Isaacs  </option>
+      <option>  Jagajaga  </option>
+      <option>  Kennedy </option>
+      <option>  Kingsford Smith </option>
+      <option>  Kingston  </option>
+      <option>  Kooyong </option>
+      <option>  La Trobe  </option>
+      <option>  Lalor </option>
+      <option>  Leichhardt  </option>
+      <option>  Lilley  </option>
+      <option>  Lindsay </option>
+      <option>  Lingiari  </option>
+      <option>  Longman </option>
+      <option>  Lyne  </option>
+      <option>  Lyons </option>
+      <option>  Macarthur </option>
+      <option>  Mackellar </option>
+      <option>  Macquarie </option>
+      <option>  Makin </option>
+      <option>  Mallee  </option>
+      <option>  Maranoa </option>
+      <option>  Maribyrnong </option>
+      <option>  Mayo  </option>
+      <option>  McEwen  </option>
+      <option>  McMahon </option>
+      <option>  McMillan  </option>
+      <option>  McPherson </option>
+      <option>  Melbourne </option>
+      <option>  Melbourne Ports </option>
+      <option>  Menzies </option>
+      <option>  Mitchell  </option>
+      <option>  Moncrieff </option>
+      <option>  Moore </option>
+      <option>  Moreton </option>
+      <option>  Murray  </option>
+      <option>  New England </option>
+      <option>  Newcastle </option>
+      <option>  North Sydney  </option>
+      <option>  OConnor </option>
+      <option>  Oxley </option>
+      <option>  Page  </option>
+      <option>  Parkes  </option>
+      <option>  Parramatta  </option>
+      <option>  Paterson  </option>
+      <option>  Pearce  </option>
+      <option>  Perth </option>
+      <option>  Petrie  </option>
+      <option>  Port Adelaide </option>
+      <option>  Rankin  </option>
+      <option>  Reid  </option>
+      <option>  Richmond  </option>
+      <option>  Riverina  </option>
+      <option>  Robertson </option>
+      <option>  Ryan  </option>
+      <option>  Scullin </option>
+      <option>  Shortland </option>
+      <option>  Solomon </option>
+      <option>  Stirling  </option>
+      <option>  Sturt </option>
+      <option>  Swan  </option>
+      <option>  Sydney  </option>
+      <option>  Tangney </option>
+      <option>  Throsby </option>
+      <option>  Wakefield </option>
+      <option>  Wannon  </option>
+      <option>  Warringah </option>
+      <option>  Watson  </option>
+      <option>  Wentworth </option>
+      <option>  Werriwa </option>
+      <option>  Wide Bay  </option>
+      <option>  Wills </option>
+      <option>  Wright  </option>
+        </select></lable> 
+         <lable for='submit'><input type='submit' name='submit' value='Go' id='submit' /></lable>
+   </p>
+      </form>
+  
+    </div>
+    <!--  <a class='close' href='#'>Close</a>
+  </div>
+</div>-->
 
 
 

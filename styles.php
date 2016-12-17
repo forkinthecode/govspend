@@ -3,6 +3,14 @@
    h3 {margin-bottom:0px;}
    #submit { height:35px; width:45%; color:#759e34; background:#eee; text-align:center; border: solid 1px #dcdcdc;
   cursor:pointer;-webkit-border-radius: 5px; border-radius: 5px; }
+
+       input,select { width:45%; font-size:2em; height:40px;}
+       input, select { height:40px; display:inline; 
+            
+            font-size:.90em ; 
+            outline:none; 
+            font-family:inherit; 
+                                      }
 .expand {height:600px; background:#eee; overflow:scroll;padding:2%;}
 .wide {width:95%; }
 .wide td:nth-of-type(even) {  text-align:right;  }
