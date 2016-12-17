@@ -63,6 +63,7 @@ include('styles.php');
 <?php
 $total = "SELECT *,sum(2014_15) FROM `fed_budget` group by Portfolio ORDER BY sum(2014_15) DESC ";
 $result = mysqli_query($db, $total );
+echo"<div class='expand'>";
  while ($row = $result->fetch_assoc()) 
     {
 
@@ -70,7 +71,7 @@ echo"<table class='basic' border='0'><tbody>
   <tr><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'><img src='outcome_search_large.png' height='40px'></img></a></td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']." <span style='float:right'>$".number_format($row['sum(2014_15)']).",000</span></td></tr>
 
  </tbody></table><br> ";
-}
+}echo"</div>";
 
 ?>
 
@@ -79,53 +80,11 @@ echo"<table class='basic' border='0'><tbody>
 
  
 
-
-
-    <?php
-       // if(isset($_GET['table']) && !isset($_GET['portfolio']) && !isset($_GET['agency']) && !isset($_GET['program']) && !isset($_GET['outcome'])  && !isset($_GET['search_term']))
-        
-        {
-echo"<br>Total spending across portfolios, agencies, outcomes, programs & components based on search term:
-          <form action='' target='_blank' method='GET'>
-
-            <input type='text'  id='search_term' name='search_term' value='health' />
-              
-
-        <input type='hidden'  id='table' name='table' value='FY2016-17' />
-        
-             <input type='submit' name='submit' value='All Results' id='submit' />
- 
-  
-   
-          </form>Find agency by key word:
-          <form action='' target='_blank' method='GET'>
-
-            <input type='text'  id='agency' name='agency' value='health' />
-              
-
-        <input type='hidden'  id='table' name='table' value='FY2016-17' />
-        
-             <input type='submit' name='submit' value='Agency Results' id='submit' />
- 
-  
-   
-          </form>
-          Find program by key word:
-             <form action='' target='_blank' method='GET'>
-
-            <input type='text'  id='program' name='program' value='health' />
-              
-
-        <input type='hidden'  id='table' name='table' value='FY2016-17' />
-        
-             <input type='submit' name='submit' value='Program Results' id='submit' />
- 
-  
-   
-          </form>";
-     }
-
-      ?>
+<p>Govspend is a prototype only. Federal electorate details may be out of date.
+  Grants data is taken from multiple Commonwealth agency sites and there is no guarantee that 
+  it is correct in the database. The prototype is to give an idea of what can be done with open financial data.</p>
+  <p>Commonwealth tenders data will soon be added. This type of data providing this kind of drill down does not exist anywhere else and is the result of several 
+    years of full time labour and expertise working with financial open data.</p>
 
   
            
@@ -138,8 +97,7 @@ echo"<br>Total spending across portfolios, agencies, outcomes, programs & compon
 
  </div>
  <div class='right'>
-  
-<br><br><br>
+
 
 <h4>2014-15 FY Portfolio totals for Commonwealth Grants Funding </h4>
 <?php

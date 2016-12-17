@@ -29,8 +29,11 @@ include('styles.php');
  
   <div class="jumbotron"> 
      
-<h2><a href='index.php'>Home</a><span style='float:right'>Budget FY2014-15</span></h2>
-  <hr>
+ <?php
+     include('nav.php');
+
+     ?>
+
         </div>
           
        
@@ -179,8 +182,28 @@ echo"<table class='basic'><tbody>
 
  </div>
  <div class='right'>
+<?php
+ if ( !isset($_GET['Portfolio']) )
+ {
+  echo"
+<h4>2014-15 FY Portfolio totals for Commonwealth Grants Funding </h4>";
 
+$total = "SELECT Portfolio,sum(Funding) FROM `grants` WHERE Year='2014-15' && Portfolio !='' group by Portfolio ORDER BY sum(Funding) DESC ";
+$result = mysqli_query($db, $total );
+ while ($row = $result->fetch_assoc()) 
+    {
 
+echo"<table class='basic' border='0'><tbody>
+  <tr><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td></tr>
+
+</td></tr>
+    <tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</td></span></tr>
+
+ </tbody></table><br><hr class='short'><br> ";
+}
+}
+
+?>
 
 
 <?php

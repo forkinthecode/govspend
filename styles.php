@@ -1,5 +1,5 @@
    <style type="text/css">
-   body {font-family:Verdana;}
+   body {font-family:Verdana; color:#333; max-width:1500px;}
    h3 {margin-bottom:0px;}
    #submit { height:35px; width:45%; color:#759e34; background:#eee; text-align:center; border: solid 1px #dcdcdc;
   cursor:pointer;-webkit-border-radius: 5px; border-radius: 5px; }
@@ -13,7 +13,7 @@
                                       }
 .council { margin:10px; padding:10px; width:95%; text-align:center;}
 .council td:nth-of-type(odd) {  background:#eee; margin:5px; }
-.expand {height:600px; background:#eee; overflow:scroll;padding:2%;}
+.expand {height:400px; overflow:scroll;padding:2%;}
 .wide {width:95%; }
 .wide td:nth-of-type(even) {  text-align:right;  }
 .reps {float:right;height:170px; width:125px; margin:1%; }
@@ -21,9 +21,9 @@
 .stats td:nth-of-type(even) {   padding:10px;  }
 .stats td:nth-of-type(odd) {  padding:10px;   }
 
-.right {float:right; width:40%; }
-.left {float:left;width:55%;margin-left:2%; }
-.page_width {width:100%; background:#eee; background:#eee;}
+.right {float:right; width:400px; }
+.left {float:left;width:700px;margin-left:2%; }
+.page_width {max-width:1200px; background:#eee; background:#eee;}
 .clear {clear:both;}
 table.right td{text-align:right;}
 a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
