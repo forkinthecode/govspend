@@ -28,7 +28,10 @@ include('styles.php');
                      
  
   <div class="jumbotron"> 
-     
+     <?php
+     include('nav.php');
+
+     ?>
 
   
         </div>
@@ -41,41 +44,36 @@ include('styles.php');
 
         <div class="left">
 
-<h2><a href='index.php'>Home</a><span style='float:right'>Budget FY2014-15</span></h2>
-        <br>Commonwealth Grants & Tenders by Postcode
-          <form action='' target='_blank' method='GET'>
 
-            <input type='text'  id='postcode' name='Postcode' value='postcode' />
-              
-
-        
-             <input type='submit' name='submit' value='Show' id='submit' />
- 
-  
-   
-          </form>
+      
  <div class='clear'></div>
 
  <?php
  if ( isset($_GET['Postcode']) )
  {
-  
- $agor = "SELECT * FROM electorate_party 
- WHERE postcode ='$postcode'  ";
+ $postcode= trim($_GET['Postcode']);
+ 
+$agor = "SELECT * FROM electorate_party
+ WHERE Postcode ='$postcode' GROUP BY electorate  ";
 $result = mysqli_query($db, $agor );
- echo"<table><tbody><tr><td> </td>";
+
+ echo"<div class='wide'>";
+
  while ($row = $result->fetch_assoc()) 
     {
-echo"<tr><td>Electorate:</td><td>".$row['electorate']."</td></tr>
-<tr><td>Party:</td><td>".$row['party']."</td></tr>
-<tr><td>Representative</td><td>".$row['name']."</td></tr>
-";
+echo"<div class='reps'><img src='".$row['url']."'></img></div>
+<table><tbody>
+<tr><td><h3>Electorate</h3></td><td><h3>".$row['electorate']."</h3></td></tr>
+<tr><td><h3>Party</h3></td><td><h3>".$row['party']."</h3></td></tr>
+<tr><td><h3>Name</h3></td><td><h3>".$row['name']."</h3></td></tr>
+</tbody></table>";
     }
-    echo"</tbody></table>";
+  echo"</div>"; 
 
   }
 
     ?>
+    <div class='clear'></div>
   <?php
  if ( isset($_GET['Postcode']) )
  {
@@ -155,8 +153,8 @@ $result = mysqli_query($db, $agor );
    
 echo"<table class='basic' ><tbody>
  
-  <tr><td><a href='locality.php?Program=".$row['Program']."&Postcode=".$row['Postcode']."'>".$row['Program']."</a></td>
-  <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td></tr>
+  <tr> <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td><td><a href='locality.php?Program=".$row['Program']."&Postcode=".$row['Postcode']."'>".$row['Program']."</a></td>
+ </tr>
   
 
  </tbody></table><br><hr class='short'><br> ";
@@ -217,7 +215,12 @@ echo"<table class='basic'><tbody>
 
  </div>
  <div class='right'>
-<br><br><br><br>
+<form class='overlaid' action='locality.php' target='_blank' method='GET'>
+                                <input type="text" name='Postcode' id='Postcode' placeholder="Search..." required>
+                                <button type="submit" value="Submit">Go</button>
+
+</form>
+          
 
  <?php
  if ( isset($_GET['Postcode']) && !isset($_GET['Program']) )

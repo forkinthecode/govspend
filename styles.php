@@ -1,10 +1,10 @@
    <style type="text/css">
    body {font-family:Verdana;}
+   h3 {margin-bottom:0px;}
 .expand {height:600px; background:#eee; overflow:scroll;padding:2%;}
 .wide {width:95%;}
-
 .wide td:nth-of-type(even) {  text-align:right;  }
-
+.reps {float:right;}
 .basic {width:95% }
 
 .right {float:right; width:40%; }

@@ -29,7 +29,10 @@ include('styles.php');
  
   <div class="jumbotron"> 
      
+<?php
+     include('nav.php');
 
+     ?>
   
         </div>
           
@@ -40,7 +43,6 @@ include('styles.php');
 
 
 <div class="left">
-<h2><a href='index.php'>Home</a><span style='float:right'>Budget FY2014-15</span></h2>
 <h4>2014-15 FY Portfolio totals for General Government Spending </h4>
 <div class='box'>
 <p>Click on <a class='button' href='#popup_search'>Quick Search</a> or click <img src='outcome_search_large.png' height='40px'></img> icons to drill down.</p> 
