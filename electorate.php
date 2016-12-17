@@ -29,7 +29,10 @@ include('styles.php');
  
   <div class="jumbotron"> 
      
+<?php
+     include('nav.php');
 
+     ?>
   
         </div>
           
@@ -41,30 +44,30 @@ include('styles.php');
 
         <div class="left">
 
-<h2><a href='index.php'>Home</a><span style='float:right'>Budget FY2014-15</span></h2>
-        
  
 
 <?php
  if ( isset($_GET['Electorate']) )
  {
   
-$electorate = $_GET['Electorate']; 
-echo"
-<h4>Federal Electorate details for $electorate </h4>";
-$total = "SELECT * FROM `lga_pcode_electorate`  where Electorate='$electorate' group by Electorate ";
+$data = $_GET['Electorate']; 
+$electorate=mysqli_real_escape_string ( $db , $data );
+echo"<h4>Federal Electorate details for $electorate </h4>";
+$total = "SELECT * FROM `lga_pcode_electorate`  where Electorate LIKE'%$electorate%' group by Electorate ";
 $result = mysqli_query($db, $total );
+ echo"<div class='wide'>";
  while ($row = $result->fetch_assoc()) 
     {
 
-echo"<table class='basic' border='0'><tbody>
-
-
-    <tr><td>Member:</td><td>".$row['name']."</td></tr>
-      <tr><td>Party:</td><td>".$row['party']."</td></tr>
-
- </tbody></table><br><hr class='short'><br> ";
-}
+    
+echo"<div class='reps'><img src='".$row['url']."'></img></div>
+<table><tbody>
+<tr><td><h3>Electorate</h3></td><td><h3>".$row['electorate']."</h3></td></tr>
+<tr><td><h3>Party</h3></td><td><h3>".$row['party']."</h3></td></tr>
+<tr><td><h3>Name</h3></td><td><h3>".$row['name']."</h3></td></tr>
+</tbody></table>";
+    }
+  echo"</div><br><hr>"; 
 }
 ?>
 
@@ -115,9 +118,10 @@ echo"
  if ( isset($_GET['Electorate']) )
  {
   
-  $electorate = $_GET['Electorate']; 
+ $data = $_GET['Electorate']; 
+$electorate=mysqli_real_escape_string ( $db , $data );
   echo"<h4>All Commonweatlh Grants for recpients in the Federal Electorate of $electorate</h4>";
-$total = "SELECT Program,sum(Funding) FROM `grants` where  Year='2014-15' && Electorate like'%$electorate%'  Group by Program  ";
+$total = "SELECT Program,sum(Funding) FROM `grants` WHERE  Year='2014-15' && Electorate LIKE'%$electorate%'  Group by Program  ";
 $result = mysqli_query($db, $total );
  while ($row = $result->fetch_assoc()) 
     {

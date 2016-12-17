@@ -50,9 +50,9 @@ include('styles.php');
   <?php
  if ( !isset($_GET['Postcode']) && !isset($_GET['Program']) )
  {
-
+echo"<h3>Total value of 14-15FY Commonwealth grants by Federal Electorate</h3><br><p>Click on the electorate name to find details of all grants in that electorate</p>";
 $grants = "SELECT Electorate,sum(Funding) FROM grants
- WHERE Electorate!='' GROUP BY Electorate  ";
+ WHERE Electorate!='' && Electorate NOT LIKE'%,%' GROUP BY Electorate  ";
 $result = mysqli_query($db, $grants );
 
  echo"<table class='basic' ><tbody>
