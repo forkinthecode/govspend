@@ -80,17 +80,17 @@ echo"<div class='reps'><img src='".$row['url']."'></img></div>
   
   $postcode = $_GET['Postcode']; 
 
-  echo"<h2>2014-15 Commonwealth Grants for $postcode</h2>";
+  echo"<br><hr><h4>Statistics for 2014-15 Commonwealth Grants for $postcode</h4>";
                    
                  //  $portfolio=mysqli_real_escape_string($portfolio);
 
- echo"<table><tbody><tr><td>Total value </td>";
+ echo"<table class='stats'><tbody><tr><td>Total value</td><td>Number</td><td>Average</td></tr>";
 $agor = "SELECT sum(Funding) as total FROM grants 
  WHERE Postcode LIKE'%$postcode%'  ";
 $result = mysqli_query($db, $agor );
  while ($row = $result->fetch_assoc()) 
     {
-      echo"<td class='right'>$".number_format($row['total'])."</td></tr>";
+      echo"<td>$".number_format($row['total'])."</td>";
       }
     }
 
@@ -103,13 +103,13 @@ $result = mysqli_query($db, $agor );
                    
                  //  $portfolio=mysqli_real_escape_string($portfolio);
 
- echo"<tr><td>Number </td>";
+
 $agor = "SELECT count(funding) as grant_number FROM grants 
  WHERE Postcode LIKE'%$postcode%'  ";
 $result = mysqli_query($db, $agor );
  while ($row = $result->fetch_assoc()) 
     {
-      echo"<td class='right'>".number_format($row['grant_number'])."</td></tr>";
+      echo"<td>".number_format($row['grant_number'])."</td>";
       }
     }
 
@@ -122,13 +122,13 @@ $result = mysqli_query($db, $agor );
                    
                  //  $portfolio=mysqli_real_escape_string($portfolio);
 
- echo"<tr><td>Average value </td>";
+
 $agor = "SELECT (sum(Funding)/count(funding)) as ave FROM grants 
  WHERE Postcode LIKE'%$postcode%'  ";
 $result = mysqli_query($db, $agor );
  while ($row = $result->fetch_assoc()) 
     {
-      echo"<td class='right'>$".number_format($row['ave'])."</td></tr>";
+      echo"<td>$".number_format($row['ave'])."</td></tr>";
       }
       echo"</tbody></table>";
     }
@@ -143,10 +143,11 @@ $result = mysqli_query($db, $agor );
                    
                  //  $portfolio=mysqli_real_escape_string($portfolio);
 
- echo"<h4>Breakdown of grant recipients for $postcode</h2>";
+ echo"<br><h4>Breakdown of Commonwealth programs administering grants to $postcode</h2>";
 $agor = "SELECT *,sum(Funding) FROM grants 
  WHERE Postcode LIKE'%$postcode%' GROUP BY Program ";
 $result = mysqli_query($db, $agor );
+echo"<table style='width:95%'><tbody><tr><td>Total Value</td><td>Program Name</td></tr></tbody></table><br><p>Click on the program name to get the recipients for that program in $postcode</p>";
  while ($row = $result->fetch_assoc()) 
     {
       
@@ -230,7 +231,7 @@ echo"<table class='basic'><tbody>
                    
                  //  $portfolio=mysqli_real_escape_string($portfolio);
 
- echo"<h4>Breakdown of grant recipients for $postcode</h2>";
+ echo"<h4>Detials of grant recipients in $postcode for all Commonwealth programs</h2>";
 $agor = "SELECT * FROM grants 
  WHERE Postcode LIKE'%$postcode%' order by Funding DESC";
 $result = mysqli_query($db, $agor );

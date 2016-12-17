@@ -2,10 +2,12 @@
    body {font-family:Verdana;}
    h3 {margin-bottom:0px;}
 .expand {height:600px; background:#eee; overflow:scroll;padding:2%;}
-.wide {width:95%;}
+.wide {width:95%; }
 .wide td:nth-of-type(even) {  text-align:right;  }
 .reps {float:right;}
-.basic {width:95% }
+.stats {width:95%; background:#eee;}
+.stats td:nth-of-type(even) {   padding:10px;  }
+.stats td:nth-of-type(odd) {  padding:10px;   }
 
 .right {float:right; width:40%; }
 .left {float:left;width:55%;margin-left:2%; }
@@ -13,9 +15,9 @@
 .clear {clear:both;}
 table.right td{text-align:right;}
 a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
-.basic td:nth-of-type(even) {  background:#cbdbd8; padding:10px; border-radius:5px; border: 1px;  }
-
-.basic td:nth-of-type(odd) {  padding:10px; border-radius:5px; width:70px;  }
+.basic {width:95%;}
+.basic td:nth-of-type(even) {  background:#cbdbd8; padding:10px; border-radius:5px; border: 1px; width:400px; }
+.basic td:nth-of-type(odd) {  padding:10px; border-radius:5px; width:100px; text-align:right; }
 
 .overlaid { margin:auto;width:800px; font-size:18px; background:#cbdbd8; padding:20px; border-radius: 5px; }
 .overlaid input[type="text"] {
