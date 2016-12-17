@@ -10,6 +10,6 @@ echo" <div class=''><div class='reps'><img src='".$row['url']."'></img></div>
 <tr><td><h3>Name</h3></td><td><h3>".$row['name']."</h3></td></tr>
 </tbody></table></div><br><div class='clear></div>";
     }
-  echo"<div class='clear></div>"; 
+  echo"<div class='clear></div><br><hr>"; 
 
   ?>

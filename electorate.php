@@ -52,7 +52,7 @@ include('styles.php');
   
 $data = $_GET['Electorate']; 
 $electorate=mysqli_real_escape_string ( $db , $data );
-echo"<h4>Federal Electorate details for $electorate </h4>";
+//echo"<h4>Federal Electorate details for $electorate </h4>";
 $total = "SELECT * FROM `lga_pcode_electorate`  where Electorate LIKE'%$electorate%' group by Electorate ";
 $result = mysqli_query($db, $total );
 include'electorate_details.php';
@@ -75,7 +75,7 @@ echo"<p>";
 echo"
 
 
-   <a href='council.php?council=".$row['council']."<'>".$row['council']."</a> |
+   <a href='council.php?council=".$row['council']."'>".$row['council']."</a> |
    
  ";
 }echo"</p><hr><br>";
@@ -141,8 +141,8 @@ $result = mysqli_query($db, $total );
 echo"
 
 <table class='basic' ><tbody>
- <tr><td>Portfolio:</td><td>".$row['Portfolio']."</td></tr>
- <tr><td>Agency:</td><td>".$row['Agency']."</td></tr>
+  <tr><td>Portfolio:</td><td>".$row['Portfolio']."</td></tr>
+  <tr><td>Agency:</td><td>".$row['Agency']."</td></tr>
   <tr><td>Program:</td><td><a href='electorate.php?Program=".$row['Program']."&electorate=$electorate'>".$row['Program']."</a></td></tr>
   <tr><td>Component:</td><td>".$row['Component']."</td></tr>
   <tr><td>Purpose:</td><td>".$row['Purpose']."</td></tr>
@@ -182,7 +182,7 @@ echo"
     <div class='content'>
      <form action='electorate.php'  method='GET'>
     <lable for='electorate'>
-      <select name='electorate' >
+      <select name='Electorate' >
     
       <option>  Adelaide  </option>
       <option>  Aston </option>
@@ -470,7 +470,8 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
 </div></div>
 
 
-    <?php //include('../scripts/footer.php');?>
+   <?php 
+    include('footer.php');?>
 
     </body>
 </html>

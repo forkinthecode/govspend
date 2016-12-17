@@ -5,12 +5,14 @@
   cursor:pointer;-webkit-border-radius: 5px; border-radius: 5px; }
 
        input,select { width:45%; font-size:2em; height:40px;}
-       input, select { height:40px; display:inline; 
+       input, select { height:35px; display:inline; 
             
             font-size:.90em ; 
             outline:none; 
             font-family:inherit; 
                                       }
+.council { margin:10px; padding:10px; width:95%; text-align:center;}
+.council td:nth-of-type(odd) {  background:#eee; margin:5px; }
 .expand {height:600px; background:#eee; overflow:scroll;padding:2%;}
 .wide {width:95%; }
 .wide td:nth-of-type(even) {  text-align:right;  }

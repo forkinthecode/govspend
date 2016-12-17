@@ -50,9 +50,10 @@ include('styles.php');
   <?php
  if ( !isset($_GET['Postcode']) && !isset($_GET['Program']) )
  {
-echo"<h3>Total value of 14-15FY Commonwealth grants by Federal Electorate</h3><br><p>Click on the electorate name to find details of all grants in that electorate</p>";
+echo"<h3>Total value of 14-15FY Commonwealth grants by Federal Electorate</h3>
+<br><p>Click on the electorate name to find details of all grants in that electorate</p>";
 $grants = "SELECT Electorate,sum(Funding) FROM grants
- WHERE Electorate!='' && Electorate NOT LIKE'%,%' GROUP BY Electorate  ";
+ WHERE Electorate!='' && Electorate NOT LIKE'%,%' && Year='2014-15' GROUP BY Electorate ORDER BY sum(Funding) DESC ";
 $result = mysqli_query($db, $grants );
 
  echo"<table class='basic' ><tbody>
@@ -400,7 +401,8 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
 </div></div>
 
 
-    <?php //include('../scripts/footer.php');?>
+    <?php 
+    include('footer.php');?>
 
     </body>
 </html>

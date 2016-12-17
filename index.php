@@ -172,7 +172,8 @@ echo"<table class='basic' border='0'><tbody>
 
 </div></div>
 
-    <?php //include('../scripts/footer.php');?>
+ <?php 
+    include('footer.php');?>
 
     </body>
 </html>
