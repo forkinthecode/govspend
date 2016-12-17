@@ -171,7 +171,7 @@ echo"<table class='basic' border='0'><tbody>
    
 
 </div></div>
-
+<div class='clear'></div>
  <?php 
     include('footer.php');?>
 

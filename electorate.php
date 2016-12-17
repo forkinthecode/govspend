@@ -53,7 +53,7 @@ include('styles.php');
 $data = $_GET['Electorate']; 
 $electorate=mysqli_real_escape_string ( $db , $data );
 //echo"<h4>Federal Electorate details for $electorate </h4>";
-$total = "SELECT * FROM `lga_pcode_electorate`  where Electorate LIKE'%$electorate%' group by Electorate ";
+$total = "SELECT * FROM `lga_pcode_electorate`  where Electorate ='$electorate' GROUP  by Electorate ";
 $result = mysqli_query($db, $total );
 include'electorate_details.php';
 }
@@ -75,7 +75,7 @@ echo"<p>";
 echo"
 
 
-   <a href='council.php?council=".$row['council']."'>".$row['council']."</a> |
+   <a href='council.php?Council=".$row['council']."'>".$row['council']."</a> |
    
  ";
 }echo"</p><hr><br>";
@@ -109,7 +109,7 @@ echo"
  $data = $_GET['Electorate']; 
 $electorate=mysqli_real_escape_string ( $db , $data );
   echo"<h4>All Commonweatlh Grants for recpients in the Federal Electorate of $electorate</h4>";
-$total = "SELECT Program,sum(Funding) FROM `grants` WHERE  Year='2014-15' && Electorate LIKE'%$electorate%'  Group by Program  ";
+$total = "SELECT Program,sum(Funding) FROM `grants` WHERE  Year='2014-15' && Electorate ='$electorate'  Group by Program  ";
 $result = mysqli_query($db, $total );
  while ($row = $result->fetch_assoc()) 
     {
@@ -118,7 +118,8 @@ echo"
 
 <table class='basic' ><tbody>
 
-  <tr><td><a href='electorate.php?Electorate=$electorate&Program=".$row['Program']."'>".$row['Program']."</a></td><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td></tr>
+  <tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td><td><a href='electorate.php?Electorate=$electorate&Program=".$row['Program']."'>".$row['Program']."</a></td>
+  </tr>
  </tbody></table><br><hr class='short'><br> ";
 }
 }
@@ -133,7 +134,7 @@ echo"
   echo"<h4>All Commonweatlh Grants for recpients in the Federal Electorate of $electorate</h4>";
 $total = "SELECT *, DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
          DATE_FORMAT(End,  '%D %b %Y' ) AS End,
-         DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` where  Year='2014-15' && Electorate like'%$electorate%'   ";
+         DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` where  Year='2014-15' && Electorate ='$electorate'  ";
 $result = mysqli_query($db, $total );
  while ($row = $result->fetch_assoc()) 
     {
@@ -356,7 +357,7 @@ echo"
 $total = "SELECT *, DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
          DATE_FORMAT(End,  '%D %b %Y' ) AS End,
          DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` where 
-          Year='2014-15' && Electorate like'%$electorate%' && Program like'%$program%'  ";
+          Year='2014-15' && Electorate ='$electorate'&& Program like'%$program%'  ";
 $result = mysqli_query($db, $total );
  while ($row = $result->fetch_assoc()) 
     {
@@ -468,7 +469,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
    
 
 </div></div>
-
+<div class='clear'></div>
 
    <?php 
     include('footer.php');?>

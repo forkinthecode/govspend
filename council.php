@@ -56,6 +56,9 @@ echo"<h3>Socio Economic (SEIFA) Data for LGA: $council</h3>
 <table class='council'><tbody><tr><td>National Rank</td><td>National Decile</td><td>Usual Resident Pop</td></tr>";
 $seifa = "SELECT * FROM SEIFA_LGA WHERE Council ='$council' ";
 $result = mysqli_query($db, $seifa );
+  @$num_results = mysqli_num_rows($result);
+  if ($num_results <1)
+  echo"<tr><td>No SEIFA results</td><td>for $council</td><td></td></tr>";
  while ($row = $result->fetch_assoc()) 
     {
       echo"<tr>
@@ -105,16 +108,38 @@ echo"
 
 <table class='basic' ><tbody>
  
-  <tr><td><a href='council.php?Council=".$row['Council']."'>".$row['Council']."</a></td>
-     <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td></tr>
+  <tr> <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td><td width='80%'><a href='council.php?Council=".$row['Council']."'>".$row['Council']."</a></td>
+    </tr>
  </tbody></table><br><hr class='short'><br> ";
     }
 }
 ?>
  
+<?php
+if ( isset($_GET['Council']) )
+ {
+$data = $_GET['Council']; 
+$council=mysqli_real_escape_string ( $db , $data );
+echo"<br><hr><h4>Commonwealth Grants totalled by Program</h4>";
+$seifa = "SELECT *,sum(Funding) FROM grants WHERE Council ='$council' && Year='2014-15' GROUP BY Program ";
+$result = mysqli_query($db, $seifa );
+  @$num_results = mysqli_num_rows($result);
+  if ($num_results <1)
+  echo"<h4>There are no Commonwealth grant recipients with addresses in the $council council area</h4>";
+ while ($row = $result->fetch_assoc()) 
+    {
 
+echo"
 
+<table class='basic' ><tbody>
 
+  <tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td>
+  <td width='80%'><a href='council.php?Council=$council&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
+ </tbody></table><br><hr class='short'><br> ";
+}
+}
+
+?>
 
   
            
@@ -133,7 +158,8 @@ echo"
      <form action='council.php'  method='GET'>
     <lable for='council'>
       <select name='Council' >";
-$seifa = "SELECT DISTINCT Council FROM grants where Council NOT LIKE'%,%' && Council !=''  ORDER BY Council";
+$seifa = "SELECT DISTINCT Council FROM grants where Council NOT LIKE'%,%' && Council !=''  ORDER BY Council
+";
 $result = mysqli_query($db, $seifa );
  while ($row = $result->fetch_assoc()) 
     {
@@ -154,34 +180,22 @@ echo"
 
 
    <?php
- if ( isset($_GET['Electorate']) && isset($_GET['Program'])  )
+ if ( isset($_GET['Council']) && isset($_GET['Program'])  )
  {
   
-   $electorate = $_GET['Electorate']; 
+   $council = $_GET['Council']; 
    $program = $_GET['Program']; 
-  echo"<h4>$program recpients in the Federal Electorate of $electorate</h4>";
-$total = "SELECT *, DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
+  echo"<h4>$program recpients in the Local Government Area of $council</h4>";
+$total = "SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
          DATE_FORMAT(End,  '%D %b %Y' ) AS End,
-         DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` where 
-          Year='2014-15' && Electorate like'%$electorate%' && Program like'%$program%'  ";
+         DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` 
+         WHERE Program like'%$program%' && Year='2014-15' && Council ='$council'
+            ";
 $result = mysqli_query($db, $total );
  while ($row = $result->fetch_assoc()) 
     {
 
-echo"
-
-<table class='basic' ><tbody>
- <tr><td>Portfolio:</td><td>".$row['Portfolio']."</td></tr>
- <tr><td>Agency:</td><td>".$row['Agency']."</td></tr>
-  <tr><td>Program:</td><td><a href='electorate.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
-  <tr><td>Component:</td><td>".$row['Component']."</td></tr>
-  <tr><td>Purpose:</td><td>".$row['Purpose']."</td></tr>
-
-  <tr><td>Recipient:</td><td><a href='portfolio.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
-  <tr><td>Address:</td><td>".$row['Locality'].", <a href='locality.php?Postcode=".$row['Postcode']."'>".$row['Postcode']."</a></td></tr>
-  <tr><td>Dates:</td><td>".$row['Approved']."-".$row['End']." (".number_format($row['Term'])."months) <span style='float:right'>Month:$".number_format($row['Funding']/$row['Term'])."</span></td></tr>
-  <tr><td></td><td><span style='float:right'>Total: $".number_format($row['Funding'])."</span></td></tr>
- </tbody></table><br><hr class='short'><br> ";
+include'grants_table.php';
 }
 }
 ?>
@@ -275,7 +289,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
    
 
 </div></div>
-
+<div class='clear'></div>
  <?php 
     include('footer.php');?>
 

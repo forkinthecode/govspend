@@ -399,6 +399,8 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
    
 
 </div></div>
+<div class='clear'></div>
+
 
 
     <?php 

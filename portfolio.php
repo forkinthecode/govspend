@@ -123,8 +123,11 @@ echo"<table class='basic'><tr><td><a href='portfolio.php?Program=$program&Compon
  
 ";
     }
-    echo"<p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
-Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank. Where it is left blank it is assumed to be identifical to Program name.";
+    echo"<h4>Notes</h4>
+    <p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
+<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank. Where it is left blank it is assumed to be identifical to Program name.</p>
+<p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
+<p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that critera.</p>";
    
 }else "No results for $program";
 
@@ -209,7 +212,7 @@ echo"<h4>Component Details</h4><table class='basic'><tbody>
  {
   
 $portfolio = $_GET['Portfolio']; 
-echo"<h4>Commonwealth Grants totals for Programs in the $portfolio Portfolio</h4>";
+echo"<h4>Commonwealth Grant totals for Programs in the $portfolio Portfolio</h4>";
 
 $grants = "SELECT grants.Program,sum(Funding) FROM `grants` join fed_budget on 
 fed_budget.program=grants.program where fed_budget.portfolio='$portfolio' && 
@@ -258,18 +261,7 @@ $result = mysqli_query($db, $grants );
  while ($row = $result->fetch_assoc()) 
     {
       
-   
-echo"
-<table class='basic' ><tbody>
- 
-  <tr><td>Component Name:</td><td>".trim($row['Component'])."</td></tr>
-  <tr><td>Purpose:</td><td>".$row['Purpose']."</td></tr>
-
-  <tr><td>Recipient:</td><td><a href='portfolio.php?Recipient=".$row['Recipient']."'>".trim($row['Recipient'])."</a></td></tr>
-  <tr><td>Address/Coverage:</td><td>".$row['Locality']." <a href='locality.php?Postcode=".$row['Postcode']."'>".$row['Postcode']."</a></td></tr>
-  <tr><td>Dates:</td><td>".$row['Approved']."-".$row['End']." <span style='float:right'>(".number_format($row['Term'])."months)</span></td></tr>
-  <tr><td></td><td>Month:$".number_format($row['Funding']/$row['Term'])."<span style='float:right'>Total: $".number_format($row['Funding'])."</span></td></tr>
- </tbody></table><br><hr><br> ";
+include'grants_table.php';
 
 }echo"</div>";
 }
@@ -290,9 +282,9 @@ include'map.php';
 
 
 </div></div>
-
-
-    <?php //include('../scripts/footer.php');?>
+<div class='clear'></div>
+<?php 
+    include('footer.php');?>
 
     </body>
 </html>
