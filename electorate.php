@@ -53,7 +53,7 @@ include('styles.php');
 $data = $_GET['Electorate']; 
 $electorate=mysqli_real_escape_string ( $db , $data );
 //echo"<h4>Federal Electorate details for $electorate </h4>";
-$total = "SELECT * FROM `lga_pcode_electorate`  where Electorate ='$electorate' GROUP  by Electorate ";
+$total = "SELECT * FROM `lga_pcode_electorate`  where Electorate ='$electorate' GROUP BY Electorate ";
 $result = mysqli_query($db, $total );
 include'electorate_details.php';
 }
@@ -72,12 +72,7 @@ echo"<p>";
  while ($row = $result->fetch_assoc()) 
     {
 
-echo"
-
-
-   <a href='council.php?Council=".$row['council']."'>".$row['council']."</a> |
-   
- ";
+echo"<a href='council.php?Council=".$row['council']."'>".$row['council']."</a> | ";
 }echo"</p><hr><br>";
 }
 ?>

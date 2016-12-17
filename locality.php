@@ -95,7 +95,7 @@ include'electorate_details.php';
   
   $postcode = $_GET['Postcode']; 
 
-  echo"<br><hr><h4>Statistics for 2014-15 Commonwealth Grants for $postcode</h4>";
+  echo"<br><h4>Statistics for 2014-15 Commonwealth Grants for $postcode</h4>";
                    
                  //  $portfolio=mysqli_real_escape_string($portfolio);
 
@@ -158,18 +158,19 @@ $result = mysqli_query($db, $agor );
                    
                  //  $portfolio=mysqli_real_escape_string($portfolio);
 
- echo"<br><h4>Breakdown of Commonwealth programs administering grants to $postcode</h2>";
+ echo"<br><h4>Breakdown of Commonwealth programs administering grants to $postcode</h2>
+ <p>Click on the program name to get the recipients for that program in $postcode</p>";
 $agor = "SELECT *,sum(Funding) FROM grants 
  WHERE Postcode LIKE'%$postcode%' GROUP BY Program ";
 $result = mysqli_query($db, $agor );
-echo"<table style='width:95%'><tbody><tr><td>Total Value</td><td>Program Name</td></tr></tbody></table><br><p>Click on the program name to get the recipients for that program in $postcode</p>";
+echo"<table style='width:95%'><tbody><tr><td>Total Value</td><td>Program Name</td></tr></tbody></table><br>";
  while ($row = $result->fetch_assoc()) 
     {
       
    
 echo"<table class='basic' ><tbody>
  
-  <tr> <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td><td><a href='locality.php?Program=".$row['Program']."&Postcode=".$row['Postcode']."'>".$row['Program']."</a></td>
+  <tr> <td ><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td><td ><a href='locality.php?Program=".$row['Program']."&Postcode=".$row['Postcode']."'>".$row['Program']."</a></td>
  </tr>
   
 
@@ -232,7 +233,7 @@ echo"<table class='basic'><tbody>
  </div>
  <div class='right'>
 <form class='overlaid' action='locality.php' target='_blank' method='GET'>
-                                <input type="text" name='Postcode' id='Postcode' placeholder="Search..." required>
+                                <input type="text" name='Postcode' id='Postcode' placeholder="Postcode" required>
                                 <button type="submit" value="Submit">Go</button>
 
 </form><br>

@@ -226,7 +226,8 @@ $result = mysqli_query($db, $grants);
            echo"<table class='basic' ><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
-      echo"<tr><td>$".number_format($row['sum(Funding)'])."</td><td><a href='portfolio.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>";
+      echo"<tr><td>$".number_format($row['sum(Funding)'])."</td>
+      <td><a href='portfolio.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>";
 
 
     }
