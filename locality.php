@@ -47,6 +47,31 @@ include('styles.php');
 
       
  <div class='clear'></div>
+  <?php
+ if ( !isset($_GET['Postcode']) && !isset($_GET['Program']) )
+ {
+
+$grants = "SELECT Electorate,sum(Funding) FROM grants
+ WHERE Electorate!='' GROUP BY Electorate  ";
+$result = mysqli_query($db, $grants );
+
+ echo"<table class='basic' ><tbody>
+ <tr>
+ <td>Postcode</td>
+ <td>Total Value</td>
+ </tr>";
+
+ while ($row = $result->fetch_assoc()) 
+    {
+echo"<tr>
+         <td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a>
+         </td>
+         <td>$".number_format($row['sum(Funding)'])."
+         </td>
+         </tr>";
+    }echo"</tbody></table>";
+}
+ ?>
 
  <?php
  if ( isset($_GET['Postcode']) )
@@ -220,8 +245,8 @@ echo"<table class='basic'><tbody>
                                 <input type="text" name='Postcode' id='Postcode' placeholder="Search..." required>
                                 <button type="submit" value="Submit">Go</button>
 
-</form>
-          
+</form><br>
+          <hr>
 
  <?php
  if ( isset($_GET['Postcode']) && !isset($_GET['Program']) )
