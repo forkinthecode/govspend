@@ -6,7 +6,7 @@
 .expand {height:600px; background:#eee; overflow:scroll;padding:2%;}
 .wide {width:95%; }
 .wide td:nth-of-type(even) {  text-align:right;  }
-.reps {float:right;}
+.reps {float:right;height:170px; width:125px; margin:1%; }
 .stats {width:95%; background:#eee;}
 .stats td:nth-of-type(even) {   padding:10px;  }
 .stats td:nth-of-type(odd) {  padding:10px;   }
