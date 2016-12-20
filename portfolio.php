@@ -128,7 +128,7 @@ echo"<table class='basic'><tr><td><a href='portfolio.php?Program=$program&Compon
     }
     echo"<h4>Notes</h4>
     <p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
-<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank. Where it is left blank it is assumed to be identifical to Program name.</p>
+<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identifical to Program name.</p>
 <p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
 <p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that critera.</p>";
    

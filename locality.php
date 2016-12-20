@@ -45,9 +45,34 @@ include('styles.php');
         <div class="left">
 
 
-      
- <div class='clear'></div>
-  <?php
+      <?php
+ if ( !isset($_GET['Postcode']) && !isset($_GET['Program']) )
+ {
+echo"<h3>Total value of 14-15FY Commonwealth grants by Postcode</h3>
+<br><p>Top 15 Postcodes by value are below. Click on the electorate name to find details of all grants in that Postcode or enter postcode into the search box to find results
+for other Postcodes.</p>";
+$grants = "SELECT Locality,Postcode,sum(Funding) FROM grants
+ WHERE Electorate!='' && Electorate NOT LIKE'%,%' && Postcode !='Multiple' && Year='2014-15' GROUP BY Postcode ORDER BY sum(Funding) DESC LIMIT 15 ";
+$result = mysqli_query($db, $grants );
+
+ echo"<table class='basic' ><tbody>
+ <tr>
+ <td>Postcode</td>
+ <td>Total Value</td>
+ </tr>";
+
+ while ($row = $result->fetch_assoc()) 
+    {
+echo"<tr>
+         <td><a href='locality.php?Postcode=".$row['Postcode']."'> ".$row['Postcode']."</a>
+         </td><td>".$row['Locality']."</td>
+         <td>$".number_format($row['sum(Funding)'])."
+         </td>
+         </tr>";
+    }echo"</tbody></table>";
+}
+ ?>
+  <?php/*
  if ( !isset($_GET['Postcode']) && !isset($_GET['Program']) )
  {
 echo"<h3>Total value of 14-15FY Commonwealth grants by Federal Electorate</h3>
@@ -71,23 +96,56 @@ echo"<tr>
          </td>
          </tr>";
     }echo"</tbody></table>";
-}
+}*/
  ?>
 
  <?php
- if ( isset($_GET['Postcode']) )
+if ( isset($_GET['Postcode']) )
  {
- $postcode= trim($_GET['Postcode']);
- 
-$agor = "SELECT * FROM electorate_party
- WHERE Postcode ='$postcode' GROUP BY electorate  ";
-$result = mysqli_query($db, $agor );
+$data = $_GET['Postcode']; 
+$postcode=mysqli_real_escape_string ( $db , $data );
+echo"<h3>Socio Economic (SEIFA) Data for postcode: $postcode</h3>
+<table class='council'><tbody><tr><td>National Rank</td><td>National Decile</td><td>Usual Resident Pop</td></tr>";
+$seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
+$result = mysqli_query($db, $seifa );
+  @$num_results = mysqli_num_rows($result);
+  if ($num_results <1)
+  echo"<tr><td>No SEIFA results</td><td>for $postcode</td><td></td></tr>";
+ while ($row = $result->fetch_assoc()) 
+    {
+      echo"<tr>
+      <td>".$row['rank']."/2,481</td><td>".$row['decile']."/10 </td>
+      <td>".number_format($row['URP'])."</td></tr>";
 
-include'electorate_details.php';
-
+    }
   }
 
-    ?>
+?>
+<?php
+if ( isset($_GET['Postcode']) )
+ {
+$data = $_GET['Postcode']; 
+$postcode=mysqli_real_escape_string ( $db , $data );
+echo"<tr><td></td><td>";
+$seifa = "SELECT decile FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
+$result = mysqli_query($db, $seifa );
+ while ($row = $result->fetch_assoc()) 
+    {
+      $iterations=$row['decile'];
+
+    }
+
+ $i=0;
+while ($i <= $iterations-1)
+{
+ echo "<img height='15px' src='icon.png'></img>";
+   $i++;
+    }
+  }echo"</td><td></td></tr></tbody></table>";
+
+?>
+
+
     <div class='clear'></div>
   <?php
  if ( isset($_GET['Postcode']) )
@@ -324,7 +382,7 @@ echo"<table class='basic' ><tbody>
  {
 $program=$_GET['Program'];
 $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where 
- Pcode IN (SELECT Postcode from grants where Program LIKE('%$program%') && Year='2014-15' ) ORDER BY Pcode ";
+ Pcode IN (SELECT Postcode from grants where Postcode LIKE('%$postcode%') && Year='2014-15' ) ORDER BY Pcode ";
        $result = mysqli_query($db, $map);
  
     echo" var markers = [";
