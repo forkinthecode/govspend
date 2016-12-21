@@ -17,7 +17,7 @@ include('login.php');
 
 include('styles.php');
 
-
+ include('nav.php');
  
     
 
@@ -29,10 +29,7 @@ include('styles.php');
  
   <div class="jumbotron"> 
      
-<?php
-     include('nav.php');
 
-     ?>
   
         </div>
           
@@ -57,17 +54,20 @@ echo"<h3>Socio Economic (SEIFA) Data for LGA: $council</h3>
 $seifa = "SELECT * FROM SEIFA_LGA WHERE Council ='$council' ";
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
-  if ($num_results <1)
+  if ($num_results >0)
+{
   echo"<tr><td>No SEIFA results</td><td>for $council</td><td></td></tr>";
  while ($row = $result->fetch_assoc()) 
     {
       echo"<tr>
       <td>".$row['Nat_Rank']."/564</td><td>".$row['Nat_Decile']."/10 </td>
       <td>".number_format($row['URP'])."</td></tr>";
-
     }
   }
-
+     elseif ($num_results <1)
+    
+  echo"<h4>No SEIFA results for $council</h4>";
+  }
 ?>
 
 <?php
@@ -81,9 +81,7 @@ $result = mysqli_query($db, $seifa );
  while ($row = $result->fetch_assoc()) 
     {
       $iterations=$row['Nat_Decile'];
-
     }
-
  $i=0;
 while ($i <= $iterations-1)
 {
@@ -91,6 +89,78 @@ while ($i <= $iterations-1)
    $i++;
     }
   }echo"</td><td></td></tr></tbody></table>";
+?>
+<?php
+if ( isset($_GET['Council']) )
+ {
+$data = $_GET['Council']; 
+$council=mysqli_real_escape_string ( $db , $data );
+$query="SELECT sum(Age_pension+PPP+PPS+Newstart+DSP+Austudy+Carer_Payment+YA_SA+YAO) as total
+ FROM lga_welfare where council='$council'";
+$result = mysqli_query($db, $query);
+ while ($row = $result->fetch_assoc())
+ {
+$total_on_welfare=$row['total'];
+//echo"$total_on_welfare<br>";
+  }
+$query="SELECT URP FROM SEIFA_LGA
+where council='$council'";
+$result = mysqli_query($db, $query);
+echo"<br><table class='council'><tbody><tr><td><span class='tiny'>Population</span></td><td><span class='tiny'>Welfare Recipients</span></td><td><span class='tiny'>Perecentage</span></td></tr>";
+ while ($row = $result->fetch_assoc())
+ {
+$URP=$row['URP'];
+//echo"$URP<br>";
+  }
+  echo"<tr><td>".number_format($URP)."</td><td>".number_format($total_on_welfare)."</td><td>".number_format($total_on_welfare/$URP*100/1)."%</td></tr>";
+
+}
+echo"</tbody></table><br>";
+
+?>
+<?php
+if ( isset($_GET['Council']) )
+ {
+$data = $_GET['Council']; 
+$council=mysqli_real_escape_string ( $db , $data );
+echo"<h3>Breakdown by Payment Type</h3>
+<table class='council'><tbody><tr><td>Payment Name</td><td>Number in Receipt</td></tr>";
+$seifa = "SELECT * FROM lga_welfare WHERE Council LIKE'%$council%' ";
+$result = mysqli_query($db, $seifa );
+  @$num_results = mysqli_num_rows($result);
+  if ($num_results <1)
+  echo"<tr><td>No SEIFA results</td><td>for $council</td><td></td></tr>";
+ while ($row = $result->fetch_assoc()) 
+    {
+       echo"
+      <tr><td>Age Pension</td><td>".number_format($row['Age_Pension'])." </td></tr>
+      <tr><td>FTB A</td><td>".number_format($row['FTB_A'])." </td></tr>
+      <tr><td>FTB B</td><td>".number_format($row['FTB_B'])." </td></tr>
+      <tr><td>Parent Payment Partnered</td><td>".number_format($row['PPP'])." </td></tr>
+      <tr><td>Parent Payment Single</td><td>".number_format($row['PPS'])." </td></tr>
+      <tr><td>NewStart</td><td>".number_format($row['Newstart'])." </td></tr>
+      <tr><td>Disability Pension</td><td>".number_format($row['DSP'])." </td></tr>
+      <tr><td>Austudy</td><td>".number_format($row['Austudy'])." </td></tr>
+      <tr><td>Carers Payment</td><td>".number_format($row['Carer_Payment'])." </td></tr>
+      <tr><td>Youth Allowance</td><td>".number_format(($row['YA_SA']+$row['YAO']))." </td></tr>
+
+
+      ";
+
+    }
+    echo"</tbody></table>";
+  }
+
+?>
+
+<?php
+if ( isset($_GET['Council']) )
+ {
+
+
+
+
+  }
 
 ?>
 
@@ -199,18 +269,44 @@ include'grants_table.php';
 }
 }
 ?>
+<?php
+if ( !isset($_GET['Council']) )
+ {
 
+
+
+$welfare_total = "SELECT council,sum(Age_pension+PPP+PPS+Newstart+DSP+Austudy+Carer_Payment+YA_SA+YAO) as total 
+FROM lga_welfare GROUP BY council ORDER BY 
+ sum(Age_pension+PPP+PPS+Newstart+DSP+Austudy+Carer_Payment+YA_SA+YAO) DESC ";
+$result = mysqli_query($db, $welfare_total );
+echo"<table class='council'><tbody><tr><td></td><td></td></tr>";
+  @$num_results = mysqli_num_rows($result);
+  if ($num_results >0)
+  
+ while ($row = $result->fetch_assoc()) 
+    {
+      echo"
+    
+<tr><td><a href='council.php?Council=".$row['council']."'>".$row['council']."</a></td><td>".number_format($row['total'])."</td></tr>";
+
+      
+
+    }
+    echo"</tbody></table>";
+  }
+
+?>
  <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?sensor=false'></script>
 <script type='text/javascript'>
 
 
     <?php
       
- if (  isset($_GET['Electorate']) && !isset($_GET['Postcode'])  )
+ if (  isset($_GET['Council']) && !isset($_GET['Program'])  )
  {
-$electorate=$_GET['Electorate'];
+
 $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where 
- Pcode IN (SELECT Postcode from grants where Electorate LIKE('%$electorate%') && Year='2014-15' ) ORDER BY Pcode ";
+ Pcode IN (SELECT Postcode from grants where Council ='$council' && Year='2014-15' ) ORDER BY Pcode ";
        $result = mysqli_query($db, $map);
  
     echo" var markers = [";
@@ -222,7 +318,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
         \"title\": \"".$row['Locality']."\",
         \"lat\": \"".$row['Lat']."\",
         \"lng\": \"".$row['Lon']."\",
-        \"description\": \"".$row['Locality']." <a href='locality.php?Program=".$_GET['Program']."&Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
+        \"description\": \"".$row['Locality']." <a href='locality.php?Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
       },
        ";
 }

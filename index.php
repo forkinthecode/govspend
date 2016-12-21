@@ -5,8 +5,10 @@
 <meta charset="UTF-8">
     <title>Little Bird</title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
+    <meta name="description" content="financial budget transparency, grants, tenders">
     <meta name="author" content="Rosie Williams">
+
+  
     </head>
     <body>
 <?php
@@ -16,7 +18,7 @@ include('login.php');
 //include('../inclusions.php');
 
 include('styles.php');
-
+ include('nav.php');
 
  
     
@@ -29,10 +31,7 @@ include('styles.php');
  
   <div class="jumbotron"> 
      
-<?php
-     include('nav.php');
 
-     ?>
   
         </div>
           
@@ -42,24 +41,25 @@ include('styles.php');
 <div class="page_width">
 
 
-<div class="left">
+<div class='left'>
 <h4>2014-15 FY Portfolio totals for General Government Spending </h4>
-<div class='box'>
+<!--<div class='box'>
 <p>Click on <a class='button' href='#popup_search'>Quick Search</a> or click <img src='outcome_search_large.png' height='40px'></img> icons to drill down.</p> 
 </div>
-<div id='popup_search'  class='overlay'>
-<div class='popup_search'>
-<div class='content' >
-<h2>Welcome to Australia's budget transparency project</h2>
-<p>Whack a postcode into the search box to find grants and tenders for that location or click<a class='close' href='#'>close</a></span>to display all budget data</p>
-<form class='overlaid' action='locality.php' target='_blank' method='GET'>
-                                <input type="text" name='Postcode' id='Postcode' placeholder="Search..." required>
-                                <button type="submit" value="Submit">Go</button>
+   <div id='popup_search'  class='overlay'>
+            <div class='popup_search'>
+                <div class='content' >
+              <h2>Welcome to Australia's budget transparency project</h2>
+              <p>Whack a postcode into the search box to find grants and tenders for that location or click<a class='close' href='#'>close</a></span>to display all budget data</p>
+              <form class='overlaid' action='locality.php' target='_blank' method='GET'>
+                                              <input type="text" name='Postcode' id='Postcode' placeholder="Search..." required>
+                                              <button type="submit" id='submit' value="Submit">Go</button>
 
-</form>
-</div>
-</div>
-</div>
+              </form>
+                </div>
+            </div>
+    </div>-->
+
 <?php
 $total = "SELECT *,sum(2014_15) FROM `fed_budget` group by Portfolio ORDER BY sum(2014_15) DESC ";
 $result = mysqli_query($db, $total );
@@ -67,8 +67,8 @@ echo"<div class='expand'>";
  while ($row = $result->fetch_assoc()) 
     {
 
-echo"<table class='basic' border='0'><tbody>
-  <tr><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'><img src='outcome_search_large.png' height='40px'></img></a></td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']." <span style='float:right'>$".number_format($row['sum(2014_15)']).",000</span></td></tr>
+echo"<table  border='0'><tbody>
+  <tr><td width='300px'><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td><td> <span style='float:right'>$".number_format($row['sum(2014_15)']).",000</span></td></tr>
 
  </tbody></table><br> ";
 }echo"</div>";

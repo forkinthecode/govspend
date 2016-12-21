@@ -17,7 +17,7 @@ include('login.php');
 
 include('styles.php');
 
-
+include('nav.php');
  
     
 
@@ -29,10 +29,7 @@ include('styles.php');
  
   <div class="jumbotron"> 
      
-<?php
-     include('nav.php');
 
-     ?>
   
         </div>
           
