@@ -26,7 +26,7 @@
 .council td:nth-of-type(odd) {  background:#eee; margin:5px; }
 .council td:nth-of-type(even) {  background:#cbdbd8; margin:5px; }
 .expand {height:400px; overflow:scroll; padding:2%;}
-
+.issues {}
 .mps {width:95%;}
 .reps {float:right; margin:1%; }
 .stats {width:95%; background:#eee;}
@@ -65,7 +65,7 @@
 
 .page_width { max-width:1250px; }
 .clear { clear:both;}
-table.right td{ text-align:right;}
+
 a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
 
 .wide {width:95%; padding:10px; font-size:15px; line-height:18px; border: 1px; border-style: dashed;  } 
