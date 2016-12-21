@@ -1,42 +1,6 @@
-<!--Budget Home-->
- <!DOCTYPE HTML>
-<html lang="en">
-  <head>
-<meta charset="UTF-8">
-    <title>Little Bird</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="Rosie Williams">
-    </head>
-    <body>
 <?php
-
-
-include('login.php');
-//include('../inclusions.php');
-
-include('styles.php');
-
-  include('nav.php');
- 
-    
-
+require'header.php';
 ?>
-
-  
-        
-                     
- 
-  <div class="jumbotron"> 
-    
-  
-        </div>
-          
-       
-
-          <div class='clear'></div>
-<div class="page_width">
-
 
         <div class="left">
 <?php
@@ -70,8 +34,8 @@ $result = mysqli_query($db, $grants );
 
  echo"<table class='basic' ><tbody>
  <tr>
- <td>Postcode</td>
- <td>Total Value</td>
+ <th>Postcode</th>
+ <th>Total Value</th>
  </tr>";
 
  while ($row = $result->fetch_assoc()) 
@@ -85,32 +49,7 @@ echo"<tr>
     }echo"</tbody></table>";
 }
  ?>
-  <?php/*
- if ( !isset($_GET['Postcode']) && !isset($_GET['Program']) )
- {
-echo"<h3>Total value of 14-15FY Commonwealth grants by Federal Electorate</h3>
-<br><p>Click on the electorate name to find details of all grants in that electorate</p>";
-$grants = "SELECT Electorate,sum(Funding) FROM grants
- WHERE Electorate!='' && Electorate NOT LIKE'%,%' && Year='2014-15' GROUP BY Electorate ORDER BY sum(Funding) DESC ";
-$result = mysqli_query($db, $grants );
-
- echo"<table class='basic' ><tbody>
- <tr>
- <td>Postcode</td>
- <td>Total Value</td>
- </tr>";
-
- while ($row = $result->fetch_assoc()) 
-    {
-echo"<tr>
-         <td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a>
-         </td>
-         <td>$".number_format($row['sum(Funding)'])."
-         </td>
-         </tr>";
-    }echo"</tbody></table>";
-}*/
- ?>
+  
 
  <?php
 if ( isset($_GET['Postcode']) )
@@ -188,10 +127,10 @@ $postcode=mysqli_real_escape_string ( $db , $data );
         
       
            echo"<br><h4>Statistics for 2014-15 Commonwealth Grants for $postcode</h4>
-  <table class='stats'><tbody><tr><td>Total value</td><td>Number</td><td>Average</td></tr>";
+  <table class='stats'><tbody><tr><th>Total value</th><th>Number</th><th>Average</th></tr>";
                while ($row = $result->fetch_assoc()) 
                     {
-                    echo"<td>$".number_format($row['total'])."</td>";
+                    echo"<th>$".number_format($row['total'])."</th>";
                     }
       
         
@@ -202,7 +141,7 @@ $postcode=mysqli_real_escape_string ( $db , $data );
             $result = mysqli_query($db, $grant_number);
              while ($row = $result->fetch_assoc()) 
                   { 
-                  echo"<td>".number_format($row['grant_number'])."</td>";
+                  echo"<th>".number_format($row['grant_number'])."</th>";
                   }
               
 
@@ -211,7 +150,7 @@ $postcode=mysqli_real_escape_string ( $db , $data );
                 $result = mysqli_query($db, $ave );
                  while ($row = $result->fetch_assoc()) 
                       {
-                      echo"<td>$".number_format($row['ave'])."</td></tr>";
+                      echo"<th>$".number_format($row['ave'])."</th></tr>";
                       }
                       echo"</tbody></table>
                       <br><h4>Breakdown of Commonwealth programs administering grants to $postcode</h2>
@@ -219,18 +158,21 @@ $postcode=mysqli_real_escape_string ( $db , $data );
                 $byprogram = "SELECT *,sum(Funding) FROM grants 
                  WHERE Postcode LIKE'%$postcode%' GROUP BY Program ";
                 $result = mysqli_query($db, $byprogram );
-                echo"<table style='width:95%'><tbody><tr><td>Total Value</td><td>Program Name</td></tr></tbody></table><br>";
+                echo"<table style='basic'>
+                <tbody>
+                <tr><th>Program Name</th><th>Total Value</th></tr>";
                  while ($row = $result->fetch_assoc()) 
                     {
                       
                    
-                echo"<table class='basic' ><tbody>
-                  <tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td>
-                  <td ><a href='locality.php?Program=".$row['Program']."&Postcode=".$row['Postcode']."'>".$row['Program']."</a></td>
-                  </tr>
-                  </tbody></table><br><hr class='short'><br> ";
+                echo"
+                 <tr>
+                  
+                  <td><a href='locality.php?Program=".$row['Program']."&Postcode=".$row['Postcode']."'>".$row['Program']."</a></td>
+                  <td>$".number_format($row['sum(Funding)'])."</td></tr>
+                  ";
 
-                   }
+                   }echo"</tbody></table><br><hr class='short'><br>"; 
   }
             
             
@@ -256,11 +198,12 @@ $postcode=mysqli_real_escape_string ( $db , $data );
 $agor = "SELECT * FROM `grants`
  WHERE Program LIKE'%$program%' ";
 $result = mysqli_query($db, $agor );
+echo"<table class='basic'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
       
    
-echo"<table class='basic'><tbody>
+echo"
  
   <tr><td><a href='locality.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
   <tr><td><a href='recipient.php?recipient=".$row['']."' target='_blank'>".$row['Recipient']."</a></td></tr>
@@ -268,9 +211,9 @@ echo"<table class='basic'><tbody>
   <tr><td><span style='float:right'>$".number_format($row['Funding'])."</span></td></tr>
   
 
- </tbody></table><br><hr class='short'><br> ";
+ ";
 
-}
+}echo" </tbody></table><br><hr class='short'><br>";
 
     
 }mysqli_free_result($result);
@@ -310,16 +253,7 @@ $result = mysqli_query($db, $agor );
     {
       
    
-echo"<table class='basic' ><tbody>
-  <tr><td>".$row['Component']."</td></tr>
-  <tr><td>".$row['Purpose']."</td></tr>
-
-  <tr><td><a href='portfolio.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
-  <tr><td>".$row['Locality'].", <a href='locality.php?Postcode=".$row['Postcode']."'>".$row['Postcode']."</a></td></tr>
-  <tr><td><span style='float:right'>$".number_format($row['Funding'])."</span></td></tr>
-  
-
- </tbody></table><br><hr class='short'><br> ";
+include'grants_table.php';
 
 }
 }

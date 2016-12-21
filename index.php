@@ -1,44 +1,7 @@
-<!--Budget Home-->
- <!DOCTYPE HTML>
-<html lang="en">
-  <head>
-<meta charset="UTF-8">
-    <title>Little Bird</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="financial budget transparency, grants, tenders">
-    <meta name="author" content="Rosie Williams">
-
-  
-    </head>
-    <body>
 <?php
-
-
-include('login.php');
-//include('../inclusions.php');
-
-include('styles.php');
- include('nav.php');
-
- 
-    
-
+require'header.php';
 ?>
 
-  
-        
-                     
- 
-  <div class="jumbotron"> 
-     
-
-  
-        </div>
-          
-       
-
-          <div class='clear'></div>
-<div class="page_width">
 
 
 <div class='left'>
@@ -63,15 +26,18 @@ include('styles.php');
 <?php
 $total = "SELECT *,sum(2014_15) FROM `fed_budget` group by Portfolio ORDER BY sum(2014_15) DESC ";
 $result = mysqli_query($db, $total );
-echo"<div class='expand'>";
+echo"<div class='expand'><table class='wide' border='0'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 
-echo"<table  border='0'><tbody>
-  <tr><td width='300px'><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td><td> <span style='float:right'>$".number_format($row['sum(2014_15)']).",000</span></td></tr>
+echo"
+  <tr>
 
- </tbody></table><br> ";
-}echo"</div>";
+
+ <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td><td> $".number_format($row['sum(2014_15)']).",000</td> 
+</tr>
+ ";
+}echo"</tbody></table><br> </div>";
 
 ?>
 
@@ -101,19 +67,19 @@ echo"<table  border='0'><tbody>
 
 <h4>2014-15 FY Portfolio totals for Commonwealth Grants Funding </h4>
 <?php
-$total = "SELECT Portfolio,sum(Funding) FROM `grants` WHERE Year='2014-15' && Portfolio !='' group by Portfolio ORDER BY sum(Funding) DESC ";
+$total = "SELECT Portfolio,sum(Funding) FROM `grants` WHERE Year='2014-15' && Portfolio !='' 
+group by Portfolio ORDER BY sum(Funding) DESC ";
 $result = mysqli_query($db, $total );
+echo"
+ <table class='grants' border='0'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 
-echo"<table class='basic' border='0'><tbody>
-  <tr><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td></tr>
-
-</td></tr>
-    <tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</td></span></tr>
-
- </tbody></table><br><hr class='short'><br> ";
-}
+echo"
+ 
+  <tr><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td><td>$".number_format($row['sum(Funding)'])."</td></tr>
+";
+}echo" </tbody></table><br><hr class='short'><br> ";
 
 ?>
 

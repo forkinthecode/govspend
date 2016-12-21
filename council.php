@@ -1,42 +1,7 @@
-<!--Budget Home-->
- <!DOCTYPE HTML>
-<html lang="en">
-  <head>
-<meta charset="UTF-8">
-    <title>Little Bird</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="Rosie Williams">
-    </head>
-    <body>
 <?php
-
-
-include('login.php');
-//include('../inclusions.php');
-
-include('styles.php');
-
- include('nav.php');
- 
-    
-
+require'header.php';
 ?>
 
-  
-        
-                     
- 
-  <div class="jumbotron"> 
-     
-
-  
-        </div>
-          
-       
-
-          <div class='clear'></div>
-<div class="page_width">
 
 
         <div class="left">
@@ -195,18 +160,24 @@ $seifa = "SELECT *,sum(Funding) FROM grants WHERE Council ='$council' && Year='2
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
   if ($num_results <1)
-  echo"<h4>There are no Commonwealth grant recipients with addresses in the $council council area</h4>";
+  echo"<h4>There are no Commonwealth grant recipients with addresses in the $council council area</h4>
+<table class='basic'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 
-echo"
-
-<table class='basic' ><tbody>
-
-  <tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td>
-  <td width='80%'><a href='council.php?Council=$council&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
- </tbody></table><br><hr class='short'><br> ";
-}
+echo"<tr>
+  <td>
+       <img style='height:15px; opacity:0.4' src='images/chevron.png'></img>
+  </td>
+  <td>
+      <a href='council.php?Council=$council&Program=".$row['Program']."'>".$row['Program']."</a>
+  </td>
+  <td>
+        $".number_format($row['sum(Funding)'])."
+  </td>
+  </tr>
+";
+}echo" </tbody></table><br><hr class='short'><br> ";
 }
 
 ?>
@@ -279,7 +250,7 @@ $welfare_total = "SELECT council,sum(Age_pension+PPP+PPS+Newstart+DSP+Austudy+Ca
 FROM lga_welfare GROUP BY council ORDER BY 
  sum(Age_pension+PPP+PPS+Newstart+DSP+Austudy+Carer_Payment+YA_SA+YAO) DESC ";
 $result = mysqli_query($db, $welfare_total );
-echo"<table class='council'><tbody><tr><td></td><td></td></tr>";
+echo"<table class='council'><tbody><tr><td>Council</td><td>Welfare Recipients</td></tr>";
   @$num_results = mysqli_num_rows($result);
   if ($num_results >0)
   
@@ -287,7 +258,8 @@ echo"<table class='council'><tbody><tr><td></td><td></td></tr>";
     {
       echo"
     
-<tr><td><a href='council.php?Council=".$row['council']."'>".$row['council']."</a></td><td>".number_format($row['total'])."</td></tr>";
+<tr><td><a href='council.php?Council=".$row['council']."'>".$row['council']."</a></td>
+<td>".number_format($row['total'])."</td></tr>";
 
       
 
@@ -305,8 +277,7 @@ echo"<table class='council'><tbody><tr><td></td><td></td></tr>";
  if (  isset($_GET['Council']) && !isset($_GET['Program'])  )
  {
 
-$map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where 
- Pcode IN (SELECT Postcode from grants where Council ='$council' && Year='2014-15' ) ORDER BY Pcode ";
+$map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN (SELECT Postcode from grants where Council ='$council' && Year='2014-15' && Locality !=',') ORDER BY Pcode ";
        $result = mysqli_query($db, $map);
  
     echo" var markers = [";
@@ -340,7 +311,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
     function LoadMap() {
         var mapOptions = {
             center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 6,
+            zoom: 13,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("Map"), mapOptions);

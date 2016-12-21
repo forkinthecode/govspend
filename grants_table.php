@@ -12,6 +12,6 @@ echo"
   
   <tr><td>Dates:</td><td>".$row['Approved']."-".$row['End']." <span style='float:right'>(".number_format($row['Term'])."months)</span></td></tr>
   <tr><td></td><td>Month:$".number_format($row['Funding']/$row['Term'])."<span style='float:right'>Total: $".number_format($row['Funding'])."</span></td></tr>
- </tbody></table><br><hr><br> ";
+ </tbody></table><br> ";
 
  ?>

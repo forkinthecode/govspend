@@ -13,6 +13,7 @@
     user-select: none;
 }
  
+ select {border:none; width:75%; font-size:18px; height:25px; padding:10px;}
    /*
        input,select { width:35%; font-size:18px; height:25px;}
        input, select { height:30px; display:inline; 
@@ -23,10 +24,11 @@
                                       }*/
 .council { margin-top:10px;width:95%; text-align:center;}
 .council td:nth-of-type(odd) {  background:#eee; margin:5px; }
+.council td:nth-of-type(even) {  background:#cbdbd8; margin:5px; }
 .expand {height:400px; overflow:scroll; padding:2%;}
-.wide {width:95%; } 
-.wide td:nth-of-type(even) {  text-align:right;  }
-.reps {float:right;height:170px; width:125px; margin:1%; }
+
+.mps {width:95%;}
+.reps {float:right; margin:1%; }
 .stats {width:95%; background:#eee;}
 .stats td:nth-of-type(even) {   padding:10px;  }
 .stats td:nth-of-type(odd) {  padding:10px;   }
@@ -41,27 +43,43 @@
   
 }
 
-@media (min-width: 520px) and (max-width: 699px)   {
+@media (min-width: 520px) and (max-width: 700px)   {
 
     .right {float:right; width:95%; }
     .left  {float:left; width:95%; margin-left:2%; }
 
   
 }
-@media (min-width: 700px) {
+@media (min-width: 701px)  {
  
-.right {float:right; width:450px; }
-.left  {float:left; width:555px; margin-left:2%; }
+.right {float:right; width:40%; }
+.left  {float:left; width:52%; margin-left:2%; }
 
       
 }
-.page_width {max-width:100%; }
-.clear {clear:both;}
-table.right td{text-align:right;}
+
+
+   
+}
+
+
+.page_width { max-width:1250px; }
+.clear { clear:both;}
+table.right td{ text-align:right;}
 a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
-.basic {width:95%;}
-.basic td:nth-of-type(even) {  background:#cbdbd8; padding:10px; border-radius:5px; border: 1px; width:400px; }
-.basic td:nth-of-type(odd) {  padding:10px; border-radius:5px; width:200px; text-align:right; }
+
+.wide {width:95%; padding:10px; font-size:15px; line-height:18px; border: 1px; border-style: dashed;  } 
+.wide td:nth-of-type(even) {   background:#cbdbd8; text-align:right;}
+.wide tr:nth-of-type(even) {   background:#eee; }
+
+
+.basic { width:90%;   border: solid 1px #dcdcdc; padding:10px;}
+.basic tr:nth-of-type(even) {  background:#cbdbd8; padding:10px; border-radius:5px; border: 1px; width:400px; line-height:18px; }
+.basic tr:nth-of-type(odd) {  padding:10px; border-radius:5px; line-height:18px;}
+.basic td:nth-of-type(odd) {  text-align:right;}
+.grants {width:95%; line-height:18px;}
+.grants td:nth-of-type(even) {   text-align:right;}
+
 .overlaid { position: relative; top: 80px;  left: 30px; }
 .overlaid input[type="text"] {
   width:60%;

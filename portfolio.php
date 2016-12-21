@@ -1,41 +1,6 @@
-<!--Budget Home-->
- <!DOCTYPE HTML>
-<html lang="en">
-  <head>
-<meta charset="UTF-8">
-    <title>Little Bird</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="Rosie Williams">
-    </head>
-    <body>
 <?php
-
-
-include('login.php');
-//include('../inclusions.php');
-
-include('styles.php');
-
-
-  include('nav.php');
-    
-
+require'header.php';
 ?>
-
-  
-        
-                     
- 
-  <div class="jumbotron"> 
-
-
-        </div>
-          
-       
-
-          <div class='clear'></div>
-<div class="page_width">
 
 
         <div class="left">
@@ -51,7 +16,7 @@ include('styles.php');
 
     
 <?php
- if ( isset($_GET['Portfolio']) )
+ if ( isset($_GET['Portfolio'])  )
  {
   
                    $portfolio = $_GET['Portfolio']; 
@@ -59,29 +24,45 @@ include('styles.php');
                  //  $portfolio=mysqli_real_escape_string($portfolio);
 
  echo"<h4>Programs administered by the $portfolio Portfolio</h2>";
-$agor = "SELECT sum(2014_15),Program FROM `fed_budget`
+$agor = "SELECT sum(2014_15),Portfolio,Program FROM `fed_budget`
  WHERE Portfolio LIKE'%$portfolio%' GROUP BY Program ORDER BY Agency,Program";
 $result = mysqli_query($db, $agor );
+echo"<table class='wide'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
       
    
-echo"<table class='wide'><tbody>
+echo"
  
-  <tr><td><a href='portfolio.php?Program=".$row['Program']."'>".$row['Program']."</a></td><td>$".number_format($row['sum(2014_15)']).",000</td></tr>
+  <tr><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td>
+  <td>$".number_format($row['sum(2014_15)']).",000</td></tr>
 
-  
-
- </tbody></table><hr><br><br> ";
-
+  ";
 }
+echo"
+ </tbody></table><br> <h4>Notes</h4>
+    <p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
+<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identifical to Program name.</p>
+<p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
+<p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that critera.</p> ";
+
+
 
     
 }mysqli_free_result($result);
 
         ?>
   
-           
+     
+
+
+ 
+
+ 
+
+ </div>
+ <div class='right'>
+
  <?php
  if ( isset($_GET['Program']) || isset($_GET['Component']))
  {
@@ -94,20 +75,21 @@ echo"<table class='wide'><tbody>
 $agor = "SELECT * FROM `fed_budget`
  WHERE Program='$program' group by Program";
 $result = mysqli_query($db, $agor );
-
+echo"  <table class='basic'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
-       echo" <table class='basic'>
-              <tr><td>Portfolio</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."' target='_blank'>".$row['Portfolio']."</a></td></tr>
-       <tr><td>Agency</td><td><a href='portfolio.php?fAgency=".$row['Agency']."' target='_blank'>".$row['Agency']."</a></td></tr>
-  <tr><td>Program</td><td><a href='portfolio.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
-   <tr><td>Outcome</td><td>".$row['Outcome']."</td></tr></tbody><table>";
+       echo" 
+  
+  <tr><td>Portfolio</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."' target='_blank'>".$row['Portfolio']."</a></td></tr>
+  <tr><td>Agency</td><td><a href='portfolio.php?Agency=".$row['Agency']."' target='_blank'>".$row['Agency']."</a></td></tr>
+  <tr><td>Program</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
+  <tr><td>Outcome</td><td>".$row['Outcome']."</td></tr>";
 
-}
+}echo"</tbody><table>";
 
 
 
-$component = "SELECT Component,Outcome FROM `fed_budget`
+$component = "SELECT Component,Outcome,Portfolio FROM `fed_budget`
  WHERE Program='$program' ";
 $result = mysqli_query($db, $component );
 
@@ -115,18 +97,18 @@ $result = mysqli_query($db, $component );
 
         if ($num_results >0)
         {
-          echo"<h4>($num_results) Components:</h4>";
+          echo"<h4>($num_results) Components:</h4>
+        
+          <table class='component'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
-echo"<table class='basic'><tr><td><a href='portfolio.php?Program=$program&Component=".$row['Component']."'><img src='outcome_search_large.png' height='40px'></img></a></td><td><a href='portfolio.php?Program=$program&Component=".$row['Component']."'>".$row['Component']."</a></td><tr></tbody></table><br>
+echo"<tr><td><img style='height:15px; opacity:0.4' src='images/chevron.png'></img></td>
+<td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=$program&Component=".$row['Component']."'>".$row['Component']."</a></td>
+</tr>
  
 ";
-    }
-    echo"<h4>Notes</h4>
-    <p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
-<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identifical to Program name.</p>
-<p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
-<p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that critera.</p>";
+    }echo"</tbody></table><br>";
+   
    
 }else "No results for $program";
 
@@ -135,72 +117,6 @@ echo"<table class='basic'><tr><td><a href='portfolio.php?Program=$program&Compon
 
         ?>
       
- <?php
- if ( isset($_GET['Portfolio']) )
- {
-  
-                   $portfolio = $_GET['Portfolio']; 
-                   
-                 //  $portfolio=mysqli_real_escape_string($portfolio);
-
- echo"<h4>Programs administered by the $portfolio Portfolio</h2>";
-$agor = "SELECT *,sum(2014_15) FROM `fed_budget`
- WHERE Portfolio LIKE'%$portfolio%' GROUP BY Program ORDER BY Agency,Program";
-$result = mysqli_query($db, $agor );
- while ($row = $result->fetch_assoc()) 
-    {
-      
-   
-echo"<table class='basic'><tbody>
- 
-  <tr><td>Agency</td><td><a href='function.php?function=".$row['Agency']."' target='_blank'>".$row['Agency']."</a></td></tr>
-  <tr><td>Program</td><td><a href='portfolio.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
-   <tr><td>Goals</td><td>".$row['Outcome']."</td></tr>
-<tr><td>Appropriation Type</td><td> ".$row['Appropriation_Type']."</td></tr>
-  <tr><td></td><td><span style='float:right'>$".number_format($row['sum(2014_15)']).",000</span></td></tr>
-  <tr><td>".$row['source_table']."</td><td> ".$row['source']."</td></tr>
-  
-
- </tbody></table><hr><br><br> ";
-
-}
-
-    
-}mysqli_free_result($result);
-
-        ?>
-
-
-
- 
-
- 
-
- </div>
- <div class='right'>
-<?php
- if ( !isset($_GET['Portfolio']) )
- {
-  echo"
-<h4>2014-15 FY Portfolio totals for Commonwealth Grants Funding </h4>";
-
-$total = "SELECT Portfolio,sum(Funding) FROM `grants` WHERE Year='2014-15' && Portfolio !='' group by Portfolio ORDER BY sum(Funding) DESC ";
-$result = mysqli_query($db, $total );
- while ($row = $result->fetch_assoc()) 
-    {
-
-echo"<table class='basic' border='0'><tbody>
-  <tr><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td></tr>
-
-</td></tr>
-    <tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</td></span></tr>
-
- </tbody></table><br><hr class='short'><br> ";
-}
-}
-
-?>
-
 
 <?php
  if ( isset($_GET['Component']) )
@@ -220,7 +136,7 @@ echo"<h4>Component Details</h4><table class='basic'><tbody>
   <tr><td>".$row['source_table']."</td><td> ".$row['source']."</td></tr>
   
 
- </tbody></table><hr><br><br> ";
+ </tbody></table><br><br> ";
 
 }
 }mysqli_free_result($result);
@@ -245,8 +161,8 @@ $result = mysqli_query($db, $grants);
            echo"<table class='basic' ><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
-      echo"<tr><td>$".number_format($row['sum(Funding)'])."</td>
-      <td><a href='portfolio.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>";
+      echo"<tr>
+      <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td><td>$".number_format($row['sum(Funding)'])."</td></tr>";
 
 
     }
@@ -299,6 +215,9 @@ include'map.php';
  }
 
  ?>
+
+
+
 
 
 </div></div>
