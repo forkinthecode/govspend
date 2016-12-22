@@ -26,12 +26,12 @@
 .council td:nth-of-type(odd) {  background:#eee; margin:5px; }
 .council td:nth-of-type(even) {  background:#cbdbd8; margin:5px; }
 .expand {height:400px; overflow:scroll; padding:2%;}
-.issues {}
+.issues {display:inline;}
 .mps {width:95%;}
 .reps {float:right; margin:1%; }
-.stats {width:95%; background:#eee;}
-.stats td:nth-of-type(even) {   padding:10px;  }
-.stats td:nth-of-type(odd) {  padding:10px;   }
+.stats {width:95%; font-size:15px;}
+.stats td:nth-of-type(even) {   padding:10px; line-height:24px; background:#eee;}
+.stats td:nth-of-type(odd) {  padding:10px;  line-height:24px; background:#cbdbd8; }
      
 
 @media (max-width: 519px) {
@@ -77,6 +77,7 @@ a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
 .basic tr:nth-of-type(even) {  background:#cbdbd8; padding:10px; border-radius:5px; border: 1px; width:400px; line-height:18px; }
 .basic tr:nth-of-type(odd) {  padding:10px; border-radius:5px; line-height:18px;}
 .basic td:nth-of-type(odd) {  text-align:right;}
+.basic td {  padding:2px; margin-left:5px;margin-right:5px;}
 .grants {width:95%; line-height:18px;}
 .grants td:nth-of-type(even) {   text-align:right;}
 

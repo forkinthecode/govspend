@@ -39,6 +39,7 @@ echo"
     }echo" </tbody></table><br></div>";
 }
 ?>
+
  
 <?php
 if ( isset($_GET['Recipient']) )
@@ -46,6 +47,7 @@ if ( isset($_GET['Recipient']) )
 $data = $_GET['Recipient']; 
 $recipient=mysqli_real_escape_string ( $db , $data );
 echo"<h4>Statistics for Commonwealth Grants received by $recipient</h4>
+	
 ";
 $seifa = "SELECT sum(Funding),count(Funding) 
 as count_ ,(sum(Funding)/count(Funding)) as Ave FROM grants WHERE Recipient ='$recipient'
@@ -62,12 +64,41 @@ else{
      {
 
      echo"<tr><th>$".number_format($row['sum(Funding)'])."</th><th>".$row['count_']."</th><th>".number_format($row['Ave'])."</th></tr>";
-     }echo"  </tbody></table><br> ";
+     }echo"  </tbody></table><p>*With approval dates during the 2014-15 FY</p><br> ";
     }
 }
 
 ?>
+<?php
+if ( isset($_GET['Recipient']) )
+ {
+$data = $_GET['Recipient']; 
+$recipient=mysqli_real_escape_string ( $db , $data );
+$query="SELECT * FROM grants WHERE Recipient='$recipient' GROUP BY Recipient";
 
+$result = mysqli_query($db, $query );
+@$num_results = mysqli_num_rows($result);
+  if ($num_results <1)
+  {
+  //echo"<h4>There are no Commonwealth grant recipients named $recipient</h4>";
+  }
+else{
+  echo"<H4>Commonwealth Grants data information for $recipient</h4><table class='stats'><tbody>";
+ while ($row = $result->fetch_assoc()) 
+     {
+echo"
+
+
+  <tr><td>Recipient:</td><td><a href='recipient.php?Recipient=".$row['Recipient']."'>".trim($row['Recipient'])."</a></td></tr>
+  <tr><td>Address:</td><td>".$row['Locality']." <a href='locality.php?Postcode=".$row['Postcode']."'>".$row['Postcode']."</a></td></tr>
+  <tr><td>Electorate:</td><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td></tr>
+  <tr><td>Council:</td><td> <a href='council.php?Council=".$row['Council']."'>".$row['Council']."</a></td></tr>";
+
+     }echo"</tbody></table>";
+   }
+
+}
+?>
 
 <?php
 if ( isset($_GET['Recipient']) )
@@ -85,7 +116,7 @@ $result = mysqli_query($db, $charities );
   {
      while ($row = $result->fetch_assoc())
            {
-            echo"
+            echo"<h4>ACNC data for $recipient</h4>
           <table class='basic'><tbody>
                
         <tr><td>ABN </td><td>".$row['ABN']."</td></tr>       

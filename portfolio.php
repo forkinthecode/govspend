@@ -162,7 +162,8 @@ $result = mysqli_query($db, $grants);
  while ($row = $result->fetch_assoc()) 
     {
       echo"<tr>
-      <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td><td>$".number_format($row['sum(Funding)'])."</td></tr>";
+      <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td>
+	  <td>$".number_format($row['sum(Funding)'])."</td></tr>";
 
 
     }
@@ -193,7 +194,8 @@ $result = mysqli_query($db, $grants );
         if ($num_results >0)
         {
           echo"
-  <h4>There are $num_results grants administered under the $program Program in the 14-15 FY:</h4><br><h4>Component Details</h4><div class='expand'>";
+  <h4>There are $num_results grants administered under the $program Program in the 14-15 FY:</h4><br>
+		  <h4>Component Details</h4><div class='expand'>";
  while ($row = $result->fetch_assoc()) 
     {
       

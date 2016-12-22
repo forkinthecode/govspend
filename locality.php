@@ -56,7 +56,7 @@ if ( isset($_GET['Postcode']) )
  {
 $data = $_GET['Postcode']; 
 $postcode=mysqli_real_escape_string ( $db , $data );
-
+$seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
    if ($num_results <1){
@@ -126,7 +126,7 @@ $postcode=mysqli_real_escape_string ( $db , $data );
         @$num_results = mysqli_num_rows($result);
         
       
-           echo"<br><h4>Statistics for 2014-15 Commonwealth Grants for $postcode</h4>
+           echo"<br><h3>Statistics for 2014-15 Commonwealth Grants for $postcode</h3>
   <table class='stats'><tbody><tr><th>Total value</th><th>Number</th><th>Average</th></tr>";
                while ($row = $result->fetch_assoc()) 
                     {
@@ -153,7 +153,7 @@ $postcode=mysqli_real_escape_string ( $db , $data );
                       echo"<th>$".number_format($row['ave'])."</th></tr>";
                       }
                       echo"</tbody></table>
-                      <br><h4>Breakdown of Commonwealth programs administering grants to $postcode</h2>
+                      <br><h3>Breakdown of Commonwealth programs administering grants to $postcode</h3>
                  <p>Click on the program name to get the recipients for that program in $postcode</p>";
                 $byprogram = "SELECT *,sum(Funding) FROM grants 
                  WHERE Postcode LIKE'%$postcode%' GROUP BY Program ";
@@ -183,47 +183,6 @@ $postcode=mysqli_real_escape_string ( $db , $data );
 
        
 
-
- 
-
- <?php
- if ( isset($_GET['Program']) && isset($_GET['Postcode']) )
- {
-  
-                   $program = $_GET['Program']; 
-                   
-                   $program=mysqli_real_escape_string($program);
-
- echo"<h4>All recipients of grants for $program</h2>";
-$agor = "SELECT * FROM `grants`
- WHERE Program LIKE'%$program%' ";
-$result = mysqli_query($db, $agor );
-echo"<table class='basic'><tbody>";
- while ($row = $result->fetch_assoc()) 
-    {
-      
-   
-echo"
- 
-  <tr><td><a href='locality.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
-  <tr><td><a href='recipient.php?recipient=".$row['']."' target='_blank'>".$row['Recipient']."</a></td></tr>
-  <tr><td>".$row['Locality'].",".$row['Postcode']."</a></td></tr>
-  <tr><td><span style='float:right'>$".number_format($row['Funding'])."</span></td></tr>
-  
-
- ";
-
-}echo" </tbody></table><br><hr class='short'><br>";
-
-    
-}mysqli_free_result($result);
-
-        ?>
-
-  
-           
-
-      
 
  
 
@@ -292,7 +251,7 @@ echo"<table class='basic' ><tbody>
   <tr><td><td></td><td><span style='float:right'>$".number_format($row['Funding'])."</span></td></tr>
   
 
- </tbody></table><br><hr class='short'><br> ";
+ </tbody></table><br>";
 
 }
 

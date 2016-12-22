@@ -21,7 +21,7 @@ $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
   if ($num_results >0)
 {
-  echo"<tr><td>No SEIFA results</td><td>for $council</td><td></td></tr>";
+  //echo"<tr><td>No SEIFA results</td><td>for $council</td><td></td></tr>";
  while ($row = $result->fetch_assoc()) 
     {
       echo"<tr>
