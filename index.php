@@ -5,7 +5,7 @@ require'header.php';
 
 
 <div class='left'>
-<h4>2014-15 FY Portfolio totals for General Government Spending </h4>
+<h4>2015-16 FY Portfolio totals for General Government Spending </h4>
 <!--<div class='box'>
 <p>Click on <a class='button' href='#popup_search'>Quick Search</a> or click <img src='outcome_search_large.png' height='40px'></img> icons to drill down.</p> 
 </div>
@@ -24,7 +24,7 @@ require'header.php';
     </div>-->
 
 <?php
-$total = "SELECT *,sum(2014_15) FROM `fed_budget` group by Portfolio ORDER BY sum(2014_15) DESC ";
+$total = "SELECT *,sum(current) FROM `budget_table15_16` group by Portfolio ORDER BY sum(current) DESC ";
 $result = mysqli_query($db, $total );
 echo"<div class='expand'><table class='wide' border='0'><tbody>";
  while ($row = $result->fetch_assoc()) 
@@ -34,7 +34,7 @@ echo"
   <tr>
 
 
- <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td><td> $".number_format($row['sum(2014_15)']).",000</td> 
+ <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td><td> $".number_format($row['sum(current)']).",000</td> 
 </tr>
  ";
 }echo"</tbody></table><br> </div>";
@@ -65,9 +65,9 @@ echo"
  <div class='right'>
 
 
-<h4>2014-15 FY Portfolio totals for Commonwealth Grants Funding </h4>
+<h4>2015-16 FY Portfolio totals for Commonwealth Grants Funding </h4>
 <?php
-$total = "SELECT Portfolio,sum(Funding) FROM `grants` WHERE Year='2014-15' && Portfolio !='' 
+$total = "SELECT Portfolio,sum(Funding) FROM `grants` WHERE Year='2015-16' && Portfolio !='' 
 group by Portfolio ORDER BY sum(Funding) DESC ";
 $result = mysqli_query($db, $total );
 echo"

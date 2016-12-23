@@ -16,7 +16,7 @@ require'header.php';
  { 
 echo"<h4>Total Commonwealth Grants by Recipient</h4>";
 $total = "SELECT Recipient,sum(Funding),count(Funding) as counts FROM `grants` WHERE 
-  Year='2014-15' && Recipient!='' GROUP BY Recipient ORDER BY sum(Funding) DESC ";
+  Year='2015-16' && Recipient!='' GROUP BY Recipient ORDER BY sum(Funding) DESC ";
  echo"<div class='expand'>
  <table class='wide'>
  <tbody>
@@ -51,7 +51,7 @@ echo"<h4>Statistics for Commonwealth Grants received by $recipient</h4>
 ";
 $seifa = "SELECT sum(Funding),count(Funding) 
 as count_ ,(sum(Funding)/count(Funding)) as Ave FROM grants WHERE Recipient ='$recipient'
- && Year='2014-15'  ";
+ && Year='2015-16'  ";
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
   if ($num_results <1)
@@ -200,8 +200,8 @@ if ( isset($_GET['Recipient']) )
 $data = $_GET['Recipient']; 
 $recipient=mysqli_real_escape_string ( $db , $data );
 echo"<h4>Commonwealth Grants received by $recipient</h4>
-<p>(With approval dates within the 2014-15 financial year)</p>";
-$seifa = "SELECT *,sum(Funding) FROM grants WHERE Recipient ='$recipient' && Year='2014-15' GROUP BY Program ";
+<p>(With approval dates within the 2015-16 financial year)</p>";
+$seifa = "SELECT *,sum(Funding) FROM grants WHERE Recipient ='$recipient' && Year='2015-16' GROUP BY Program ";
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
   if ($num_results <1)
@@ -255,7 +255,7 @@ echo"
 $total = "SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
          DATE_FORMAT(End,  '%D %b %Y' ) AS End,
          DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` 
-         WHERE Program like'%$program%' && Year='2014-15' && Recipient ='$recipient'
+         WHERE Program like'%$program%' && Year='2015-16' && Recipient ='$recipient'
             ";
 $result = mysqli_query($db, $total );
  @$num_results = mysqli_num_rows($result);
@@ -283,7 +283,7 @@ include'grants_table.php';
  {
 
 $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN 
-(SELECT Postcode from grants where Recipient ='$recipient' && Year='2014-15' 
+(SELECT Postcode from grants where Recipient ='$recipient' && Year='2015-16' 
   && Locality !=',') ORDER BY Pcode ";
        $result = mysqli_query($db, $map);
  

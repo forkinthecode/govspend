@@ -1,3 +1,4 @@
+
 <nav id="menu">
         
         <input type="checkbox" id="toggle-nav"/>
@@ -15,13 +16,18 @@
             <li><a href="council.php">Council</a></li>
             <li><a href="electorate.php">Electorate</a></li>
             <li><a href="recipient.php">Recipient</a></li>
+			<hr>
+			<li><a href="agency.php">Agency</a></li>
+			
                               
 
 
 
           </ul>
 
-
         </div>
         
       </nav>
+	  <hr>
+	  <h1 style='float:right'>GovSpend 2015-16</h1>
+	  

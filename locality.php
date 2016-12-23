@@ -25,11 +25,12 @@ echo"<a href='council.php?Council=".$row['council']."'>".$row['council']."</a> c
       <?php
  if ( !isset($_GET['Postcode']) && !isset($_GET['Program']) )
  {
-echo"<h3>Total value of 14-15FY Commonwealth grants by Postcode</h3>
+echo"<h3>Total value of 15-16FY Commonwealth grants by Postcode</h3>
 <br><p>Top 15 Postcodes by value are below. Click on the electorate name to find details of all grants in that Postcode or enter postcode into the search box to find results
 for other Postcodes.</p>";
 $grants = "SELECT Locality,Postcode,sum(Funding) FROM grants
- WHERE Electorate!='' && Electorate NOT LIKE'%,%' && Postcode !='Multiple' && Year='2014-15' GROUP BY Postcode ORDER BY sum(Funding) DESC LIMIT 15 ";
+ WHERE Electorate!='' && Electorate NOT LIKE'%,%' && 
+Postcode !='Multiple' && Year='2015-16' GROUP BY Postcode ORDER BY sum(Funding) DESC LIMIT 15 ";
 $result = mysqli_query($db, $grants );
 
  echo"<table class='basic' ><tbody>
@@ -96,7 +97,29 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
     
 }
 ?>
+    <div class='clear'></div>
+  <?php
+ if ( isset($_GET['Program']) )
+ {
+	$program= $_GET['Program'];
 
+	 $query="SELECT * from budget_table15_16 where Program like '%".$_GET['Program']."%' GROUP BY Program";
+     $result = mysqli_query($db, $query );
+	 echo"  <table class='basic'><tbody>";
+	  while ($row = $result->fetch_assoc()) 
+	     {
+	    echo" 
+  
+	   <tr><td>Portfolio</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."' target='_blank'>".$row['Portfolio']."</a></td></tr>
+	   <tr><td>Agency</td><td><a href='agency.php?Agency=".$row['Agency']."' target='_blank'>".$row['Agency']."</a></td></tr>
+	   <tr><td>Program</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
+	   <tr><td>Outcome</td><td>".$row['Outcome']."</td></tr>";
+
+	 }echo"</tbody><table>";
+	
+}
+ 
+ ?>
 
     <div class='clear'></div>
   <?php
@@ -126,7 +149,7 @@ $postcode=mysqli_real_escape_string ( $db , $data );
         @$num_results = mysqli_num_rows($result);
         
       
-           echo"<br><h3>Statistics for 2014-15 Commonwealth Grants for $postcode</h3>
+           echo"<br><h3>Statistics for 2015-16 Commonwealth Grants for $postcode</h3>
   <table class='stats'><tbody><tr><th>Total value</th><th>Number</th><th>Average</th></tr>";
                while ($row = $result->fetch_assoc()) 
                     {
@@ -184,7 +207,35 @@ $postcode=mysqli_real_escape_string ( $db , $data );
        
 
 
+    <?php
+      
+ if (  isset($_GET['Program']) && !isset($_GET['Postcode']))
+ {
+	$program=$_GET['Program'];
+	$query="SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
+         DATE_FORMAT(End,  '%D %b %Y' ) AS End,
+         DATEDIFF(END,APPROVED)/30 AS Term from grants where Program like'%$program%' ORDER BY Postcode "; 
+	$result = mysqli_query($db, $query );
+	@$num_results = mysqli_num_rows($result);
+	         if ($num_results<0)
+	              {
+					  echo"<h4>There are no grants administered under the $program Program</h4>"; 
+				  }
+				  else
+				  {
+	echo"<h4>There are ".number_format($num_results)." grants approved in the 2015-16 FY for $program</h4> <p>Click on the map icon to reveal postcode. Click on the Postcode to display grants for the program in that location</p> ";
+    while ($row = $result->fetch_assoc()) 
+       {
+      
+   
+   include'grants_table.php';
+
+   }
+}
+	
+ }
  
+ ?>
 
  
 
@@ -201,7 +252,9 @@ $postcode=mysqli_real_escape_string ( $db , $data );
 
 
 
-$agor = "SELECT * FROM grants 
+$agor = "SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
+         DATE_FORMAT(End,  '%D %b %Y' ) AS End,
+         DATEDIFF(END,APPROVED)/30 AS Term  FROM grants 
  WHERE Postcode LIKE'%$postcode%' order by Funding DESC";
 $result = mysqli_query($db, $agor );
 @$num_results = mysqli_num_rows($result);
@@ -229,13 +282,16 @@ include'grants_table.php';
   
   $postcode = $_GET['Postcode']; 
   $program = $_GET['Program']; 
-                   
-                 //  $portfolio=mysqli_real_escape_string($portfolio);
 
- echo"<h4>Grant recipients for $program in Postcode $postcode</h2>";
-$agor = "SELECT * FROM grants 
- WHERE Postcode LIKE'%$postcode%' && Program LIKE'%$program%' ";
-$result = mysqli_query($db, $agor );
+ echo"<h4>Grant recipients for the $program  Program in Postcode $postcode</h2>";
+$grants = "SELECT * FROM grants 
+ WHERE Postcode LIKE'%$postcode%' && Program LIKE'%$program%' && Year='2015-16'";
+$result = mysqli_query($db, $grants );
+@$num_results = mysqli_num_rows($result);
+         if ($num_results>0)
+              { 
+				  
+				  
  while ($row = $result->fetch_assoc()) 
     {
       
@@ -244,15 +300,20 @@ echo"<table class='basic' ><tbody>
  
  
   <tr><td>Program:</td><td><a href='locality.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
-  <tr><td>Recipient</td><td><a href='locality.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
+  <tr><td>Recipient</td><td><a href='recipient.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
   <tr><td>Component:</td><td>".$row['Component']."</td></tr>
   <tr><td>Purpose:</td><td>".$row['Purpose']."</td></tr>
   <tr><td>Dates:</td><td>".$row['Approved']."-".$row['End']." months</td></tr>
-  <tr><td><td></td><td><span style='float:right'>$".number_format($row['Funding'])."</span></td></tr>
+  <tr><td>Value<td></td><td><span style='float:right'>$".number_format($row['Funding'])."</span></td></tr>
   
 
  </tbody></table><br>";
 
+}
+}
+else
+{
+	echo"No grants for $program in $postcode";
 }
 
     
@@ -260,91 +321,23 @@ echo"<table class='basic' ><tbody>
 
         ?>
 
-  
-
- 
-<script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?sensor=false'></script>
-<script type='text/javascript'>
-
-
-    <?php
-      
- if (  isset($_GET['Program']) && !isset($_GET['Postcode'])  )
+ <?php
+ if ( !isset($_GET['Postcode']) && isset($_GET['Program']))
  {
-$program=$_GET['Program'];
-$map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where 
- Pcode IN (SELECT Postcode from grants where Postcode LIKE('%$postcode%') && Year='2014-15' ) ORDER BY Pcode ";
-       $result = mysqli_query($db, $map);
+	 include'locality_map.php';
+ }
  
-    echo" var markers = [";
-      while ($row = $result->fetch_assoc())
-          
+
+?>
+ <?php
+ if ( isset($_GET['Postcode']) && isset($_GET['Program']))
  {
-       echo
-       " {
-        \"title\": \"".$row['Locality']."\",
-        \"lat\": \"".$row['Lat']."\",
-        \"lng\": \"".$row['Lon']."\",
-        \"description\": \"".$row['Locality']." <a href='locality.php?Program=".$_GET['Program']."&Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
-      },
-       ";
-}
-   echo"];";
-   mysqli_free_result($result);
-}
+	 include'postcode_map.php';
+ }
+ 
+
 ?>
 
-
-    window.onload = function () {
-        LoadMap();
-    }
-
-
-     
-
-
-
-    function LoadMap() {
-        var mapOptions = {
-            center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 4,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("Map"), mapOptions);
- 
-        //Create and open InfoWindow.
-        var infoWindow = new google.maps.InfoWindow();
- 
-        for (var i = 0; i < markers.length; i++) {
-            var data = markers[i];
-            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map,
-                title: data.title,
-
-                icon:'map_icon.png'
-            });
- 
-            //Attach click event to the marker.
-
-         
-            (function (marker, data) {
-                google.maps.event.addListener(marker, "click", function (e) {
-                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
-                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.description + "</div>");
-                    infoWindow.open(map, marker);
-                });
-            })(marker, data);
-        }
-    }
-</script>
-<script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi_5tk-gJ3wLBKhYh95OKsfTxWV-FOSnI&callback=initMap">
-</script>
-<div id="Map" style="width: 700px; height: 500px">
-</div><hr><br>
-<div class='clear'></div>
   
    
 

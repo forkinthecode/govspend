@@ -133,7 +133,7 @@ if ( isset($_GET['Council']) )
  if ( !isset($_GET['Council']) )
  { 
 echo"<h4>Total Commonwealth Grants by Council Area</h4>";
-$total = "SELECT *,sum(Funding) FROM `grants` WHERE  Year='2014-15' && Council!=''
+$total = "SELECT *,sum(Funding) FROM `grants` WHERE  Year='2015-16' && Council!=''
  GROUP BY Council ORDER BY sum(Funding) DESC ";
 $result = mysqli_query($db, $total );
  while ($row = $result->fetch_assoc()) 
@@ -143,9 +143,10 @@ echo"
 
 <table class='basic' ><tbody>
  
-  <tr> <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td><td width='80%'><a href='council.php?Council=".$row['Council']."'>".$row['Council']."</a></td>
+  <tr> <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td>
+  <td ><a href='council.php?Council=".$row['Council']."'>".$row['Council']."</a></td>
     </tr>
- </tbody></table><br><hr class='short'><br> ";
+ </tbody></table><br>";
     }
 }
 ?>
@@ -156,12 +157,14 @@ if ( isset($_GET['Council']) )
 $data = $_GET['Council']; 
 $council=mysqli_real_escape_string ( $db , $data );
 echo"<br><hr><h4>Commonwealth Grants totalled by Program</h4>";
-$seifa = "SELECT *,sum(Funding) FROM grants WHERE Council ='$council' && Year='2014-15' GROUP BY Program ";
+$seifa = "SELECT *,sum(Funding) FROM grants WHERE Council ='$council' && Year='2015-16' GROUP BY Program ";
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
   if ($num_results <1)
-  echo"<h4>There are no Commonwealth grant recipients with addresses in the $council council area</h4>
-<table class='basic'><tbody>";
+  {
+  echo"<h4>There are no Commonwealth grant recipients with addresses in the $council council area</h4>";
+	  }
+echo"<table class='basic'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 
@@ -177,7 +180,7 @@ echo"<tr>
   </td>
   </tr>
 ";
-}echo" </tbody></table><br><hr class='short'><br> ";
+}echo" </tbody></table><br>";
 }
 
 ?>
@@ -230,7 +233,7 @@ echo"
 $total = "SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
          DATE_FORMAT(End,  '%D %b %Y' ) AS End,
          DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` 
-         WHERE Program like'%$program%' && Year='2014-15' && Council ='$council'
+         WHERE Program like'%$program%' && Year='2015-16' && Council ='$council'
             ";
 $result = mysqli_query($db, $total );
  while ($row = $result->fetch_assoc()) 
@@ -277,7 +280,8 @@ echo"<table class='council'><tbody><tr><td>Council</td><td>Welfare Recipients</t
  if (  isset($_GET['Council']) && !isset($_GET['Program'])  )
  {
 
-$map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN (SELECT Postcode from grants where Council ='$council' && Year='2014-15' && Locality !=',') ORDER BY Pcode ";
+$map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN (SELECT Postcode from grants 
+	where Council ='$council' && Year='2015-16' && Locality !=',') ORDER BY Pcode ";
        $result = mysqli_query($db, $map);
  
     echo" var markers = [";

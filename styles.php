@@ -1,10 +1,15 @@
    <style type="text/css">
    body {font-family:Verdana; font-size:12px; color:#333; max-width:1500px;}
-   h3 {margin-bottom:0px;}
+ 
+ 
    #submit {background:#FFF; border:none; height:35px;
 
  }
- .tiny {font-size:10px;}
+ .source {font-size:10px; width:85%; margin-left:2px; margin-right:2px; padding:5px; }
+ .scroller {width:85%; height:15px; text-align:left; 
+opacity:0.7; padding:5px;}
+   
+   
    img{
     -khtml-user-select: none;
     -o-user-select: none;
@@ -13,7 +18,7 @@
     user-select: none;
 }
  
- select {border:none; width:75%; font-size:18px; height:25px; padding:10px;}
+ select {border:none; width:75%; font-size:18px; height:25px; padding:10px; }
    /*
        input,select { width:35%; font-size:18px; height:25px;}
        input, select { height:30px; display:inline; 
@@ -61,7 +66,7 @@
 
    
 }
-
+.description {width:300px; height:200px; overflow:scroll;}
 
 .page_width { max-width:1250px; }
 .clear { clear:both;}
@@ -74,8 +79,8 @@ a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
 
 
 .basic { width:90%;   border: solid 1px #dcdcdc; padding:10px;}
-.basic tr:nth-of-type(even) {  background:#cbdbd8; padding:10px; border-radius:5px; border: 1px; width:400px; line-height:18px; }
-.basic tr:nth-of-type(odd) {  padding:10px; border-radius:5px; line-height:18px;}
+.basic tr:nth-of-type(even) {  background:#cbdbd8; border-radius:5px; border: 1px; width:400px; line-height:18px; }
+.basic tr:nth-of-type(odd) {   border-radius:5px; line-height:18px;}
 .basic td:nth-of-type(odd) {  text-align:right;}
 .basic td {  padding:2px; margin-left:5px;margin-right:5px;}
 .grants {width:95%; line-height:18px;}
