@@ -68,7 +68,9 @@ while ($i <= $iterations-1)
  echo "<img height='15px' src='icon.png'></img>";
    $i++;
     }
-  }echo"</th></tr></tbody></table>";
+  echo"</th></tr></tbody></table><div class='source'><a href=http://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/2033.0.55.0012011?OpenDocument'>SEIFA data</a> 
+  calculated based on the ABS from 2011 Census data</div>";
+}
 ?>
 
 
@@ -96,7 +98,8 @@ echo"<a href='council.php?Council=".$row['council']."'>".$row['council']."</a> |
  {
   
 $electorate = $_GET['Electorate']; 
-echo"<h4>Total Commonwealth Grants by Electorate</h4>";
+echo"<h4>Total Commonwealth Grants by Electorate</h4> <div class='source'>Source: DSS Payment by Demographic published at 
+	<a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div> ";
 $total = "SELECT Electorate,sum(Funding) FROM `grants` where electorate !='' && Year='2015-16' Group by electorate ";
 $result = mysqli_query($db, $total );
 echo"<div class='expand'><table class='grants' ><tbody>";
@@ -120,6 +123,8 @@ $electorate=mysqli_real_escape_string ( $db , $data );
 $query="SELECT sum(Age_pension+PPP+PPS+Newstart+DSP+Austudy+Carer_Payment+YA_SA+YAO) as total
  FROM welfare_by_electorate where electorate='$electorate'";
 $result = mysqli_query($db, $query);
+echo"<div class='source'>Source: DSS Payment by Demographic published at 
+	<a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div> ";
  while ($row = $result->fetch_assoc())
  {
 $total_on_welfare=$row['total'];
@@ -143,7 +148,7 @@ $electorate=mysqli_real_escape_string ( $db , $data );
   echo"<h4>All Commonweatlh Grants for recpients in the Federal Electorate of $electorate</h4>";
 $total = "SELECT Program,sum(Funding) FROM `grants` WHERE  Year='2015-16' && Electorate ='$electorate'  Group by Program  ";
 $result = mysqli_query($db, $total );
-echo"<table class='basic' ><tbody>";
+echo"<div class='source'>Source: Grants data published at agency websites</div> <table class='basic' ><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 

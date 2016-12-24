@@ -74,7 +74,7 @@ if ( isset($_GET['Recipient']) )
  {
 $data = $_GET['Recipient']; 
 $recipient=mysqli_real_escape_string ( $db , $data );
-$query="SELECT * FROM grants WHERE Recipient='$recipient' GROUP BY Recipient";
+$query="SELECT * FROM grants WHERE Recipient='$recipient' GROUP BY Recipient where Electorate!=''";
 
 $result = mysqli_query($db, $query );
 @$num_results = mysqli_num_rows($result);
@@ -105,7 +105,7 @@ if ( isset($_GET['Recipient']) )
  {
 $data = $_GET['Recipient']; 
 $recipient=mysqli_real_escape_string ( $db , $data );
-$charities = "SELECT * FROM charities where Legal_Name LIKE'%$recipient%'";
+$charities = "SELECT * FROM charities where Legal_Name LIKE'%$recipient%' GROUP BY '$recipient' ";
 $result = mysqli_query($db, $charities );
   @$num_results = mysqli_num_rows($result);
   if ($num_results <1)
@@ -116,7 +116,7 @@ $result = mysqli_query($db, $charities );
   {
      while ($row = $result->fetch_assoc())
            {
-            echo"<h4>ACNC data for $recipient</h4>
+            echo"<h4>ACNC data for $recipient</h4><div class='source'>Source: ACNC data published at <a href='http://data.gov.au/dataset/acnc-register'>data.gov.au</a></div>
           <table class='basic'><tbody>
                
         <tr><td>ABN </td><td>".$row['ABN']."</td></tr>       
@@ -126,7 +126,7 @@ $result = mysqli_query($db, $charities );
         </tr>
         <tr>
         <td>Other Names</td>     
-        <td> ".$row['Other_Names']."</td>
+        <td> <a href='recipient.php?Recipient=".$row['Other_Names']."'>".$row['Other_Names']."</a></td>
         </tr>
         <tr>
         <td></td>     
@@ -200,7 +200,7 @@ if ( isset($_GET['Recipient']) )
 $data = $_GET['Recipient']; 
 $recipient=mysqli_real_escape_string ( $db , $data );
 echo"<h4>Commonwealth Grants received by $recipient</h4>
-<p>(With approval dates within the 2015-16 financial year)</p>";
+<p>(With approval dates within the 2015-16 financial year)</p><div class='source'>Source: Grants published at agency websites</div>";
 $seifa = "SELECT *,sum(Funding) FROM grants WHERE Recipient ='$recipient' && Year='2015-16' GROUP BY Program ";
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);

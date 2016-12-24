@@ -7,17 +7,66 @@ require'header.php';
  if ( isset($_GET['Postcode']) )
  {
 
+	 $data = $_GET['Postcode']; 
+	$postcode=mysqli_real_escape_string ( $db , $data );
+	$total = "SELECT * FROM `coordinates`  where pcode='$postcode' ";
+	$result = mysqli_query($db, $total );
+	echo"<h3>$postcode has the following suburbs/localities</h3>";
+	 while ($row = $result->fetch_assoc()) 
+	    {
+
+	echo"".$row['locality'].", ".$row['state']." ";
+
+	    }
+		
+		
  $data = $_GET['Postcode']; 
-$postcode=mysqli_real_escape_string ( $db , $data ); 
-;
-$total = "SELECT Distinct council,electorate FROM `lga_pcode_electorate`  where Postcode='$postcode' ";
+$postcode=mysqli_real_escape_string ( $db , $data );
+$total = "SELECT Distinct council FROM `LGA`  where Postcode='$postcode' ";
 $result = mysqli_query($db, $total );
-echo"<h4>$postcode is in the";
+
  while ($row = $result->fetch_assoc()) 
     {
 
-echo"<a href='council.php?Council=".$row['council']."'>".$row['council']."</a> council area which is in the Federal electorate of <a href='electorate.php?Electorate=".$row['electorate']."'>".$row['electorate']."</a></h4> ";
-}echo"</p><hr><br>";
+echo"<h3>$postcode is in the <a href='council.php?Council=".$row['council']."'>".$row['council']." Local Government Area</a></h3>";
+$council =$row['council'];
+    }
+
+
+	$postcode=mysqli_real_escape_string ( $db , $data );
+	$total = "SELECT Distinct postcode FROM `LGA`  where council='$council' ";
+	$result = mysqli_query($db, $total );
+ echo"<p>Postcodes in the Local Government Area of $council</p>";
+	 while ($row = $result->fetch_assoc()) 
+	    {
+
+	echo"<a href='locality.php?Postcode=".$row['postcode']."'>".$row['postcode']."</a> | ";
+	    }
+
+$total = "SELECT Distinct Electorate FROM `electorate_party`  where Postcode='$postcode' ";
+$result = mysqli_query($db, $total );
+
+ while ($row = $result->fetch_assoc()) 
+    {
+
+		echo"<h3>$postcode is in the Federal electorate of 
+		 <a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></h3> ";
+	$electorate =$row['Electorate'];
+    }
+ $total = "SELECT Postcode FROM `electorate_party`  where Electorate='$electorate' GROUP BY Postcode ";
+ $result = mysqli_query($db, $total );
+ echo"<p>Postcodes in the Federal electorate of $electorate</p>";
+  while ($row = $result->fetch_assoc()) 
+     {
+
+
+
+ 	 echo"
+ 		 <a href='locality.php?Postcode=".$row['Postcode']."'>".$row['Postcode']."</a> | ";
+	 
+     }
+ 
+
 }
 ?>
 
@@ -27,7 +76,7 @@ echo"<a href='council.php?Council=".$row['council']."'>".$row['council']."</a> c
  {
 echo"<h3>Total value of 15-16FY Commonwealth grants by Postcode</h3>
 <br><p>Top 15 Postcodes by value are below. Click on the electorate name to find details of all grants in that Postcode or enter postcode into the search box to find results
-for other Postcodes.</p>";
+for other Postcodes.</p><div class='source'>Source: Grants data published at agency websites</div>";
 $grants = "SELECT Locality,Postcode,sum(Funding) FROM grants
  WHERE Electorate!='' && Electorate NOT LIKE'%,%' && 
 Postcode !='Multiple' && Year='2015-16' GROUP BY Postcode ORDER BY sum(Funding) DESC LIMIT 15 ";
@@ -66,7 +115,7 @@ $result = mysqli_query($db, $seifa );
 
   elseif ($num_results >0)
       {
-echo"<h3>Socio Economic (SEIFA) Data for postcode: $postcode</h3>
+echo"<h3>Socio Economic (SEIFA) Data for postcode: $postcode</h3><div class='source'>Source: SEIFA data published by ABS based on 2011 census data</div>
 <table class='council'><tbody><tr><td>National Rank</td><td>National Decile</td><td>Usual Resident Pop</td></tr>";
 $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
      while ($row = $result->fetch_assoc()) 
@@ -93,7 +142,7 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
                  echo "<img height='15px' src='icon.png'></img>";
                    $i++;
                     }
-      }echo"</td><td></td></tr></tbody></table>";
+      }echo"</td><td></td></tr></tbody></table><br><br>";
     
 }
 ?>
@@ -105,7 +154,7 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
 
 	 $query="SELECT * from budget_table15_16 where Program like '%".$_GET['Program']."%' GROUP BY Program";
      $result = mysqli_query($db, $query );
-	 echo"  <table class='basic'><tbody>";
+	 echo"<div class='source'>Source: Line item CSV published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></a></div>  <table class='basic'><tbody>";
 	  while ($row = $result->fetch_assoc()) 
 	     {
 	    echo" 
@@ -149,7 +198,7 @@ $postcode=mysqli_real_escape_string ( $db , $data );
         @$num_results = mysqli_num_rows($result);
         
       
-           echo"<br><h3>Statistics for 2015-16 Commonwealth Grants for $postcode</h3>
+           echo"<br><hr><h3>Statistics for 2015-16 Commonwealth Grants for $postcode</h3>
   <table class='stats'><tbody><tr><th>Total value</th><th>Number</th><th>Average</th></tr>";
                while ($row = $result->fetch_assoc()) 
                     {
@@ -175,7 +224,7 @@ $postcode=mysqli_real_escape_string ( $db , $data );
                       {
                       echo"<th>$".number_format($row['ave'])."</th></tr>";
                       }
-                      echo"</tbody></table>
+                      echo"</tbody></table><hr>
                       <br><h3>Breakdown of Commonwealth programs administering grants to $postcode</h3>
                  <p>Click on the program name to get the recipients for that program in $postcode</p>";
                 $byprogram = "SELECT *,sum(Funding) FROM grants 
@@ -195,7 +244,7 @@ $postcode=mysqli_real_escape_string ( $db , $data );
                   <td>$".number_format($row['sum(Funding)'])."</td></tr>
                   ";
 
-                   }echo"</tbody></table><br><hr class='short'><br>"; 
+                   }echo"</tbody></table><br><hr class='short'><div class='source'>Grants data published at agency websites</div><br>"; 
   }
             
             
@@ -296,18 +345,9 @@ $result = mysqli_query($db, $grants );
     {
       
    
-echo"<table class='basic' ><tbody>
- 
- 
-  <tr><td>Program:</td><td><a href='locality.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
-  <tr><td>Recipient</td><td><a href='recipient.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
-  <tr><td>Component:</td><td>".$row['Component']."</td></tr>
-  <tr><td>Purpose:</td><td>".$row['Purpose']."</td></tr>
-  <tr><td>Dates:</td><td>".$row['Approved']."-".$row['End']." months</td></tr>
-  <tr><td>Value<td></td><td><span style='float:right'>$".number_format($row['Funding'])."</span></td></tr>
   
 
- </tbody></table><br>";
+include'grants_table.php';
 
 }
 }

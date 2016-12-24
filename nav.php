@@ -28,6 +28,7 @@
         </div>
         
       </nav>
-	  <hr>
-	  <h1 style='float:right'>GovSpend 2015-16</h1>
+	  <hr> 
+	  <h1 style='float:right'>GovSpend 2015-16</h1><br>
+	  <span style='float:left'>Click on the links to drill down or use the drop-down menu above</span>
 	  

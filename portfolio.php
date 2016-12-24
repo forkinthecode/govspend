@@ -11,8 +11,8 @@ require'header.php';
     {
   
                       
-
-    echo"<h4>Agencies administered by the $portfolio Portfolio</h2>";
+$portfolio=$_GET['Portfolio'];
+    
    $agor = "SELECT DISTINCT Agency FROM `budget_table15_16`
     WHERE Portfolio ='".$_GET['Portfolio']."' ";
    $result = mysqli_query($db, $agor );
@@ -22,7 +22,11 @@ require'header.php';
           {
             
         
-   echo"<table class='wide'><tbody>";
+   echo"<h4>Agencies administered by the $portfolio Portfolio</h2><div class='source'>Source: Line item CSV 
+Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
+ <div class='clear'></div> 
+ 
+ <tbody><table class='wide'><tbody>";
     while ($row = $result->fetch_assoc()) 
        {
 		   echo"<tr><td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td></tr>";
@@ -50,7 +54,9 @@ $portfolio=$_GET['Portfolio'];
 $agor = "SELECT sum(current),Portfolio,Program FROM `budget_table15_16`
  WHERE Portfolio LIKE'%$portfolio%' GROUP BY Program ORDER BY Agency,Program";
 $result = mysqli_query($db, $agor );
-echo"<table class='wide'><tbody>";
+echo"<div class='source'>Source: Calculated using line item CSV 
+Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
+<div class='clear'></div><table class='wide'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
       
@@ -83,7 +89,7 @@ echo"
       
   if (  isset($_GET['Program']) && !isset($_GET['Postcode'])  )
   {
- include'map.php';
+ //include'map.php';
   }
 
   ?>
@@ -109,7 +115,7 @@ $result = mysqli_query($db, $grants);
 
         if ($num_results >0)
         {
-           echo"<table class='basic' ><tbody>";
+           echo"<div class='source'>Source: Grants data published at agency websites</div><table class='basic' ><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
       echo"<tr>
@@ -121,8 +127,10 @@ $result = mysqli_query($db, $grants);
     echo" </tbody></table><br><hr class='short'><br> ";
         }
                  else 
+				 {/*
      echo"<p>There are no grants provided by the Commonwealth directly under the Programs administered by/the open data provided by
-               the $portfolio Portfolio the 2015-16 FY</p>";
+               the $portfolio Portfolio the 2015-16 FY</p>";*/
+ }
 
 }mysqli_free_result($result);
                  ?>
@@ -147,7 +155,7 @@ $result = mysqli_query($db, $grants );
         {
           echo"
   <h4>There are $num_results grants administered under the $program Program in the 14-15 FY:</h4><br>
-		  <div class='expand'>";
+		 <div class='source'>Source: Grants data published at agency websites</div> <div class='expand'>";
  while ($row = $result->fetch_assoc()) 
     {
       
@@ -156,9 +164,9 @@ include'grants_table.php';
     }echo"</div><p>Mouse over/scroll for more results</p>";
        }
        if ($num_results <1)
-       {
+       {/*
 echo"<p>There are no grants provided by the Commonwealth directly under the Programs administered by/the open data provided by
-          the $portfolio the 2015-16 FY</p>";
+          the $portfolio the 2015-16 FY</p>";*/
        }
 }mysqli_free_result($result);
 
@@ -176,7 +184,9 @@ echo"<p>There are no grants provided by the Commonwealth directly under the Prog
 $agor = "SELECT * FROM `budget_table15_16`
  WHERE Program='$program' group by Program";
 $result = mysqli_query($db, $agor );
-echo"  <table class='basic'><tbody>";
+echo"  <div class='source'>Source: Line item CSV 
+Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
+<table class='basic'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
        echo" 
@@ -199,7 +209,9 @@ $result = mysqli_query($db, $component );
         if ($num_results >0)
         {
           echo"<h4>($num_results) Components:</h4>
-        
+			  <div class='source'>Source: Line item CSV 
+			  Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
+			
           <table class='component'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
@@ -226,20 +238,23 @@ echo"<tr><td><img style='height:15px; opacity:0.4' src='images/chevron.png'></im
       $sub_program = "SELECT * FROM `budget_table15_16`
  WHERE Component LIKE'%$component%' ";
 $result = mysqli_query($db, $sub_program);
+echo"<h4>Component Details</h4><div class='source'>Source: Line item CSV 
+Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
+
+	<table class='basic'><tbody>";
 while ($row = $result->fetch_assoc()) 
 {
-echo"<h4>Component Details</h4><table class='basic'><tbody>
+echo"
  
   <tr><td>Component</td><td>".$row['Component']."</td></tr>
- 
   <tr><td>Appropriation Type</td><td> ".$row['Appropriation_Type']."</td></tr>
-  <tr><td>Cost</td><td><span style='float:right'>$".number_format($row['2015_16']).",000</span></td></tr>
-  <tr><td>".$row['source_table']."</td><td> ".$row['source']."</td></tr>
+  <tr><td>Cost</td><td><span style='float:right'>$".number_format($row['current']).",000</span></td></tr>
+  <tr><td>".$row['Source_Table']."</td><td> ".$row['Source']."</td></tr>
   
 
- </tbody></table><br><br> ";
+  ";
 
-}
+}echo"</tbody></table><br><br>";
 }mysqli_free_result($result);
 
 ?>

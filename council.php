@@ -78,9 +78,9 @@ $URP=$row['URP'];
 //echo"$URP<br>";
   }
   echo"<tr><td>".number_format($URP)."</td><td>".number_format($total_on_welfare)."</td><td>".number_format($total_on_welfare/$URP*100/1)."%</td></tr>";
+echo"</tbody></table><div class='source'><a href=http://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/2033.0.55.0012011?OpenDocument'>SEIFA data</a> calculated by the ABS from 2011 Census data</div><br>";
 
 }
-echo"</tbody></table><br>";
 
 ?>
 <?php
@@ -88,7 +88,8 @@ if ( isset($_GET['Council']) )
  {
 $data = $_GET['Council']; 
 $council=mysqli_real_escape_string ( $db , $data );
-echo"<h3>Breakdown by Payment Type</h3>
+echo"<h3>Breakdown by Payment Type</h3> <div class='source'>Source: DSS Payment by Demographic published at 
+	<a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div> 
 <table class='council'><tbody><tr><td>Payment Name</td><td>Number in Receipt</td></tr>";
 $seifa = "SELECT * FROM lga_welfare WHERE Council LIKE'%$council%' ";
 $result = mysqli_query($db, $seifa );
@@ -118,36 +119,28 @@ $result = mysqli_query($db, $seifa );
 
 ?>
 
-<?php
-if ( isset($_GET['Council']) )
- {
 
-
-
-
-  }
-
-?>
 
 <?php
  if ( !isset($_GET['Council']) )
  { 
-echo"<h4>Total Commonwealth Grants by Council Area</h4>";
+echo"<h4>Total Commonwealth Grants by Council Area</h4><div class='source'>Source: Grants data published at agency websites</div><table class='basic' ><tbody> ";
 $total = "SELECT *,sum(Funding) FROM `grants` WHERE  Year='2015-16' && Council!=''
  GROUP BY Council ORDER BY sum(Funding) DESC ";
+
 $result = mysqli_query($db, $total );
  while ($row = $result->fetch_assoc()) 
     {
 
 echo"
+ 
 
-<table class='basic' ><tbody>
  
   <tr> <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td>
   <td ><a href='council.php?Council=".$row['Council']."'>".$row['Council']."</a></td>
     </tr>
- </tbody></table><br>";
-    }
+ ";
+    }echo"</tbody></table><br>";
 }
 ?>
  
@@ -156,7 +149,7 @@ if ( isset($_GET['Council']) )
  {
 $data = $_GET['Council']; 
 $council=mysqli_real_escape_string ( $db , $data );
-echo"<br><hr><h4>Commonwealth Grants totalled by Program</h4>";
+echo"<br><hr><h4>Commonwealth Grants totalled by Program</h4> <div class='source'>Source: Grants data published at agency websites</div> ";
 $seifa = "SELECT *,sum(Funding) FROM grants WHERE Council ='$council' && Year='2015-16' GROUP BY Program ";
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
@@ -236,6 +229,7 @@ $total = "SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
          WHERE Program like'%$program%' && Year='2015-16' && Council ='$council'
             ";
 $result = mysqli_query($db, $total );
+echo" <div class='source'>Source: Grants data published at agency websites</div> ";
  while ($row = $result->fetch_assoc()) 
     {
 
@@ -315,7 +309,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN (S
     function LoadMap() {
         var mapOptions = {
             center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 13,
+            zoom: 7,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("Map"), mapOptions);

@@ -128,7 +128,7 @@ $result = mysqli_query($db, $agor );
 
         if ($num_results >0)
 {
-echo"<h4>Programs administered by the $agency Agency</h2><div class='source'>Source: Line item CSV 
+echo"<h4>Programs administered by the $agency Agency</h2><div class='source'>Source: Calculated from Line item CSV 
 Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
 	<table class='wide'><tbody>";
  while ($row = $result->fetch_assoc()) 
