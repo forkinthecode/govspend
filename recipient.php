@@ -12,7 +12,7 @@ require'header.php';
 
 
 <?php
- if ( !isset($_GET['Recipient']) )
+ if ( !isset($_GET['Recipient']) && !isset($_GET['ABN']))
  { 
 echo"<h4>Total Commonwealth Grants by Recipient</h4>";
 $total = "SELECT Recipient,sum(Funding),count(Funding) as counts FROM `grants` WHERE 
@@ -110,13 +110,13 @@ $result = mysqli_query($db, $charities );
   @$num_results = mysqli_num_rows($result);
   if ($num_results <1)
   {
-    echo"<p>There are no matches in ACNC charities data for $recipient</p>";
+    echo"<h4>There are no matches in ACNC charities data for $recipient</h4>";
   }
   elseif ($num_results >0)
   {
      while ($row = $result->fetch_assoc())
            {
-            echo"<h4>ACNC data for $recipient</h4><div class='source'>Source: ACNC data published at <a href='http://data.gov.au/dataset/acnc-register'>data.gov.au</a></div>
+            echo"<h3>ACNC data for $recipient</h3><div class='source'>Source: ACNC data published at <a href='http://data.gov.au/dataset/acnc-register'>data.gov.au</a></div>
           <table class='basic'><tbody>
                
         <tr><td>ABN </td><td>".$row['ABN']."</td></tr>       
@@ -129,7 +129,7 @@ $result = mysqli_query($db, $charities );
         <td> <a href='recipient.php?Recipient=".$row['Other_Names']."'>".$row['Other_Names']."</a></td>
         </tr>
         <tr>
-        <td></td>     
+        <td>Address</td>     
         <td><a href='https://www.google.com.au/maps/search/".$row['Address1']."
          ".$row['Address2']." ".$row['Address3']."
           ".$row['Locality']." 
@@ -194,6 +194,103 @@ $result = mysqli_query($db, $charities );
 }
 
 ?>
+
+
+<?php
+if ( isset($_GET['ABN']) )
+ {
+$data = $_GET['ABN']; 
+$ABN=mysqli_real_escape_string ( $db , $data );
+$charities = "SELECT * FROM charities where ABN ='$ABN'  GROUP BY '$ABN' ";
+$result = mysqli_query($db, $charities );
+  @$num_results = mysqli_num_rows($result);
+  if ($num_results <1)
+  {
+    echo"<h4>There are no matches in ACNC charities data for the ABN $ABN</h4>";
+  }
+  elseif ($num_results >0)
+  {
+     while ($row = $result->fetch_assoc())
+           {
+            echo"<h3>ACNC data for $ABN</h3>
+				<div class='source'>Source: ACNC data published at <a href='http://data.gov.au/dataset/acnc-register'>data.gov.au</a></div>
+          <table class='basic'><tbody>
+               
+        <tr><td>ABN </td><td>".$row['ABN']."</td></tr>       
+         <tr>
+        <td>Legal Name</td>     
+        <td> ".$row['Legal_Name']."</td>
+        </tr>
+        <tr>
+        <td>Other Names</td>     
+        <td> <a href='recipient.php?Recipient=".$row['Other_Names']."'>".$row['Other_Names']."</a></td>
+        </tr>
+        <tr>
+        <td>Address</td>     
+        <td><a href='https://www.google.com.au/maps/search/".$row['Address1']."
+         ".$row['Address2']." ".$row['Address3']."
+          ".$row['Locality']." 
+        ".$row['state']." ".$row['postcode']." Australia' 
+        title='Locate in Google maps' target='_blank'><img src='map_icon.png'></img>
+        ".$row['Address1']." ".$row['Address2']." ".$row['Address3']." 
+        ".$row['Locality'].", ".$row['State']." ".$row['Postcode']."</a></td>
+        </tr>
+        <tr>
+        <td>Size</td>    
+        <td> ".$row['Size']."</td>
+        </tr>
+        <tr>
+        <td>Operating Countries</td>     
+        <td> ".$row['Countries']."</td>
+        </tr>
+        <tr>
+        <td>Operating States</td>    
+        <td> ".$row['NSW']." ".$row['QLD']." ".$row['VIC']." ".$row['SA']." ".$row['ACT']." ".$row['TAS']." 
+        ".$row['NT']." ".$row['WA']."</td>
+        </tr>
+        <tr>
+        <td>Issues</td>       <td>
+       <div class='issues'>".$row['animals']."</div>
+<div class='issues'>".$row['Culture']."</div>
+<div class='issues'>".$row['Education']."</div>
+<div class='issues'>".$row['Health']."</div>
+<div class='issues'>".$row['Policy']."</div> 
+<div class='issues'>".$row['Environment']."</div>
+<div class='issues'>".$row['Rights']."</div> 
+<div class='issues'>".$row['Misc']."</div> 
+<div class='issues'>".$row['Reconciliation']."</div> 
+<div class='issues'>".$row['Religion']."</div>
+<div class='issues'>".$row['Social']."</div> 
+<div class='issues'>".$row['Security']."</div>
+<div class='issues'>".$row['General']."</div> 
+<div class='issues'>".$row['Indigenous']."</div> 
+<div class='issues'>".$row['Aged']."</div>
+<div class='issues'>".$row['Children']."</div> 
+<div class='issues'>".$row['Overseas']."</div>
+<div class='issues'>".$row['Ethnicity']."</div>
+<div class='issues'>".$row['LGBT']."</div> 
+<div class='issues'>".$row['Public']."</div> 
+<div class='issues'>".$row['Men']."</div> 
+<div class='issues'>".$row['Migrants']."</div> 
+<div class='issues'>".$row['Offenders']."</div>
+<div class='issues'>".$row['Illness']."</div> 
+<div class='issues'>".$row['Disabilities']."</div> 
+<div class='issues'>".$row['Homelessness']."</div>
+<div class='issues'>".$row['Unemployed']."</div> 
+<div class='issues'>".$row['Veterans']."</div> 
+<div class='issues'>".$row['Crime']."</div> 
+<div class='issues'>".$row['Disasters']."</div> 
+<div class='issues'>".$row['Women']."</div>
+<div class='issues'>".$row['Youth']."</div> </td>
+        </tr>
+        </tbody>
+        </table>";
+        }
+
+     }
+}
+
+?>  
 <?php
 if ( isset($_GET['Recipient']) )
  {
@@ -228,19 +325,151 @@ echo"
 }
 
 ?>
-
+  <?php
+  if ( isset($_GET['ABN']) )
+   {
   
-           
+	   $data = $_GET['ABN']; 
+	   $ABN=mysqli_real_escape_string ( $db , $data );
+	   
+  $query="SELECT * FROM `tax` where ABN='$ABN'";
+  
+  $result = mysqli_query($db, $query );
+    @$num_results = mysqli_num_rows($result);
+ 
+  $num_results = mysqli_num_rows($result);
+    if ($num_results <1)
+    {
+    echo"<h4>The ATO has not provided Tax Transparency data for the ABN $ABN</h4>";
+    }
+  else{ echo"<div class='source'>Source: From Tax Transparency data published at data.gov.au </div>";
+   while ($row = $result->fetch_assoc()) 
+      {
 
+  echo"
+   
+ <table class='wide' border='0'><tbody>
+ <tr><td width='150px'>Name            </td><td><a href='recipient.php?Recipient=".$row['Name']."'>".$row['Name']."</td></tr>
+ <tr><td>ABN             </td><td><a href='recipient.php?ABN=".$row['ABN']."'>".$row['ABN']."</td></tr>
+ <tr><td>Total Income    </td><td>$".number_format($row['Total_Income'])."</td></tr>
+ <tr><td>Taxable Income  </td><td>$".number_format($row['Taxable_Income'])."</td></tr>
+ <tr><td>Tax             </td><td>$".number_format($row['Tax'])."</td></tr>
+  </tbody></table><br> ";
+     }
+ }
+ }
  
+ ?>
+
+   
+   
+  <?php
+  if ( isset($_GET['ABN']) )
+   {
+ 
+    $data = $_GET['ABN']; 
+    $ABN=mysqli_real_escape_string ( $db , $data );
  
 
+ echo"<h3>Commonwealth Tenders received by $ABN</h3>
+ <p>(With approval dates within the 2015-16 financial year)</p>
+ <div class='source'>Source: Calculated using Historical Tenders data published at data.gov.au </div>";
+ $seifa = "SELECT *,sum(Value),count(Value) as count,AVG(Value)  FROM tenders WHERE ABN ='$ABN'   ";
+ $result = mysqli_query($db, $seifa );
+   @$num_results = mysqli_num_rows($result);
+   if ($num_results <1)
+   {
+   echo"<h4>There are no Commonwealth Tender recipients named $ABN</h4>";
+ }
+ else{
+	 echo"<hr>
+
+	 <table class='stats' ><tbody><tr><th>Number</th><th>Ave Value</th><th>Total Value</th></tr>";
+  while ($row = $result->fetch_assoc()) 
+     {
+
+ echo"
  
+   <tr><th>".number_format($row['count'])."</th><th>".number_format($row['AVG(Value)'])."</th>    <th>$".number_format($row['sum(Value)'])."</th></tr>
+ 
+ ";
+ }echo" </tbody></table><hr><br>";
+ }
+ }
+
+ ?>
+ <?php
+ if ( isset($_GET['ABN']) )
+  {
+
+   $data = $_GET['ABN']; 
+   $ABN=mysqli_real_escape_string ( $db , $data );
+   $query="SELECT  Name,count(Name) as count FROM tenders where ABN='$ABN' GROUP BY Name ORDER BY count(Name) DESC";
+   $result = mysqli_query($db, $query );
+     @$num_results = mysqli_num_rows($result);
+     if ($num_results <1)
+     {
+     echo"<h4>There are no Commonwealth Tender recipients named $ABN</h4>";
+     }
+   else{
+	  
+		   echo"<h3>Names used by $ABN in Commonwealth Tenders</h3>
+			   <p>Name (No. Tenders using that name)</p>
+			   <div class='expand'>"; 
+		    while ($row = $result->fetch_assoc())
+	      {
+  	 echo"<p><a href='recipient.php?Recipient=".$row['Name']."'>".$row['Name']."</a> (".$row['count'].") </p>";
+ }
+ 
+       }echo"</div>";
+ 
+ }
+   ?>
+<?php
+ if ( isset($_GET['ABN']) )
+  {
+	  include'tenders_map.php';
+	  
+	  }
+	  
+	  ?>
 
  </div>
  <div class='right'>
   
 
+   <?php
+   if ( isset($_GET['ABN']) )
+    {
+ 
+     $data = $_GET['ABN']; 
+     $ABN=mysqli_real_escape_string ( $db , $data );
+ 
+
+  echo"<h4>Commonwealth Tenders received by $ABN</h4>
+  <p>(With approval dates within the 2015-16 financial year)</p>
+  <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
+  $seifa = "SELECT *  FROM tenders WHERE ABN ='$ABN'   ";
+  $result = mysqli_query($db, $seifa );
+    @$num_results = mysqli_num_rows($result);
+    if ($num_results <1)
+    {
+    echo"<h4>There are no Commonwealth Tender recipients named $ABN</h4>";
+  }
+  else{
+   while ($row = $result->fetch_assoc()) 
+      {
+		  include'tenders_table.php';
+  
+           }echo" <p>Click on the Agency name to display details of all Tenders to $ABN for that Agency</p> ";
+  }
+  }
+
+  ?>
+           
+
+ 
+ 
   
 
 
@@ -343,7 +572,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN
             (function (marker, data) {
                 google.maps.event.addListener(marker, "click", function (e) {
                     //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
-                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.description + "</div>");
+                    infoWindow.setContent("<div style = 'width:px;min-height:40px'>" + data.description + "</div>");
                     infoWindow.open(map, marker);
                 });
             })(marker, data);

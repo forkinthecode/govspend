@@ -45,15 +45,33 @@ echo"
  
  
 
- 
-
 <p>Govspend is a prototype only. Federal electorate details may be out of date.
   Grants data is taken from multiple Commonwealth agency sites and there is no guarantee that 
   it is correct in the database. The prototype is to give an idea of what can be done with open financial data.</p>
-  <p>Commonwealth tenders data will soon be added. This type of data providing this kind of drill down does not exist anywhere else and is the result of several 
-    years of full time labour and expertise working with financial open data.</p>
+  <?php/*
+  $query="SELECT * FROM tax_transparency GROUP BY ABN";
+  $result = mysqli_query($db, $query );
+  echo"<div class='source'>Source: Calculated from Historical Tenders data and Tax Transparency data published at data.gov.au </div>
+ 	 <div class='expand'>";
+   while ($row = $result->fetch_assoc()) 
+      {
 
-  
+  echo"
+   
+ <table class='wide' border='0'><tbody>
+ <tr><td>Name            </td><td><a href='recipient.php?Recipient=".$row['Name']."' target='_blank'>".$row['Name']."</a></td></tr>
+ <tr><td>ABN             </td><td><a href='recipient.php?ABN=".$row['ABN']."' target='_blank'>".$row['ABN']."</td></tr>
+ <tr><td>Total Income    </td><td>$".number_format($row['Total_Income'])."</td></tr>
+ <tr><td>Taxable Income  </td><td>$".number_format($row['Taxable_Income'])."</td></tr>
+ <tr><td>Tax             </td><td>$".number_format($row['Tax'])."</td></tr>
+ <tr><td>Value of Tenders</td><td>$".number_format($row['Value'])."</td> </tr>
+  </tbody></table><br> ";
+  }echo"< </div>";
+ 
+ */
+  ?>
+
+ 
            
 
       
@@ -85,8 +103,36 @@ echo"
 ?>
 
 
+ 
+   <?php
+   //if ( isset($_GET['Agency']) )
+    {
+
+ 
+
+  echo"<h4>Commonwealth Tenders Totalled by Agency</h4>
+  <p>(With approval dates within the 2015-16 financial year)</p>
+  <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
+  $agency_results = "SELECT Agency,sum(Value)  FROM tenders GROUP BY Agency ORDER BY sum(Value) DESC ";
+  $result = mysqli_query($db, $agency_results );
+  echo" <table class='wide' ><tbody><tr><th>Agency</th><th>Value</th></tr>";
+   while ($row = $result->fetch_assoc()) 
+      {
+
+
+
+	   echo"
+
+	   <tr><td width='150px'><span style='float:right'>$".number_format($row['sum(Value)'])."</span></td>
+	   <td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td></tr>
+	   
+	   ";
 
   
+        }echo" </tbody></table><br>";
+  }
+
+  ?>
 
  
          

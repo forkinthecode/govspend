@@ -126,30 +126,58 @@ $agor = "SELECT *,sum(current) FROM `budget_table15_16`
 $result = mysqli_query($db, $agor );
 @$num_results = mysqli_num_rows($result);
 
-        if ($num_results >0)
+
+        if ($num_results <4 and $num_results>0)
 {
 echo"<h4>Programs administered by the $agency Agency</h2><div class='source'>Source: Calculated from Line item CSV 
 Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
-	<table class='wide'><tbody>";
+	";
  while ($row = $result->fetch_assoc()) 
     {
       
    
-echo"
+echo"<table class='wide'><tbody>
  
-  <tr><td><a href='agency.php?Agency=".$row['Agency']."&Program=".$row['Program']."'>".$row['Program']."</a></td>
-  <td>$".number_format($row['sum(current)']).",000</td></tr>
+  <tr><td>".$row['Program']."</td>
+  <td>$".number_format($row['sum(current)']).",000</td></tr> </tbody></table>
 
   ";
-
+}
 echo"
- </tbody></table><p>Click on the Program name to see details</p><br> <h4>Notes</h4>
-    <p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
+<p>Commonwealth tenders data includes Agency name but not the Program under which each Agency is seeking tenders.</p><br>
+<!--<h4>Notes</h4><p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
 <p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identical to Program name.</p>
 <p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
-<p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that criteria.</p> ";
+<p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that criteria.</p>-->   ";
 
 }
+
+
+
+        if ($num_results >3)
+{
+echo"<h4>Programs administered by the $agency Agency</h2><div class='source'>Source: Calculated from Line item CSV 
+Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
+	<div class='expand'>";
+ while ($row = $result->fetch_assoc()) 
+    {
+      
+   
+echo"<table class='wide'><tbody>
+ 
+  <tr><td>".$row['Program']."</td>
+  <td>$".number_format($row['sum(current)']).",000</td></tr> </tbody></table>
+
+  ";
+}
+echo"</div>Mouse/Scroll over for more results.
+<p>Commonwealth tenders data includes Agency name but not the Program under which each Agency is seeking tenders.</p><br>
+<!--<h4>Notes</h4><p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
+<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identical to Program name.</p>
+<p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
+<p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that criteria.</p>-->   ";
+
+
 
 }
 
@@ -158,8 +186,7 @@ echo"
 
         ?>
   
-     
-
+    
 
   <?php
       
@@ -170,10 +197,140 @@ echo"
 
   ?>
 
- 
+   
 
  </div>
  <div class='right'>
+  <?php
+  if ( isset($_GET['Agency']) )
+   {
+
+    $data = $_GET['Agency']; 
+    $agency=mysqli_real_escape_string ( $db , $data );
+
+
+ echo"<h3>Commonwealth Tenders awarded by $agency</h3>
+ <p>(With approval dates within the 2015-16 financial year)</p>
+ <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
+ $seifa = "SELECT *,sum(Value),count(Value) as count,AVG(Value)  FROM tenders WHERE Agency ='$agency'   ";
+ $result = mysqli_query($db, $seifa );
+   @$num_results = mysqli_num_rows($result);
+   if ($num_results <1)
+   {
+   echo"<h4>There are no Commonwealth Tenders made by $agency</h4>";
+   }
+ else{
+	 echo"<hr>
+
+	 <table class='stats' ><tbody><tr><th>Number</th><th>Ave Value</th><th>Total Value</th></tr>";
+  while ($row = $result->fetch_assoc()) 
+     {
+
+ echo"
+
+   <tr><th>".number_format($row['count'])."</th><th>".number_format($row['AVG(Value)'])."</th>    <th>$".number_format($row['sum(Value)'])."</th></tr>
+
+ ";
+ }echo" </tbody></table><hr><br>";
+ }
+ }
+
+ ?>
+	   <?php
+	   if ( isset($_GET['Agency']) )
+	    {
+
+	     $data = $_GET['Agency']; 
+	     $agency=mysqli_real_escape_string ( $db , $data );
+
+
+	  //echo"<h3>Commonwealth Tenders awarded by $agency</h3>	  <p>(With approval dates within the 2015-16 financial year)</p>";
+	  echo"
+	  
+	  <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
+	  $seifa = "SELECT Name,ABN,sum(Value),count(Value) as count  FROM tenders WHERE Agency ='$agency' GROUP BY ABN ORDER BY sum(Value) DESC ";
+	  $result = mysqli_query($db, $seifa );
+	    @$num_results = mysqli_num_rows($result);
+	    if ($num_results <1)
+	    {
+	    echo"<h4>There are no Commonwealth Tenders made by $agency</h4>";
+	  }
+	  else{
+	 	 echo"<hr>
+	 <div class='expand'>
+	 ";
+	   while ($row = $result->fetch_assoc()) 
+	      {
+
+	  echo"
+	 	 <table class='basic' ><tbody>
+	    <tr><td width='150px'>Name</td><td>".$row['Name']."</td></tr>
+	  <tr><td>ABN</td><td><a href='agency.php?Agency=$agency&ABN=".$row['ABN']."'>".$row['ABN']."</a></td></tr>
+	 <tr><td>Number</td><td>(".number_format($row['count']).") <span class='right'>$".number_format($row['sum(Value)'])."</span></td>    </tr>
+
+	 </tbody></table>
+	  ";
+	  }echo" <hr><br></div>Mouse/Scroll over for more results. <p>Click on the ABN to display details (below)</p><hr><br>";
+	  }
+	  }
+
+	  ?>
+	 
+      <?php
+      if ( isset($_GET['Agency']) && isset($_GET['ABN']) )
+       {
+
+        $data = $_GET['Agency']; 
+        $agency=mysqli_real_escape_string ( $db , $data );
+        $data = $_GET['ABN']; 
+        $ABN=mysqli_real_escape_string ( $db , $data );
+
+ 	   $query = "SELECT *  FROM tenders WHERE Agency ='$agency'  && ABN='$ABN' ";
+ 	   $result = mysqli_query($db, $query);
+	    @$num_results = mysqli_num_rows($result);
+	
+	   echo"<p>$agency awarded $num_results tenders to $ABN in the 2015-16 FY <div class='expand'>";
+ 	   while ($row = $result->fetch_assoc()) 
+ 	      {
+ 			  include'tenders_table.php';
+ 		  }
+		  echo"</div>Mouse/Scroll over for more results.";
+ 	  }
+ 	   ?>
+
+	  
+	 
+	    <?php/*
+	    if ( isset($_GET['Agency']) )
+	     {
+ 
+	      $data = $_GET['Agency']; 
+	      $agency=mysqli_real_escape_string ( $db , $data );
+ 
+
+	   echo"<h4>Commonwealth Tenders administered by $agency</h4>
+	   <p>(With approval dates within the 2015-16 financial year)</p>
+	   <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
+	   $agency_results = "SELECT *  FROM tenders WHERE Agency ='$agency'   ";
+	   $result = mysqli_query($db, $agency_results );
+	     @$num_results = mysqli_num_rows($result);
+	     if ($num_results <1)
+	     {
+	     echo"<h4>There are no Commonwealth Tenders administered by $agency</h4>";
+	     }
+	   else{
+	    while ($row = $result->fetch_assoc()) 
+	       {
+
+
+
+	 include'tenders_table.php';
+  
+	   }echo" <p></p>";
+	   }
+	   }
+
+	   ?>
 
  <?php
  if ( isset($_GET['Program']) || isset($_GET['Component']))
@@ -228,7 +385,7 @@ echo"<tr><td><img style='height:15px; opacity:0.4' src='images/chevron.png'></im
     
 }mysqli_free_result($result);
 
-        ?>
+      */  ?>
       
 
 <?php
