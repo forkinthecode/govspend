@@ -18,9 +18,9 @@ opacity:0.7; padding:5px;}
     user-select: none;
 }
  
- select {border:none; width:75%; font-size:18px; height:25px; padding:10px; }
+ select {border:none; width:75%; font-size:20px; height:25px; padding:10px; }
    /*
-       input,select { width:35%; font-size:18px; height:25px;}
+       input,select { width:35%; font-size:20px; height:25px;}
        input, select { height:30px; display:inline; 
             
             font-size:.90em ; 
@@ -73,17 +73,17 @@ opacity:0.7; padding:5px;}
 
 a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
 
-.wide {width:95%; padding:10px; font-size:15px; line-height:18px; border: 1px; border-style: dashed;  } 
+.wide {width:95%; padding:10px; font-size:15px; line-height:20px; border: 1px; border-style: dashed;  } 
 .wide td:nth-of-type(even) {   background:#cbdbd8; text-align:right;}
 .wide tr:nth-of-type(even) {   background:#eee; }
 
 
 .basic { width:90%;   border: solid 1px #dcdcdc; padding:10px;}
-.basic tr:nth-of-type(even) {  background:#cbdbd8; border-radius:5px; border: 1px; width:400px; line-height:18px; }
-.basic tr:nth-of-type(odd) {   border-radius:5px; line-height:18px;}
+.basic tr:nth-of-type(even) {  background:#cbdbd8; border-radius:5px; border: 1px; width:400px; line-height:20px; }
+.basic tr:nth-of-type(odd) {   border-radius:5px; line-height:20px;}
 .basic td:nth-of-type(odd) {  text-align:right;}
 .basic td {  padding:2px; margin-left:5px;margin-right:5px;}
-.grants {width:95%; line-height:18px;}
+.grants {width:95%; line-height:20px;}
 .grants td:nth-of-type(even) {   text-align:right;}
 
 .overlaid { position: relative; top: 80px;  left: 30px; }
@@ -147,7 +147,7 @@ li { list-style: none; }
   padding: 15px;
   border: 1px solid transparent;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 20px;
   color: #eoeoeo;
   -webkit-transition: all 0.2s ease-in-out; 
   -moz-transition: all 0.2s ease-in-out; 
