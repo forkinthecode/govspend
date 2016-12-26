@@ -10,7 +10,7 @@ require'header.php';
  if ( !isset($_GET['Agency'])  )
  {
 
-$budget = "SELECT Agency,sum(current) FROM `budget_table15_16` GROUP BY Agency order by sum(current) DESC";
+$budget = "SELECT Portfolio,Agency,sum(current) FROM `budget_table15_16` GROUP BY Agency order by sum(current) DESC";
 $result = mysqli_query($db, $budget );
 @$num_results = mysqli_num_rows($result);
  echo"<h3>Budget totals for all Agencies</h3><div class='expand'>
@@ -23,7 +23,7 @@ $result = mysqli_query($db, $budget );
    
 echo"
  
-<tr><td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td><td>$".number_format($row['sum(current)']).",000</td></tr>
+<tr><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</a></td><td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td><td>$".number_format($row['sum(current)']).",000</td></tr>
   ";
     }echo"</tbody></table></div><div class='clear'></div>
 		<div class='scroller'>
@@ -120,7 +120,7 @@ echo"<div class='source'>Source: <a href='http://www.finance.gov.au/resource-man
   
                   
 
- $agency=$_GET['Agency'];
+$agency=$_GET['Agency'];
 $agor = "SELECT *,sum(current) FROM `budget_table15_16`
  WHERE Agency LIKE'%$agency%' GROUP BY Program ORDER BY Agency,Program";
 $result = mysqli_query($db, $agor );
@@ -156,7 +156,7 @@ echo"
 
         if ($num_results >3)
 {
-echo"<h4>Programs administered by the $agency Agency</h2><div class='source'>Source: Calculated from Line item CSV 
+echo"<h4>Programs administered by the $agency</h2><div class='source'>Source: Calculated from Line item CSV 
 Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
 	<div class='expand'>";
  while ($row = $result->fetch_assoc()) 
@@ -165,7 +165,7 @@ Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/bud
    
 echo"<table class='wide'><tbody>
  
-  <tr><td>".$row['Program']."</td>
+  <tr><td><a href='portfolio.php?Program=".$row['Program']."'>".$row['Program']."</a></td>
   <td>$".number_format($row['sum(current)']).",000</td></tr> </tbody></table>
 
   ";
@@ -197,6 +197,40 @@ echo"</div>Mouse/Scroll over for more results.
 
   ?>
 
+    <?php
+    if ( isset($_GET['Agency']) && !isset($_GET['Program']))
+    {
+  
+   $agency = $_GET['Agency']; 
+
+
+   $grants = "SELECT grants.Program,sum(Funding) FROM `grants` join budget_table15_16 on 
+   budget_table15_16.program=grants.program where budget_table15_16.agency='$agency' && 
+   grants.Year='2015-16' group by grants.Program";
+   $result = mysqli_query($db, $grants);
+    @$num_results = mysqli_num_rows($result);
+
+
+           if ($num_results >0)
+           {
+              echo"<h4>Commonwealth Grant totals for Programs administered by $agency </h4><div class='source'>Source: Grants data published at $agency website</div>
+   			   <table class='grants' ><tbody>";
+    while ($row = $result->fetch_assoc()) 
+       {
+         echo"<tr>
+         <td><a href='agency.php?Agency=$agency&Program=".$row['Program']."'>".$row['Program']."</a></td>
+   	  <td>$".number_format($row['sum(Funding)'])."</td></tr>";
+
+
+       }
+       echo" </tbody></table><br><hr class='short'><br><p>Click on the Program name for details</p> ";
+           }
+                  /*  else 
+        echo"<p>There are no grants provided by the Commonwealth directly under the Programs administered by/the open data provided by
+                  the $agency in the 2015-16 FY</p>";*/
+
+   }mysqli_free_result($result);
+                    ?>
    
 
  </div>
@@ -462,40 +496,6 @@ include'grants_table.php';
         ?>
  
 
- <?php
- if ( isset($_GET['Agency']) && !isset($_GET['Program']))
- {
-  
-$agency = $_GET['Agency']; 
-
-
-$grants = "SELECT grants.Program,sum(Funding) FROM `grants` join budget_table15_16 on 
-budget_table15_16.program=grants.program where budget_table15_16.agency='$agency' && 
-grants.Year='2015-16' group by grants.Program";
-$result = mysqli_query($db, $grants);
- @$num_results = mysqli_num_rows($result);
-
-
-        if ($num_results >0)
-        {
-           echo"<h4>Commonwealth Grant totals for Programs administered by $agency </h4><div class='source'>Source: Grants data published at $agency website</div>
-			   <table class='grants' ><tbody>";
- while ($row = $result->fetch_assoc()) 
-    {
-      echo"<tr>
-      <td><a href='agency.php?Agency=$agency&Program=".$row['Program']."'>".$row['Program']."</a></td>
-	  <td>$".number_format($row['sum(Funding)'])."</td></tr>";
-
-
-    }
-    echo" </tbody></table><br><hr class='short'><br><p>Click on the Program name for details</p> ";
-        }
-               /*  else 
-     echo"<p>There are no grants provided by the Commonwealth directly under the Programs administered by/the open data provided by
-               the $agency in the 2015-16 FY</p>";*/
-
-}mysqli_free_result($result);
-                 ?>
 
 
 

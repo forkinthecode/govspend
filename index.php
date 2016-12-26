@@ -101,14 +101,35 @@ echo"
 }echo" </tbody></table><br><div class='source'>Source: Grants data published at agency websites</div><hr class='short'><br> ";
 
 ?>
+<h4>2015-16 FY Portfolio totals for Commonwealth Tenders Funding </h4>
+<?php
+
+$qery=" SELECT * FROM tenders_by_portfolio";
+$result = mysqli_query($db, $qery );
+echo" <table class='grants' ><tbody><tr><th>Portfolio</th><th>Value</th></tr>";
+ while ($row = $result->fetch_assoc()) 
+    {
 
 
- 
+
+   echo"
+
+   <tr> <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</a></td><td width='150px'><span style='float:right'>$".number_format($row['Funding'])."</span></td>
+  </tr>
+   
+   ";
+
+
+      }echo" </tbody></table><br>";
+
+	 
+	 
+	 ?>
    <?php
    //if ( isset($_GET['Agency']) )
     {
 
- 
+		/*
 
   echo"<h4>Commonwealth Tenders Totalled by Agency</h4>
   <p>(With approval dates within the 2015-16 financial year)</p>
@@ -129,7 +150,7 @@ echo"
 	   ";
 
   
-        }echo" </tbody></table><br>";
+        }echo" </tbody></table><br>";*/
   }
 
   ?>

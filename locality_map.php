@@ -69,6 +69,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi_5tk-gJ3wLBKhYh95OKsfTxWV-FOSnI&callback=initMap">
 </script>
 	     
-<div id='Map' style='width: 700px; height: 500px'>
-</div><hr><br>
+<div id='Map' style='width: 500px; height: 500px'>
+</div><br>
+<p>Click on the map icon to reveal postcode. Click on the Postcode to display grants for the program in that location</p>
 <div class='clear'></div>
