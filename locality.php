@@ -3,8 +3,56 @@ require'header.php';
 ?>
 
         <div class="left">
-			<table ><tr><td>
-<?php
+  
+
+			 <?php
+			if ( isset($_GET['Postcode']) )
+			 {
+			$data = $_GET['Postcode']; 
+			$postcode=mysqli_real_escape_string ( $db , $data );
+			$seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
+			$result = mysqli_query($db, $seifa );
+			  @$num_results = mysqli_num_rows($result);
+			   if ($num_results <1){
+			        echo"<h4>No SEIFA scores have been calculated by the ABS for $postcode</h4>";
+			      }
+
+			  elseif ($num_results >0)
+			      {
+			echo"<h3>Socio Economic (SEIFA) Data for postcode: $postcode</h3><div class='source'>Source: SEIFA data published by ABS based on 2011 census data</div>
+			<table class='council'><tbody><tr><td>National Rank</td><td>National Decile</td><td>Usual Resident Pop</td></tr>";
+			$seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
+			     while ($row = $result->fetch_assoc()) 
+			            {
+			              echo"<tr>
+			              <td>Ranked ".number_format($row['rank'])." </td><td>".$row['decile']."/10 </td>
+			              <td>".number_format($row['URP'])."</td></tr>";
+
+			              }
+       
+
+			                echo"<tr><td tyle='text-align:right'>out of a possible 2,481</td><td>";
+			                $seifa = "SELECT decile FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
+			                $result = mysqli_query($db, $seifa );
+			                 while ($row = $result->fetch_assoc()) 
+			                    {
+			                      $iterations=$row['decile'];
+
+			                    }
+
+			                 $i=0;
+			                while ($i <= $iterations-1)
+			                    {
+			                 echo "<img height='15px' src='icon.png'></img>";
+			                   $i++;
+			                    }
+			      }echo"</td><td></td></tr></tbody></table><br><br>";
+    
+			}
+			?>
+			    <div class='clear'></div>
+			
+<?php/*
  if ( isset($_GET['Postcode']) )
  {
 
@@ -12,19 +60,17 @@ require'header.php';
 	$postcode=mysqli_real_escape_string ( $db , $data );
 	$total = "SELECT * FROM `coordinates`  where pcode='$postcode' ";
 	$result = mysqli_query($db, $total );
-	echo"<h3>Suburbs</h3></td><td>";
+	echo"<table border='1px'><tr><td><h3>Suburbs</h3></td><td>";
 	 while ($row = $result->fetch_assoc()) 
 	    {
 
-	echo"".$row['locality'].", ".$row['state']." ";
+	echo"".$row['locality'].", ".$row['state'].". ";
 
 	    }
 		
 		
- $data = $_GET['Postcode']; 
-$postcode=mysqli_real_escape_string ( $db , $data );
-$total = "SELECT Distinct council FROM `LGA`  where Postcode='$postcode' ORDER BY RATIO DESC LIMIT 1";
-$result = mysqli_query($db, $total );
+$lga = "SELECT Distinct council FROM `LGA`  where Postcode='$postcode' ORDER BY RATIO DESC LIMIT 1";
+$result = mysqli_query($db, $lga );
 
  while ($row = $result->fetch_assoc()) 
     {
@@ -35,41 +81,47 @@ $council =$row['council'];
     }
 
 
-	$postcode=mysqli_real_escape_string ( $db , $data );
-	$total = "SELECT Distinct postcode FROM `LGA`  where council='$council' ";
-	$result = mysqli_query($db, $total );
+	
+	$pcode = "SELECT Distinct postcode FROM `LGA`  where council='$council' ";
+	$result = mysqli_query($db, $pcode );
  echo"<tr><td><h3>LGA Postcodes</h3></td><td>";
 	 while ($row = $result->fetch_assoc()) 
 	    {
 
 	echo"<a href='locality.php?Postcode=".$row['postcode']."'>".$row['postcode']."</a> | ";
 	    }
-
-$total = "SELECT * FROM `locality_CED`  where Postcode='$postcode' ORDER BY RATIO DESC LIMIT 1 ";
-$result = mysqli_query($db, $total );
+$fed_electorate = "SELECT electorate FROM `locality_CED`  where postcode='$postcode' ORDER BY RATIO DESC LIMIT 1 ";
+$result = mysqli_query($db, $fed_electorate );
 
  while ($row = $result->fetch_assoc()) 
     {
 
-		echo"</td></tr><tr><td><h3>Federal Electorate</h3></td><td>
-		 <a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></h3></td></tr><tr> ";
-	$electorate =$row['Electorate'];
+		echo"</td></tr>
+	               <tr>
+		<td><h3>Federal Electorate</h3></td>
+		<td>
+		 <a href='electorate.php?Electorate=".$row['electorate']."'>".$row['electorate']."</a></h3></td>
+		           </tr>
+	               <tr> ";
+	$electorate =$row['electorate'];
     }
- $total = "SELECT Postcode FROM `electorate_party`  where Electorate='$electorate' GROUP BY Postcode ";
- $result = mysqli_query($db, $total );
- echo"<td><h3>Electorate Postcodes</h3></td><td>";
+ $total_ = "SELECT DISTINCT postcode FROM locality_CED  where electorate='$electorate'  ";
+ $result = mysqli_query($db, $total_ );
+ echo"<td><h3>Electorate Postcodes</h3>
+	 </td><td>test";
   while ($row = $result->fetch_assoc()) 
      {
 
 
 
  	 echo"
- 		 <a href='locality.php?Postcode=".$row['Postcode']."'>".$row['Postcode']."</a> | ";
+ 		 <a href='locality.php?Postcode=".$row['postcode']."'>".$row['postcode']."</a> | ";
 	 
      }
  
 
-}echo"</td></tr></table>";
+}         echo"</td>
+	           </tr></table>";*/
 ?>
 
 
@@ -78,13 +130,23 @@ if ( isset($_GET['Postcode']) && !isset($_GET['Program']) )
 {
 $total = "SELECT * FROM `suburb_by_indigenous`  where postcode='$postcode'  ";
 $result = mysqli_query($db, $total );
-echo"<br><br><hr><br><table class='stats'><tr><th>Non Indigenous</th><th>Indigenous & Torres Strait</th></tr>";
+@$num_results = mysqli_num_rows($result);
+ if ($num_results >0){
  while ($row = $result->fetch_assoc()) 
     {
-
-echo"<tr><td>".number_format($row['non_Indigenous'])."</td><td>".(number_format($row['total']-$row['non_Indigenous']))."</td></tr>";
+		echo"<br><div class='source'>ABS figures from 2011 Census</div>
+			<table class='stats'><tr><th>Non Indigenous</th><th>Indigenous & Torres Strait</th><th>Not Stated</th></tr>";
+echo"<tr><th>".number_format($row['non_Indigenous'])."</th><th>".(number_format($row['Aboriginal']+$row['TSI']+$row['TSI_IND']))."</th><th>".number_format($row['not_stated'])."</th></tr>";
+echo"<tr>
+	<th>".number_format(
+		($row['non_Indigenous']/$row['total'])
+			     *100/1,2)."%</th>
+				<th>".number_format(( ($row['Aboriginal']+$row['TSI']+$row['TSI_IND'])/$row['non_Indigenous'])*100.1,2)."%</th>
+		<th>".number_format(($row['not_stated']/$row['total'])*100/1,2)."%</th></tr>";
+		echo"</table><br>";
  
-    }echo"</table><br>";
+    }
+                        }
 	
 }
 ?>
@@ -119,63 +181,16 @@ echo"<tr>
 }
  ?>
   
-
- <?php
-if ( isset($_GET['Postcode']) )
- {
-$data = $_GET['Postcode']; 
-$postcode=mysqli_real_escape_string ( $db , $data );
-$seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
-$result = mysqli_query($db, $seifa );
-  @$num_results = mysqli_num_rows($result);
-   if ($num_results <1){
-        echo"<h4>No SEIFA scores have been calculated by the ABS for $postcode</h4>";
-      }
-
-  elseif ($num_results >0)
-      {
-echo"<h3>Socio Economic (SEIFA) Data for postcode: $postcode</h3><div class='source'>Source: SEIFA data published by ABS based on 2011 census data</div>
-<table class='council'><tbody><tr><td>National Rank</td><td>National Decile</td><td>Usual Resident Pop</td></tr>";
-$seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
-     while ($row = $result->fetch_assoc()) 
-            {
-              echo"<tr>
-              <td>Ranked ".number_format($row['rank'])." </td><td>".$row['decile']."/10 </td>
-              <td>".number_format($row['URP'])."</td></tr>";
-
-              }
-       
-
-                echo"<tr><td tyle='text-align:right'>out of a possible 2,481</td><td>";
-                $seifa = "SELECT decile FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
-                $result = mysqli_query($db, $seifa );
-                 while ($row = $result->fetch_assoc()) 
-                    {
-                      $iterations=$row['decile'];
-
-                    }
-
-                 $i=0;
-                while ($i <= $iterations-1)
-                    {
-                 echo "<img height='15px' src='icon.png'></img>";
-                   $i++;
-                    }
-      }echo"</td><td></td></tr></tbody></table><br><br>";
-    
-}
-?>
-    <div class='clear'></div>
 	<?php
-    if ( !isset($_GET['Postcode']) && !isset($_GET['Program']) )
+    if ( isset($_GET['Postcode']) && !isset($_GET['Program']) )
     {
-	$charities="SELECT * as count FROM `charities` WHERE postcode='$postcode'";
+	$charities="SELECT * FROM `charities` WHERE Postcode='$postcode'";
 	$result = mysqli_query($db, $charities );
 	 @$num_results = mysqli_num_rows($result);
-	 echo"<h3>There are ".number_format($row['count'])." charities registered with the Australian Charitis & Not for Profit Commission
-		  using $postcode as their postal address.</h3><div class='expand'><table><tbody>";
+	 echo"<div class='source'>Calculated based on ACNC data.</div><h3>There are ".number_format($num_results)." charities registered with the Australian Charities & Not for Profit Commission
+		  using $postcode as their business address.</h3><div class='expand'><table><tbody>";
 	 
-
+	 
 
 	 while ($row = $result->fetch_assoc()) 
 	    {
@@ -189,29 +204,7 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
 }
 	
 	?>
-  <?php
- if ( isset($_GET['Program']) )
- {
-	$program= $_GET['Program'];
-
-	 $query="SELECT * from budget_table15_16 where Program like '%".$_GET['Program']."%' GROUP BY Program";
-     $result = mysqli_query($db, $query );
-	 echo"<div class='source'>Source: Line item CSV published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></a></div>
-	   <table class='basic'><tbody>";
-	  while ($row = $result->fetch_assoc()) 
-	     {
-	    echo" 
-  
-	   <tr><td>Portfolio</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."' target='_blank'>".$row['Portfolio']."</a></td></tr>
-	   <tr><td>Agency</td><td><a href='agency.php?Agency=".$row['Agency']."' target='_blank'>".$row['Agency']."</a></td></tr>
-	   <tr><td>Program</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
-	   <tr><td>Outcome</td><td>".$row['Outcome']."</td></tr>";
-
-	 }echo"</tbody></table>";
-	
-}
  
- ?>
 
     <div class='clear'></div>
   
@@ -252,9 +245,31 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
  }
  
  ?>
-
+  <?php
+ if ( isset($_GET['Postcode']) &&  isset($_GET['Program']))
+ {
+  $data = $_GET['Postcode']; 
+ $postcode=mysqli_real_escape_string ( $db , $data );
+ $data1 = $_GET['Program']; 
+$program=mysqli_real_escape_string ( $db , $data1);
  
+$grants = "SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
+         DATE_FORMAT(End,  '%D %b %Y' ) AS End,
+         DATEDIFF(END,APPROVED)/30 AS Term  
+	
+	
+	 FROM grants WHERE Postcode LIKE'%$postcode%' && Program like'%$program%' && Year='2015-16'  ";
+$result = mysqli_query($db, $grants );
 
+@$num_results = mysqli_num_rows($result);
+  while ($row = $result->fetch_assoc()) 
+ {
+	 include'grants_table.php';
+
+ }
+}
+ ?>
+   
  </div>
  <div class='right'>
 	   <?php
@@ -279,7 +294,7 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
 
 	         {
 	         $grants = "SELECT sum(Funding) as total FROM grants 
-	          WHERE Postcode LIKE'%$postcode%'  ";
+	          WHERE Postcode LIKE'%$postcode%' && Year='2015-16' ";
 	         $result = mysqli_query($db, $grants );
 	         @$num_results = mysqli_num_rows($result);
         
@@ -295,7 +310,7 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
 
 
 	             $grant_number = "SELECT count(funding) as grant_number FROM grants 
-	              WHERE Postcode LIKE'%$postcode%'  ";
+	              WHERE Postcode LIKE'%$postcode%' && Year='2015-16' ";
 	             $result = mysqli_query($db, $grant_number);
 	              while ($row = $result->fetch_assoc()) 
 	                   { 
@@ -304,13 +319,13 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
               
 
 	                 $ave = "SELECT (sum(Funding)/count(funding)) as ave FROM grants 
-	                  WHERE Postcode LIKE'%$postcode%'  ";
+	                  WHERE Postcode LIKE'%$postcode%' && Year='2015-16' ";
 	                 $result = mysqli_query($db, $ave );
 	                  while ($row = $result->fetch_assoc()) 
 	                       {
 	                       echo"<th>$".number_format($row['ave'])."</th></tr>";
 	                       }
-	                       echo"</tbody></table><hr>
+	                       echo"</tbody></table><hr>";/*
 	                       <br><h3>Breakdown of Commonwealth programs administering grants to $postcode</h3>
 	                  <p>Click on the program name to get the recipients for that program in $postcode</p>";
 	                 $byprogram = "SELECT *,sum(Funding) FROM grants 
@@ -330,7 +345,7 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
 	                   <td>$".number_format($row['sum(Funding)'])."</td></tr>
 	                   ";
 
-	                    }echo"</tbody></table><br><hr class='short'><div class='source'>Grants data published at agency websites</div><br>"; 
+	                    }echo"</tbody></table><br><hr class='short'><div class='source'>Grants data published at agency websites</div><br>"; */
 	   }
             
             
@@ -339,8 +354,43 @@ $seifa = "SELECT * FROM seifa_by_postcode WHERE Postcode ='$postcode' ";
 
 	         ?>
 
+   <?php
+  if ( isset($_GET['Postcode']) )
+  {
 
- <?php
+
+  $data = $_GET['Postcode']; 
+ $postcode=mysqli_real_escape_string ( $db , $data );
+
+ echo"
+	                       <br><h3>Breakdown of Commonwealth programs administering grants to $postcode</h3>
+	                  <p>Click on the program name to get the recipients for that program in $postcode</p>";
+	                 $byprogram = "SELECT *,sum(Funding) FROM grants 
+	                  WHERE Postcode LIKE'%$postcode%' && Year='2015-16' GROUP BY Program ";
+	                 $result = mysqli_query($db, $byprogram );
+	                 echo"<table style='basic'>
+	                 <tbody>
+	                 <tr><th>Program Name</th><th>Total Value</th></tr>";
+	                  while ($row = $result->fetch_assoc()) 
+	                     {
+                      
+                   
+	                 echo"
+	                  <tr>
+                  
+	                   <td><a href='locality.php?Program=".$row['Program']."&Postcode=".$row['Postcode']."'>".$row['Program']."</a></td>
+	                   <td>$".number_format($row['sum(Funding)'])."</td></tr>
+	                   ";
+
+	                    }echo"</tbody></table><br><hr class='short'><div class='source'>Grants data published at agency websites</div><br>"; 
+	   
+            
+            
+    
+	 }mysqli_free_result($result);
+
+	         ?>
+ <?php/*
  if ( isset($_GET['Postcode']) && !isset($_GET['Program']) )
  {
   
@@ -408,7 +458,7 @@ else
 
     
 }mysqli_free_result($result);
-
+*/
         ?>
 
  <?php

@@ -70,6 +70,7 @@ echo"
 }
 echo"
  </tbody></table><br> <h4>Notes</h4>
+<p>Structure of the Commonwealth budget: Portfolio->Agencies->Programs->Component/Sub-Program->Grants & Tenders</p>
     <p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
 <p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identical to Program name.</p>
 <p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
@@ -206,7 +207,7 @@ $result = mysqli_query($db, $grants);
 
         if ($num_results >0)
         {
-           echo"<div class='source'>Source: Grants data published at agency websites</div><table class='basic' ><tbody>";
+           echo"<div class='source'>Source: Grants data published at agency websites</div><div class='expand'><table class='basic' ><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
       echo"<tr>
@@ -215,12 +216,10 @@ $result = mysqli_query($db, $grants);
 
 
     }
-    echo" </tbody></table><br><hr class='short'><br> ";
+    echo" </tbody></table><br></div>Mouse/Scroll for more results ";
         }
                  else 
-				 {/*
-     echo"<p>There are no grants provided by the Commonwealth directly under the Programs administered by/the open data provided by
-               the $portfolio Portfolio the 2015-16 FY</p>";*/
+				 {
  }
 
 }mysqli_free_result($result);
@@ -284,7 +283,7 @@ $result = mysqli_query($db, $grants );
         if ($num_results >0)
         {
           echo"
-  <h4>There are $num_results grants administered under the $program Program in the 14-15 FY:</h4><br>
+  <h4>There are $num_results grants administered under the $program Program in the 15-16 FY:</h4><br>
 		 <div class='source'>Source: Grants data published at agency websites</div> <div class='expand'>";
  while ($row = $result->fetch_assoc()) 
     {

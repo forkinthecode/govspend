@@ -1,7 +1,7 @@
-       <?php     echo"<h3>ACNC data for $recipient</h3><div class='source'>Source: ACNC data published at <a href='http://data.gov.au/dataset/acnc-register'>data.gov.au</a></div>
+       <?php     echo"<div class='source'>Source: ACNC data published at <a href='http://data.gov.au/dataset/acnc-register'>data.gov.au</a></div>
           <table class='basic'><tbody>
                
-        <tr><td>ABN </td><td>".$row['ABN']."</td></tr>       
+        <tr><td>ABN </td><td><a href='recipient.php?ABN=".$row['ABN']."'>".$row['ABN']."</a></td></tr>       
          <tr>
         <td>Legal Name</td>     
         <td> ".$row['Legal_Name']."</td>
@@ -70,6 +70,6 @@
         </tr>
         </tbody>
         </table>";
-        }
+        
 		
 		?>

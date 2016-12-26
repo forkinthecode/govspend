@@ -45,9 +45,6 @@ echo"
  
  
 
-<p>Govspend is a prototype only. Federal electorate details may be out of date.
-  Grants data is taken from multiple Commonwealth agency sites and there is no guarantee that 
-  it is correct in the database. The prototype is to give an idea of what can be done with open financial data.</p>
   <?php/*
   $query="SELECT * FROM tax_transparency GROUP BY ABN";
   $result = mysqli_query($db, $query );
@@ -74,7 +71,18 @@ echo"
  
            
 
-      
+       <h4>Notes</h4>
+
+<p>GovSpend is a prototype only. Federal electorate details may be out of date.
+  Grants data is taken from multiple Commonwealth agency sites and there is no guarantee that 
+  it is correct in the database. The prototype is to give an idea of what can be done with open financial data.</p>
+<p>Structure of the Commonwealth budget: Portfolio->Agencies->Programs->Component/Sub-Program->Grants & Tenders</p>
+    <p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
+<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identical to Program name.</p>
+<p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
+<p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that criteria.</p>
+
+
 
  
 
@@ -101,12 +109,12 @@ echo"
 }echo" </tbody></table><br><div class='source'>Source: Grants data published at agency websites</div><hr class='short'><br> ";
 
 ?>
-<h4>2015-16 FY Portfolio totals for Commonwealth Tenders Funding </h4>
-<?php
 
+<?php
+/*
 $qery=" SELECT * FROM tenders_by_portfolio";
 $result = mysqli_query($db, $qery );
-echo" <table class='grants' ><tbody><tr><th>Portfolio</th><th>Value</th></tr>";
+echo"<h4>2015-16 FY Portfolio totals for Commonwealth Tenders Funding </h4> <table class='grants' ><tbody><tr><th>Portfolio</th><th>Value</th></tr>";
  while ($row = $result->fetch_assoc()) 
     {
 
@@ -123,7 +131,7 @@ echo" <table class='grants' ><tbody><tr><th>Portfolio</th><th>Value</th></tr>";
       }echo" </tbody></table><br>";
 
 	 
-	 
+	 */
 	 ?>
    <?php
    //if ( isset($_GET['Agency']) )

@@ -118,7 +118,8 @@ $result = mysqli_query($db, $charities );
            {
          	include'charities_table.php';
 
-     }
+          }
+}
 }
 
 ?>
@@ -137,13 +138,16 @@ $result = mysqli_query($db, $charities );
     echo"<h4>There are no matches in ACNC charities data for the ABN $ABN</h4>";
   }
   elseif ($num_results >0)
-  { echo"<h3>ACNC data for $ABN</h3>";
+     { 
+	  
+	  echo"<h3>ACNC data for $ABN</h3>";
      while ($row = $result->fetch_assoc())
            {
            
 				include'charities_table.php';
 
-     }
+           }
+    }
 }
 
 ?>  
@@ -160,10 +164,10 @@ $result = mysqli_query($db, $seifa );
   if ($num_results <1)
   {
   echo"<h4>There are no Commonwealth grant recipients named $recipient</h4>";
-}
+  }
 else{
  while ($row = $result->fetch_assoc()) 
-    {
+     {
 
 echo"
 
@@ -174,8 +178,8 @@ echo"
 <tr><td>Total Value:</td>       <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td></tr>
  </tbody></table><br>
 ";
-}echo" <p>Click on the Program name to display details of grants to $recipient for that program</p> ";
-}
+     }echo" <p>Click on the Program name to display details of grants to $recipient for that program</p> ";
+   }
 }
 
 ?>
@@ -196,7 +200,8 @@ echo"
     {
     echo"<h4>The ATO has not provided Tax Transparency data for the ABN $ABN</h4>";
     }
-  else{ echo"<div class='source'>Source: From Tax Transparency data published at data.gov.au </div>";
+  else
+  { echo"<div class='source'>Source: From Tax Transparency data published at data.gov.au </div>";
    while ($row = $result->fetch_assoc()) 
       {
 
@@ -210,7 +215,7 @@ echo"
  <tr><td>Tax             </td><td>$".number_format($row['Tax'])."</td></tr>
   </tbody></table><br> ";
      }
- }
+   }
  }
  
  ?>
@@ -224,31 +229,30 @@ echo"
     $data = $_GET['ABN']; 
     $ABN=mysqli_real_escape_string ( $db , $data );
  
+	$test="SELECT id FROM tenders where ABN='$ABN'";
+    $result = mysqli_query($db, $test );
+      @$num_results = mysqli_num_rows($result);
+      if ($num_results >0)
+      {
+	
+ 
+ $tenders = "SELECT *,sum(Value),count(Value) as count,AVG(Value)  FROM tenders WHERE ABN ='$ABN'   ";
+ $result = mysqli_query($db, $tenders );
+  
 
- echo"<h3>Commonwealth Tenders received by $ABN</h3>
+	 
+	 echo"<h3>Commonwealth Tenders received by $ABN</h3>
  <p>(With approval dates within the 2015-16 financial year)</p>
- <div class='source'>Source: Calculated using Historical Tenders data published at data.gov.au </div>";
- $seifa = "SELECT *,sum(Value),count(Value) as count,AVG(Value)  FROM tenders WHERE ABN ='$ABN'   ";
- $result = mysqli_query($db, $seifa );
-   @$num_results = mysqli_num_rows($result);
-   if ($num_results <1)
-   {
-   echo"<h4>There are no Commonwealth Tender recipients named $ABN</h4>";
- }
- else{
-	 echo"<hr>
-
-	 <table class='stats' ><tbody><tr><th>Number</th><th>Ave Value</th><th>Total Value</th></tr>";
+ <div class='source'>Source: Calculated using Historical Tenders data published at data.gov.au </div>
+<hr><table class='stats' ><tbody><tr><th>Number</th><th>Ave Value</th><th>Total Value</th></tr>";
   while ($row = $result->fetch_assoc()) 
      {
 
  echo"
  
-   <tr><th>".number_format($row['count'])."</th><th>".number_format($row['AVG(Value)'])."</th>    <th>$".number_format($row['sum(Value)'])."</th></tr>
- 
- ";
- }echo" </tbody></table><hr><br>";
- }
+<tr><th>".number_format($row['count'])."</th><th>".number_format($row['AVG(Value)'])."</th>    <th>$".number_format($row['sum(Value)'])."</th></tr>";
+     }echo" </tbody></table><hr><br>";
+   }
  }
 
  ?>
@@ -273,7 +277,7 @@ echo"
 		    while ($row = $result->fetch_assoc())
 	      {
   	 echo"<p><a href='recipient.php?Recipient=".$row['Name']."'>".$row['Name']."</a> (".$row['count'].") </p>";
- }
+           }
  
        }echo"</div>";
  
@@ -281,7 +285,7 @@ echo"
    ?>
 <?php
  if ( isset($_GET['ABN']) )
-  {
+      {
 	  include'tenders_map.php';
 	  
 	  }
@@ -298,25 +302,26 @@ echo"
  
      $data = $_GET['ABN']; 
      $ABN=mysqli_real_escape_string ( $db , $data );
- 
+ 	$test="SELECT id FROM tenders where ABN='$ABN'";
+     $result = mysqli_query($db, $test );
+       @$num_results = mysqli_num_rows($result);
+       if ($num_results >0)
+       {
+	
 
   echo"<h4>Commonwealth Tenders received by $ABN</h4>
   <p>(With approval dates within the 2015-16 financial year)</p>
   <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
   $seifa = "SELECT *  FROM tenders WHERE ABN ='$ABN'   ";
   $result = mysqli_query($db, $seifa );
-    @$num_results = mysqli_num_rows($result);
-    if ($num_results <1)
-    {
-    echo"<h4>There are no Commonwealth Tender recipients named $ABN</h4>";
-  }
-  else{
+   
+
    while ($row = $result->fetch_assoc()) 
-      {
+          {
 		  include'tenders_table.php';
   
            }echo" <p>Click on the Agency name to display details of all Tenders to $ABN for that Agency</p> ";
-  }
+       }
   }
 
   ?>
@@ -348,7 +353,7 @@ echo"
     {
 
 include'grants_table.php';
-}
+    }
 }
 ?>
 
