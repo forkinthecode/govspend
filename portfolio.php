@@ -243,7 +243,7 @@ $result = mysqli_query($db, $component );
 
         if ($num_results >0)
         {
-          echo"Click on the Component name to show distribution of recpients by Federal electorate (income support payments only)<h4>($num_results) Components:</h4>
+          echo"Click on the Component name (below) to show distribution of recpients by Federal electorate (income support payments only)<h4>($num_results) Components:</h4>
         
           <table class='component'><tbody>";
  while ($row = $result->fetch_assoc()) 
@@ -412,15 +412,31 @@ $result = mysqli_query($db, $grants);
  <?php
  include'income_support.php';
  ?>
+
  <?php
- if (  isset($_GET['Component']))
+ if ( isset($_GET['Component']) )
  {
+ 
+ $component=$_GET['Component'];
+ if (  $component !='Carer Allowance (Adult)' 
+	 || $component !='Compensation and debt relief' 
+	 || $component !='Child Disability Assistance Payment)' 
+	 || $component !='Carer Supplement' 
+	 || $component !='Ex-Gratia Payments to Unsuccessful Applicants of Carer Payment (Child)'
+	 || $component !='Mobility Allowance' 
+	 || $component !='Pensioner Education Supplement' 
+	 || $component !='Utilities Allowance (Working Age Payments)'
+	 || $component !='Investment Approaches to Welfare - Evaluation')
+ 
+      {
 	 echo"<h4>Caveats</h4>
 		 <div class='source'>Source: Department of Social Services published at <a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div>
 		 <p>
  In order to protect individuals' privacy, identified populations between 1 and 19 have been suppressed and replaced with ‘20’ for confidentiality purposes. Additional data may be suppressed and replaced with ‘n.p.’ (not published) to prevent the derivation of identified populations that have values of less than 20. This prevents information from being broken down or manipulated to the degree that individuals may be identified. In some cases populations with invalid, missing, unknown or 'other' values (where 'other' includes unknown values) are not suppressed as this information cannot be used to identify individuals. n/a (not applicable/not available) is used where the data is either unavailable or the
   data is not reported as it is part of the eligibility criteria for the payment (i.e. Widow Allowance by Gender). </p>";
   
+      }
+
 }?>
 </div></div>
 <div class='clear'></div>
