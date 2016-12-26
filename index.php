@@ -27,7 +27,7 @@ require'header.php';
 $total = "SELECT *,sum(current) FROM `budget_table15_16` group by Portfolio ORDER BY sum(current) DESC ";
 $result = mysqli_query($db, $total );
 echo"<div class='source'>Source: Calculated from Line item CSV 
-Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div><div class='expand'><table class='wide' border='0'><tbody>";
+Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div><table class='wide' border='0'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 
@@ -38,7 +38,7 @@ echo"
  <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td><td> $".number_format($row['sum(current)']).",000</td> 
 </tr>
  ";
-}echo"</tbody></table><br> </div>";
+}echo"</tbody></table><br> ";
 
 ?>
 

@@ -5,7 +5,27 @@ require'header.php';
 
         <div class="left">
 
-    
+    <?php
+     if ( !isset($_GET['Portfolio']) )
+     {
+	$total = "SELECT *,sum(current) FROM `budget_table15_16` group by Portfolio ORDER BY sum(current) DESC ";
+	$result = mysqli_query($db, $total );
+	echo"<p>Click on the Portfolio name to get breakdown of spending by that Portfolio</p> <div class='source'>Source: Calculated from Line item CSV 
+	Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div><table class='wide' border='0'><tbody>";
+	 while ($row = $result->fetch_assoc()) 
+	    {
+
+	echo"
+	  <tr>
+
+
+	 <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</td><td> $".number_format($row['sum(current)']).",000</td> 
+	</tr>
+	 ";
+	}echo"</tbody></table><br>";
+}
+	?>
+	
    <?php
     if ( isset($_GET['Portfolio']) && !isset($_GET['Component'] ))
     {
@@ -13,8 +33,8 @@ require'header.php';
                       
 $portfolio=$_GET['Portfolio'];
     
-   $agor = "SELECT DISTINCT Agency FROM `budget_table15_16`
-    WHERE Portfolio ='$portfolio' ";
+   $agor = "SELECT Agency,sum(current) FROM `budget_table15_16`
+    WHERE Portfolio ='$portfolio' GROUP BY Agency ORDER BY sum(current) DESC ";
    $result = mysqli_query($db, $agor );
    @$num_results = mysqli_num_rows($result);
 
@@ -29,7 +49,7 @@ Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/bud
  <tbody><table class='wide'><tbody>";
     while ($row = $result->fetch_assoc()) 
        {
-		   echo"<tr><td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td></tr>";
+		   echo"<tr><td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td><td>$".number_format($row['sum(current)']).",000</td></tr>";
 	   }
 	   echo"</tbody></table>";
          }elseif ($num_results<1)
@@ -272,7 +292,8 @@ $component=$_GET['Component'];
  {
   
 $portfolio = $_GET['Portfolio']; 
-echo"<hr><h4>Commonwealth Grant totals for Programs in the $portfolio Portfolio</h4>";
+echo"<hr><h4>Commonwealth Grant totals for Programs in the $portfolio Portfolio</h4>
+";
 
 $total="SELECT Portfolio,sum(Funding),AVG(Funding) as AVE, count(Funding) as count FROM grants where Portfolio='$portfolio'
 	 && Year='2015-16' GROUP BY Portfolio";
@@ -282,11 +303,12 @@ while ($row = $result->fetch_assoc())
    {echo"<tr><th>".number_format($row['count'])."</th><th>$".number_format($row['AVE'])."</th><th>$".number_format($row['sum(Funding)'])."</th></tr>";
 	   
    }
-   echo"<tbody></table><hr><br>";
+   echo"<tbody></table><hr>	<p>Click on the electorate name to get breakdown for that electorate. Click on
+	Program name to see details of that Program</p><br>";
    
 
 
-$grants="SELECT *,sum(Funding) FROM grants where Portfolio='$portfolio' && Year='2015-16' GROUP BY Program";
+$grants="SELECT *,sum(Funding) FROM grants where Portfolio='$portfolio' && Year='2015-16' GROUP BY Electorate ORDER BY sum(Funding) DESC";
 $result = mysqli_query($db, $grants);
  @$num_results = mysqli_num_rows($result);
 
@@ -297,7 +319,7 @@ $result = mysqli_query($db, $grants);
  while ($row = $result->fetch_assoc()) 
     {
       echo"<tr>
-      <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td>
+      <td><a href='elecotrate.php?Electorate=".$row['Electorate']."&Program=".$row['Program']."'>".$row['Electorate']."</a></td>
 	  <td>$".number_format($row['sum(Funding)'])."</td></tr>";
 
 
@@ -359,24 +381,27 @@ $result = mysqli_query($db, $grants);
                
   $program=$_GET['Program'];
 
- $grants = "SELECT *, DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
-          DATE_FORMAT(End,  '%D %b %Y' ) AS End,
-          DATEDIFF(END,APPROVED)/30 AS Term FROM grants 
-  WHERE Program ='$program' && Year='2015-16'  ORDER BY Postcode ";
+ $grants = "SELECT *,sum(Funding) FROM grants 
+  WHERE Program ='$program' && Year='2015-16' GROUP BY Electorate  ORDER BY sum(Funding) DESC ";
  $result = mysqli_query($db, $grants );
   @$num_results = mysqli_num_rows($result);
 
          if ($num_results >0)
          {
            echo"
-   <h4>There are $num_results grants administered under the $program Program in the 15-16 FY:</h4><br>
- 		 <div class='source'>Source: Grants data published at agency websites</div> <div class='expand'>";
+   <h4>There are ".number_format($num_results)." grants administered under the $program Program in the 15-16 FY:</h4><br>
+ 		 <div class='source'>Source: Grants data published at agency websites</div> <div class='expand'><table class='basic'><tbody>";
   while ($row = $result->fetch_assoc()) 
      {
-  
- include'grants_table.php';
+		
+     echo"<tr>
+     <td><a href='electorate.php?Electorate=".$row['Electorate']."&Program=".$row['Program']."'>".$row['Electorate']."</a></td>
+  <td>$".number_format($row['sum(Funding)'])."</td></tr>";
 
-     }echo"</div><p>Mouse over/scroll for more results</p>";
+
+ 
+
+     }echo"</tbody></table></div><p>Mouse over/scroll for more results</p>";
         }
         if ($num_results <1)
         {echo"<h4>There are no grants matching $program</h4>";
@@ -384,104 +409,19 @@ $result = mysqli_query($db, $grants);
  }mysqli_free_result($result);
 
          ?>
-
  <?php
-  $component=$_GET['Component'];
- if (  $component =='Age Pension')
- {
-	 $query="SELECT Electorate,Age_Pension FROM welfare_by_electorate ORDER BY Age_Pension DESC";
-	  $result = mysqli_query($db, $query );
-	  echo"
-		  
-		  <H3>$program recipients by Federal Electorate</h3>
-	  <div class='source'>Source: Department of Human Services published at data.gov.au</div>
-	  
-	  <div class='expand'><table class='wide'><tbody><tr><td>Federal Electorate</td><td>Number</td></tr>";
-	  while ($row = $result->fetch_assoc()) 
-	     {
-	  
-	 echo"<tr><td>".$row['Electorate']."</td>
-		      <td>".number_format($row['Age_Pension'])."</td>";
- }echo"</tbody></table></div>";
- }
- 
+ include'income_support.php';
  ?>
  <?php
-  $component=$_GET['Component'];
- if (  $component =='Family Tax Benefit Part A')
+ if (  isset($_GET['Component']))
  {
-	 $query="SELECT Electorate,FTB_A FROM welfare_by_electorate ORDER BY FTB_A  DESC";
-	  $result = mysqli_query($db, $query );
-	  echo"<H3>FTB A recipients by Federal Electorate</h3>
-		  
-		  <div class='source'>Source: Department of Human Services published at data.gov.au</div>
-		  <div class='expand'><table class='wide'><tbody><tr><td>Federal Electorate</td><td>Number</td></tr>";
-	  while ($row = $result->fetch_assoc()) 
-	     {
-	  
-	 echo"<tr><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td>
-		      <td>".number_format($row['FTB_A'])."</td>";
- }echo"</tbody></table></div>Mouse/Scroll for more results<br>";
- }
- 
- ?>
- <?php
-  $component=$_GET['Component'];
- if (  $component =='Family Tax Benefit Part B')
- {
-	 $query="SELECT Electorate,FTB_B FROM welfare_by_electorate ORDER BY FTB_B  DESC";
-	  $result = mysqli_query($db, $query );
-	  echo"<H3>FTB B recipients by Federal Electorate</h3>
-		  <div class='source'>Source: Department of Human Services published at data.gov.au</div>
-		  <div class='expand'><table class='wide'><tbody><tr><td>Federal Electorate</td><td>Number</td></tr>";
-	  while ($row = $result->fetch_assoc()) 
-	     {
-	  
-	 echo"<tr><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td>
-		      <td>".number_format($row['FTB_B'])."</td>";
- }echo"</tbody></table></div>Mouse/Scroll for more results";
- }
- 
- ?>
- <?php
- $component=$_GET['Component'];
- if (  $component =='Newstart Allowance')
- {
-	 $query="SELECT Electorate,Newstart FROM welfare_by_electorate ORDER BY Newstart  DESC";
-	  $result = mysqli_query($db, $query );
-	  echo"
-		  <H3>NewStart recipients by Federal Electorate</h3><div class='source'>Source: Department of Human Services published at data.gov.au</div>
-	  <div class='expand'>
-	  <table class='wide'><tbody><tr><td>Federal Electorate</td><td>Number</td></tr>";
-	  while ($row = $result->fetch_assoc()) 
-	     {
-	  
-	 echo"<tr><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td>
-		      <td>".number_format($row['Newstart'])."</td>";
- }echo"</tbody></table></div>Mouse/Scroll for more results<br>";
- }
- 
- ?>
- <?php
- $component=$_GET['Component'];
- if (  $component =='Widow B Pension')
- {
-	 $query="SELECT Electorate,WidowB_Pension FROM welfare_by_electorate ORDER BY WidowB_Pension  DESC";
-	  $result = mysqli_query($db, $query );
-	  echo"<H3>NewStart recipients by Federal Electorate</h3><div class='source'>Source: Department of Human Services published at data.gov.au</div>
-		  
-	  
-	  <div class='expand'><table class='wide'><tbody><tr><td>Federal Electorate</td><td>Number</td></tr>";
-	  while ($row = $result->fetch_assoc()) 
-	     {
-	  
-	 echo"<tr><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td>
-		      <td>".number_format($row['WidowB_Pension'])."</td>";
- }echo"</tbody></table></div>Mouse/Scroll for more results<br>";
- }
- 
- ?>
-
+	 echo"<h4>Caveats</h4>
+		 <div class='source'>Source: Department of Social Services published at <a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div>
+		 <p>
+ In order to protect individuals' privacy, identified populations between 1 and 19 have been suppressed and replaced with ‘20’ for confidentiality purposes. Additional data may be suppressed and replaced with ‘n.p.’ (not published) to prevent the derivation of identified populations that have values of less than 20. This prevents information from being broken down or manipulated to the degree that individuals may be identified. In some cases populations with invalid, missing, unknown or 'other' values (where 'other' includes unknown values) are not suppressed as this information cannot be used to identify individuals. n/a (not applicable/not available) is used where the data is either unavailable or the
+  data is not reported as it is part of the eligibility criteria for the payment (i.e. Widow Allowance by Gender). </p>";
+  
+}?>
 </div></div>
 <div class='clear'></div>
 <?php 

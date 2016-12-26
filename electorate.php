@@ -47,7 +47,7 @@ $result = mysqli_query($db, $seifa );
     }
 }
 ?>
-     
+  
   <?php
   if ( isset($_GET['Electorate']) )
   {
@@ -115,6 +115,7 @@ echo"
 }echo"</tbody></table><br></div> ";
 }
 ?>
+
 <?php
 if ( isset($_GET['Electorate']) &&  !isset($_GET['Program']) )
  {
@@ -139,6 +140,41 @@ $total_on_welfare=$row['total'];
 echo"</tbody></table><br>";
 
 ?>
+  <?php
+  if ( isset($_GET['Electorate']) )
+   {
+  $data = $_GET['Electorate']; 
+  $electorate=mysqli_real_escape_string ( $db , $data );
+  echo"<h3>Breakdown by Payment Type</h3> <div class='source'>Source: DSS Payment by Demographic published at 
+  	<a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div> 
+  <table class='council'><tbody><tr><td>Payment Name</td><td>Number in Receipt</td></tr>";
+  $seifa = "SELECT * FROM welfare_by_electorate WHERE Electorate ='$electorate' ";
+  $result = mysqli_query($db, $seifa );
+    @$num_results = mysqli_num_rows($result);
+    if ($num_results >0)
+   // echo"<tr><td>No SEIFA results</td><td>for $council</td><td></td></tr>";
+   while ($row = $result->fetch_assoc()) 
+      {
+         echo"
+        <tr><td>Age Pension</td><td>".number_format($row['Age_Pension'])." </td></tr>
+        <tr><td>FTB A</td><td>".number_format($row['FTB_A'])." </td></tr>
+        <tr><td>FTB B</td><td>".number_format($row['FTB_B'])." </td></tr>
+        <tr><td>Parent Payment Partnered</td><td>".number_format($row['PPP'])." </td></tr>
+        <tr><td>Parent Payment Single</td><td>".number_format($row['PPS'])." </td></tr>
+        <tr><td>NewStart</td><td>".number_format($row['Newstart'])." </td></tr>
+        <tr><td>Disability Pension</td><td>".number_format($row['DSP'])." </td></tr>
+        <tr><td>Austudy</td><td>".number_format($row['Austudy'])." </td></tr>
+        <tr><td>Carers Payment</td><td>".number_format($row['Carer_Payment'])." </td></tr>
+        <tr><td>Youth Allowance</td><td>".number_format(($row['YA_SA']+$row['YAO']))." </td></tr>
+
+
+        ";
+
+      }
+      echo"</tbody></table>";
+    }
+
+  ?>
  <?php
  if ( isset($_GET['Electorate']) )
  {
@@ -379,20 +415,29 @@ echo"<table class='basic'><tbody>
   
    $electorate = $_GET['Electorate']; 
    $program = $_GET['Program']; 
-  echo"<h4>$program recpients in the Federal Electorate of $electorate</h4>";
+   $details = "SELECT Portfolio,Agency,Program  FROM `grants` where 
+             Year='2015-16' && Electorate ='$electorate'&& Program like'%$program%' GROUP BY Program ";
+   
+   $result = mysqli_query($db, $details );
+   while ($row = $result->fetch_assoc()) 
+      {
+   echo"<h4>Program details</h4><table class='stats'><tbody>
+   <tr><td>Portfolio:</td>    <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</a></td></tr>
+   <tr><td>Agency:</td>       <td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td></tr>
+    <tr><td>Program:</td>     <td><a href='electorate.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr></tbody></table>";
+ }
+
 $total = "SELECT *, DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
          DATE_FORMAT(End,  '%D %b %Y' ) AS End,
          DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` where 
           Year='2015-16' && Electorate ='$electorate'&& Program like'%$program%'  ";
 $result = mysqli_query($db, $total );
-
+ @$num_results = mysqli_num_rows($result);
+ echo"<h4>There are ".number_format($num_results)." grants for $program in $electorate</h4>";
  while ($row = $result->fetch_assoc()) 
     {
 echo"<table class='basic'><tbody>";
 echo"
- <tr><td>Portfolio:</td>    <td>".$row['Portfolio']."</td></tr>
- <tr><td>Agency:</td>       <td>".$row['Agency']."</td></tr>
-  <tr><td>Program:</td>     <td><a href='electorate.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
   <tr><td>Component:</td>   <td>".$row['Component']."</td></tr>
   <tr><td>Purpose:</td>     <td>".$row['Purpose']."</td></tr>
   <tr><td>Recipient:</td>   <td><a href='recipient.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
