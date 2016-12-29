@@ -446,7 +446,38 @@ echo"<h4>Component Details</h4><table class='basic'><tbody>
 }mysqli_free_result($result);
 
 ?>
+   <?php
+   /*if ( isset($_GET['Agency']) )
+    {
 
+		
+
+  echo"<h4>Commonwealth Tenders Totalled by Agency</h4>
+  <p>(With approval dates within the 2015-16 financial year)</p>
+  <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
+  $agency_results = "SELECT Agency,sum(Value)  FROM tenders GROUP BY Agency ORDER BY sum(Value) DESC ";
+  $result = mysqli_query($db, $agency_results );
+  echo" <table class='wide' ><tbody><tr><th>Agency</th><th>Value</th></tr>";
+   while ($row = $result->fetch_assoc()) 
+      {
+
+
+
+	   echo"
+
+	   <tr><td width='150px'><span style='float:right'>$".number_format($row['sum(Value)'])."</span></td>
+	   <td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td></tr>
+	   
+	   ";
+
+  
+        }echo" </tbody></table><br>";
+  }*/
+
+  ?>
+
+ 
+     
  <?php
  if ( isset($_GET['Program']) )
  {

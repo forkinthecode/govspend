@@ -111,8 +111,8 @@ echo"
 ?>
 
 <?php
-/*
-$qery=" SELECT * FROM tenders_by_portfolio";
+
+$qery=" SELECT Portfolio,sum(Value) FROM tenders WHERE Portfolio!='' group by Portfolio order by sum(Value) DESC";
 $result = mysqli_query($db, $qery );
 echo"<h4>2015-16 FY Portfolio totals for Commonwealth Tenders Funding </h4> <table class='grants' ><tbody><tr><th>Portfolio</th><th>Value</th></tr>";
  while ($row = $result->fetch_assoc()) 
@@ -122,7 +122,8 @@ echo"<h4>2015-16 FY Portfolio totals for Commonwealth Tenders Funding </h4> <tab
 
    echo"
 
-   <tr> <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</a></td><td width='150px'><span style='float:right'>$".number_format($row['Funding'])."</span></td>
+   <tr> <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</a></td>
+   <td width='150px'><span style='float:right'>$".number_format($row['sum(Value)'])."</span></td>
   </tr>
    
    ";
@@ -131,40 +132,9 @@ echo"<h4>2015-16 FY Portfolio totals for Commonwealth Tenders Funding </h4> <tab
       }echo" </tbody></table><br>";
 
 	 
-	 */
+	 
 	 ?>
-   <?php
-   //if ( isset($_GET['Agency']) )
-    {
-
-		/*
-
-  echo"<h4>Commonwealth Tenders Totalled by Agency</h4>
-  <p>(With approval dates within the 2015-16 financial year)</p>
-  <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
-  $agency_results = "SELECT Agency,sum(Value)  FROM tenders GROUP BY Agency ORDER BY sum(Value) DESC ";
-  $result = mysqli_query($db, $agency_results );
-  echo" <table class='wide' ><tbody><tr><th>Agency</th><th>Value</th></tr>";
-   while ($row = $result->fetch_assoc()) 
-      {
-
-
-
-	   echo"
-
-	   <tr><td width='150px'><span style='float:right'>$".number_format($row['sum(Value)'])."</span></td>
-	   <td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td></tr>
-	   
-	   ";
-
-  
-        }echo" </tbody></table><br>";*/
-  }
-
-  ?>
-
- 
-         
+       
         
 
   

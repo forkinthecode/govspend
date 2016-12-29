@@ -8,7 +8,9 @@
 	 || $component =='Mobility Allowance' 
 	 || $component =='Pensioner Education Supplement' 
 	 || $component =='Utilities Allowance (Working Age Payments)'
-	 || $component =='Investment Approaches to Welfare - Evaluation')
+	 || $component =='Investment Approaches to Welfare - Evaluation'
+	 || $component== 'Age Pension and Pensioner Concessions Information'
+	 || $component== 'Extend deeming provisions to account-based income streams _ awareness strategy')
  {
 	 echo"<p>There is no electorate breakdown for this payment.</p>";
  }
@@ -42,6 +44,57 @@
  }
  
  ?>
+ <?php
+  $component=$_GET['Component'];
+ if (  $component =='Wife Pension (Age)')
+ {
+	 echo"<p>Wife Pensions are income support payments for the female partner of an Age or Disability Support Pensioner respectively. There have been no new grants of Wife Pension since 1 July 1995. Current recipients remain eligible to receive this payment until otherwise disqualified from receiving it, or until they reach the qualifying age for the Age Pension.  
+		 Data includes recipients who are determined to be current (i.e. entitled to be paid) or suspended on the Centrelink payment system.</p>
+	";
+	 $query="SELECT Electorate,WP_Age FROM welfare_by_electorate ORDER BY WP_Age   DESC";
+	  $result = mysqli_query($db, $query );
+	  echo"
+		  
+		  <H3>$component recipients by Federal Electorate</h3>
+	  <div class='source'>Source: Department of Human Services published at data.gov.au</div>
+	  
+	  <div class='expand'><table class='wide'><tbody><tr><td>Federal Electorate</td><td>Number</td></tr>";
+	  while ($row = $result->fetch_assoc()) 
+	     {
+	  
+	  
+			 echo"<tr><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td>
+		      <td>".number_format($row['WP_Age'])."</td>";
+ }echo"</tbody></table></div>";
+ }
+ 
+ ?>
+ <?php
+  $component=$_GET['Component'];
+ if (  $component =='Special Benefit')
+ {
+	 echo"<p>Special Benefit is an income support payment for people who are in severe financial hardship due to circumstances beyond their control and who are ineligible for any other income support payment. Data includes recipients who are determined to be current (i.e. entitled to be paid)
+		  on the Centrelink payment system and not in receipt of a zero rate of payment.</p>
+	";
+	 $query="SELECT Electorate,Special_Benefit FROM welfare_by_electorate ORDER BY Special_Benefit   DESC";
+	  $result = mysqli_query($db, $query );
+	  echo"
+		  
+		  <H3>$component recipients by Federal Electorate</h3>
+	  <div class='source'>Source: Department of Human Services published at data.gov.au</div>
+	  
+	  <div class='expand'><table class='wide'><tbody><tr><td>Federal Electorate</td><td>Number</td></tr>";
+	  while ($row = $result->fetch_assoc()) 
+	     {
+	  
+	  
+			 echo"<tr><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td>
+		      <td>".number_format($row['Special_Benefit'])."</td>";
+ }echo"</tbody></table></div>";
+ }
+ 
+ ?>
+ 
  <?php
   $component=$_GET['Component'];
  if (  $component =='Sickness Allowance')

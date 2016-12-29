@@ -2,15 +2,13 @@
    body {font-family:Verdana; font-size:12px; color:#333; max-width:1500px;}
  
  
-   #submit {background:#FFF; border:none; height:35px;
-
- }
+   #submit {background:#cbdbd8; border:none; height:35px;}
+   
  .source {font-size:10px; width:85%; margin-left:2px; margin-right:2px; padding:5px; }
- .scroller {width:85%; height:15px; text-align:left; 
-opacity:0.7; padding:5px;}
+ .scroller {width:85%; height:15px; text-align:left; opacity:0.7; padding:5px;}
+
    
-   
-   img{
+   img{ /*stops linked images from showing highlights on mouseover*/
     -khtml-user-select: none;
     -o-user-select: none;
     -moz-user-select: none;
@@ -18,15 +16,11 @@ opacity:0.7; padding:5px;}
     user-select: none;
 }
  
- select {border:none; width:75%; font-size:20px; height:25px; padding:10px; }
-   /*
-       input,select { width:35%; font-size:20px; height:25px;}
-       input, select { height:30px; display:inline; 
-            
-            font-size:.90em ; 
-            outline:none; 
-            font-family:inherit; 
-                                      }*/
+ select {border:none; width:85%; font-size:20px; height:40px; padding:10px; }
+   
+
+ input { height:40px; width:10%; display:inline; font-size:20px ; outline:none; font-family:inherit; 
+             border-radius:5px;                         }
 .council { margin-top:10px;width:95%; text-align:center;}
 .council td:nth-of-type(odd) {  background:#eee; margin:5px; }
 .council td:nth-of-type(even) {  background:#cbdbd8; margin:5px; }

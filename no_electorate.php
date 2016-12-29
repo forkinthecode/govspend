@@ -1,14 +1,14 @@
- 
 <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?sensor=false'></script>
 <script type='text/javascript'>
+
+
     <?php
       
- if (  isset($_GET['Program']) && !isset($_GET['Postcode'])  )
+ if (  !isset($_GET['Electorate'])  )
  {
-$program=$_GET['Program'];
-$postcode=$_GET['Postcode'];
+
 $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where 
- Pcode IN (SELECT Postcode from grants where Program LIKE('%$program%') && Year='2015-16' ) ORDER BY Pcode ";
+ Pcode IN (SELECT Postcode from grants where Electorate='$electorate' && Year='2015-16' ) ORDER BY Pcode ";
        $result = mysqli_query($db, $map);
  
     echo" var markers = [";
@@ -20,7 +20,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where
         \"title\": \"".$row['Locality']."\",
         \"lat\": \"".$row['Lat']."\",
         \"lng\": \"".$row['Lon']."\",
-        \"description\": \"".$row['Locality']." <a href='locality.php?Program=".$_GET['Program']."&Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
+        \"description\": \"".$row['Locality']." <a href='locality.php?Program=".$_GET['Program']."&Postcode=".$row['Pcode']."'>".$row['Pcode']."</a>\"
       },
        ";
 }
@@ -28,10 +28,17 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where
    mysqli_free_result($result);
 }
 ?>
+
+
     window.onload = function () {
         LoadMap();
     }
+
+
      
+
+
+
     function LoadMap() {
         var mapOptions = {
             center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
@@ -50,10 +57,12 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where
                 position: myLatlng,
                 map: map,
                 title: data.title,
+
                 icon:'map_icon.png'
             });
  
             //Attach click event to the marker.
+
          
             (function (marker, data) {
                 google.maps.event.addListener(marker, "click", function (e) {
@@ -68,8 +77,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where
 <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi_5tk-gJ3wLBKhYh95OKsfTxWV-FOSnI&callback=initMap">
 </script>
-	     
-<div id='Map' style='width: 500px; height: 500px'>
-</div><br>
+<div id="Map" style="width: 500px; height: 500px">
+</div>
 <p>Click on the map icon to reveal postcode. Click on the Postcode to display grants for the program in that location</p>
 <div class='clear'></div>

@@ -126,7 +126,7 @@ $result = mysqli_query($db, $fed_electorate );
 
 
 <?php
-if ( isset($_GET['Postcode']) && !isset($_GET['Program']) )
+if ( isset($_GET['Postcode'])  )
 {
 $total = "SELECT * FROM `suburb_by_indigenous`  where postcode='$postcode'  ";
 $result = mysqli_query($db, $total );
@@ -180,15 +180,18 @@ echo"<tr>
     }echo"</tbody></table>";
 }
  ?>
+  	
   
+	
 	<?php
     if ( isset($_GET['Postcode']) && !isset($_GET['Program']) )
     {
 	$charities="SELECT * FROM `charities` WHERE Postcode='$postcode'";
 	$result = mysqli_query($db, $charities );
 	 @$num_results = mysqli_num_rows($result);
-	 echo"<div class='source'>Calculated based on ACNC data.</div><h3>There are ".number_format($num_results)." charities registered with the Australian Charities & Not for Profit Commission
-		  using $postcode as their business address.</h3><div class='expand'><table><tbody>";
+	 echo"<div class='source'>Calculated based on ACNC data.</div><h3>There are ".number_format($num_results)." charities 
+		 registered with the Australian Charities & Not for Profit Commission
+		  using $postcode as their business address.</h3><div class='source'>Source: ACNC data published at <a href='http://data.gov.au/dataset/acnc-register'>data.gov.au</a></div><div class='expand'><table><tbody>";
 	 
 	 
 
@@ -205,7 +208,29 @@ echo"<tr>
 	
 	?>
  
+  	<?php/*
+      if ( isset($_GET['Postcode']) && isset($_GET['Program']) )
+      {
+  	$charities="SELECT * FROM `charities` WHERE Postcode='$postcode' && Program LIKE'%$program%'";
+  	$result = mysqli_query($db, $charities );
+  	 @$num_results = mysqli_num_rows($result);
+  	 echo"<div class='source'>Calculated based on ACNC data.</div><h3>There are ".number_format($num_results)." charities
+		  registered with the Australian Charities & Not for Profit Commission
+  		  using $postcode as their business address.</h3><div class='expand'><table><tbody>";
+	 
+	 
 
+  	 while ($row = $result->fetch_assoc()) 
+  	    {
+
+
+  			include'charities_table.php';
+		
+
+  	    }echo"</tbody></table></div>";
+	
+  }*/
+  ?>
     <div class='clear'></div>
   
 

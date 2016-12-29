@@ -1,14 +1,13 @@
- 
 <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?sensor=false'></script>
 <script type='text/javascript'>
     <?php
       
- if (  isset($_GET['Program']) && !isset($_GET['Postcode'])  )
+ if (  isset($_GET['Electorate']) && isset($_GET['Program'])  )
  {
-$program=$_GET['Program'];
-$postcode=$_GET['Postcode'];
+$electorate=$_GET['Electorate'];
 $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where 
- Pcode IN (SELECT Postcode from grants where Program LIKE('%$program%') && Year='2015-16' ) ORDER BY Pcode ";
+ Pcode IN (SELECT Postcode from grants where Electorate ='$electorate' && Program LIKE'%$program%' && Year='2015-16' ) 
+Group by Pcode ORDER BY Pcode ";
        $result = mysqli_query($db, $map);
  
     echo" var markers = [";
@@ -20,7 +19,8 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where
         \"title\": \"".$row['Locality']."\",
         \"lat\": \"".$row['Lat']."\",
         \"lng\": \"".$row['Lon']."\",
-        \"description\": \"".$row['Locality']." <a href='locality.php?Program=".$_GET['Program']."&Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
+        \"description\": \"".$row['Locality']." <a href='locality.php?Program=".$_GET['Program']."&Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> Click on
+		the postcode for all grants to that postcode \"
       },
        ";
 }
@@ -35,7 +35,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where
     function LoadMap() {
         var mapOptions = {
             center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 4,
+            zoom: 10,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("Map"), mapOptions);
@@ -68,8 +68,6 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where
 <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi_5tk-gJ3wLBKhYh95OKsfTxWV-FOSnI&callback=initMap">
 </script>
-	     
-<div id='Map' style='width: 500px; height: 500px'>
-</div><br>
-<p>Click on the map icon to reveal postcode. Click on the Postcode to display grants for the program in that location</p>
+<div id="Map" style="width: 500px; height: 500px;background:#eee">
+</div><hr><br>
 <div class='clear'></div>

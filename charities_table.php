@@ -1,7 +1,7 @@
-       <?php     echo"<div class='source'>Source: ACNC data published at <a href='http://data.gov.au/dataset/acnc-register'>data.gov.au</a></div>
+       <?php     echo"
           <table class='basic'><tbody>
                
-        <tr><td>ABN </td><td><a href='recipient.php?ABN=".$row['ABN']."'>".$row['ABN']."</a></td></tr>       
+        <tr><td width='200px'>ABN </td><td><a href='recipient.php?ABN=".$row['ABN']."'>".$row['ABN']."</a></td></tr>       
          <tr>
         <td>Legal Name</td>     
         <td> ".$row['Legal_Name']."</td>
@@ -47,7 +47,9 @@
 <div class='issues'>".$row['Religion']."</div>
 <div class='issues'>".$row['Social']."</div> 
 <div class='issues'>".$row['Security']."</div>
+<div class='issues'>".$row['General_Public']."</div> 
 <div class='issues'>".$row['General']."</div> 
+<div class='issues'>".$row['Other']."</div> 
 <div class='issues'>".$row['Indigenous']."</div> 
 <div class='issues'>".$row['Aged']."</div>
 <div class='issues'>".$row['Children']."</div> 

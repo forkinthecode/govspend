@@ -63,7 +63,7 @@ echo"<th>";
       $iterations=$row['decile'];
     }
  $i=0;
-while ($i <= $iterations-1)
+while ($i <= $iterations)
     {
  echo "<img height='15px' src='icon.png'></img>";
    $i++;
@@ -97,7 +97,7 @@ echo"<a href='council.php?Council=".$row['council']."'>".$row['council']."</a> |
  if ( !isset($_GET['Electorate']) )
  {
   
-$electorate = $_GET['Electorate']; 
+
 echo"<h4>Total Commonwealth Grants by Electorate</h4> <div class='source'>Source: DSS Payment by Demographic published at 
 	<a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div> ";
 $total = "SELECT Electorate,sum(Funding) FROM `grants` where electorate !='' && Year='2015-16' Group by electorate ";
@@ -106,13 +106,8 @@ echo"<div class='expand'><table class='grants' ><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 
-echo"
-
-
- 
-  <tr><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td></tr>
- ";
-}echo"</tbody></table><br></div> ";
+echo"<tr><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td></tr>";
+}echo"</tbody></table><br></div>Mouse over/scroll for more results<div class='clear'></div> ";
 }
 ?>
 
@@ -165,7 +160,9 @@ echo"</tbody></table><br>";
         <tr><td>Disability Pension</td><td>".number_format($row['DSP'])." </td></tr>
         <tr><td>Austudy</td><td>".number_format($row['Austudy'])." </td></tr>
         <tr><td>Carers Payment</td><td>".number_format($row['Carer_Payment'])." </td></tr>
-        <tr><td>Youth Allowance</td><td>".number_format(($row['YA_SA']+$row['YAO']))." </td></tr>
+        <tr><td>Youth Allowance</td><td>".number_format(($row['YA_SA']+$row['YAO']))." </td>
+		  <tr><td>Special Benefit</td><td>".number_format($row['Special_Benefit'])." </td>
+		</tr>
 
 
         ";
@@ -174,6 +171,31 @@ echo"</tbody></table><br>";
       echo"</tbody></table>";
     }
 
+  ?>
+  <?php
+   if (isset($_GET['Electorate']))
+   {
+  
+
+
+
+  $total="SELECT sum(Funding),AVG(Funding) as AVE, count(Funding) as count FROM grants where Electorate='$electorate'
+  	 && Year='2015-16' group by Electorate";
+  $result = mysqli_query($db, $total);
+  @$num_results = mysqli_num_rows($result);
+
+
+
+        
+  echo"<br><hr><table class='stats'><tbody><th>Number</td><th>Average Value</th><th>Total</td></tr>";
+  while ($row = $result->fetch_assoc()) 
+     {echo"<tr><th>".number_format($row['count'])."</th><th>$".number_format($row['AVE'])."</th><th>$".number_format($row['sum(Funding)'])."</th></tr>";
+	   
+     }
+     echo"<tbody></table><hr>	";
+   
+  }
+  
   ?>
  <?php
  if ( isset($_GET['Electorate']) )
@@ -214,7 +236,8 @@ echo"<tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."<
     <h2>Electorate Search</h2>
   
     <div class='content'>
-     <form action='electorate.php'  method='GET'>
+     <form action='electorate.php' class='search' method='GET'>
+		   <lable for='submit'><input type='submit' name='submit' value='Go' id='submit' /></lable>
     <lable for='electorate'>
       <select name='Electorate' >
     
@@ -369,7 +392,7 @@ echo"<tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."<
       <option>  Wills </option>
       <option>  Wright  </option>
         </select></lable> 
-         <lable for='submit'><input type='submit' name='submit' value='Go' id='submit' /></lable>
+       
  
       </form>
   
@@ -449,81 +472,38 @@ echo"
 }
 }
 ?>
- <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?sensor=false'></script>
-<script type='text/javascript'>
-    <?php
-      
- if (  isset($_GET['Electorate']) && !isset($_GET['Postcode'])  )
- {
-$electorate=$_GET['Electorate'];
-$map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where 
- Pcode IN (SELECT Postcode from grants where Electorate ='$electorate' && Year='2015-16' ) ORDER BY Pcode ";
-       $result = mysqli_query($db, $map);
- 
-    echo" var markers = [";
-      while ($row = $result->fetch_assoc())
-          
- {
-       echo
-       " {
-        \"title\": \"".$row['Locality']."\",
-        \"lat\": \"".$row['Lat']."\",
-        \"lng\": \"".$row['Lon']."\",
-        \"description\": \"".$row['Locality']." <a href='locality.php?Program=".$_GET['Program']."&Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
-      },
-       ";
-}
-   echo"];";
-   mysqli_free_result($result);
-}
-?>
-    window.onload = function () {
-        LoadMap();
-    }
-     
-    function LoadMap() {
-        var mapOptions = {
-            center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 10,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("Map"), mapOptions);
- 
-        //Create and open InfoWindow.
-        var infoWindow = new google.maps.InfoWindow();
- 
-        for (var i = 0; i < markers.length; i++) {
-            var data = markers[i];
-            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map,
-                title: data.title,
-                icon:'map_icon.png'
-            });
- 
-            //Attach click event to the marker.
-         
-            (function (marker, data) {
-                google.maps.event.addListener(marker, "click", function (e) {
-                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
-                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.description + "</div>");
-                    infoWindow.open(map, marker);
-                });
-            })(marker, data);
-        }
-    }
-</script>
-<script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi_5tk-gJ3wLBKhYh95OKsfTxWV-FOSnI&callback=initMap">
-</script>
-<div id="Map" style="width: 500px; height: 500px;background:#eee">
-</div><hr><br>
-<div class='clear'></div>
+
+     <?php
+  /*    
+  if (  !isset($_GET['Electorate']) && !isset($_GET['Program'])  && !isset($_GET['Postcode']))
+  {
+ echo"<h3>Commonwealth grant locations in the federal electorate of Adelaide</h3>";	 
+ include'no_electorate_map.php';
+  }
+ */
+  ?>
   
 
 
+ 
+ <?php
+if  ( isset($_GET['Electorate'])  )
 
+{
+	$query="SELECT * FROM `tenders` WHERE Postcode IN (SELECT postcode from locality_CED where electorate='$electorate' )";
+    $result = mysqli_query($db, $query );
+	echo"<h3>Commonwealth tenders for the 15-16 FY for the electorate of $electorate</h3>";
+	    @$num_results = mysqli_num_rows($result);
+	    echo"<h4>There are ".number_format($num_results)." tenders</h4>
+		<div class='expand'>";
+    while ($row = $result->fetch_assoc()) 
+       {
+		   include'tenders_table.php';
+	   }
+	
+echo"</div>Mouse over/scroll for more results<div class='clear'></div>";
+}
+?>
 </div></div>
 <div class='clear'></div>
 <?php 

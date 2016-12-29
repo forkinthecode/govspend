@@ -7,8 +7,8 @@
  if (  isset($_GET['Program']) && !isset($_GET['Postcode'])  )
  {
 $program=$_GET['Program'];
-$map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where 
- Pcode IN (SELECT Postcode from grants where Program LIKE('%$program%') && Year='2014-15' ) ORDER BY Pcode ";
+$map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where 
+ Pcode IN (SELECT Postcode from grants where Program LIKE('%$program%') && Year='2015-16' ) ORDER BY Pcode ";
        $result = mysqli_query($db, $map);
  
     echo" var markers = [";
@@ -20,7 +20,8 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
         \"title\": \"".$row['Locality']."\",
         \"lat\": \"".$row['Lat']."\",
         \"lng\": \"".$row['Lon']."\",
-        \"description\": \"".$row['Locality']." <a href='locality.php?Program=".$_GET['Program']."&Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
+        \"description\": \"".$row['Locality']." <a href='locality.php?Program=".$_GET['Program']."&Postcode=".$row['Pcode']."'>".$row['Pcode']."</a>Click on
+		the postcode for all grants to that postcode \"
       },
        ";
 }
@@ -78,5 +79,6 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM postcodes_table where
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi_5tk-gJ3wLBKhYh95OKsfTxWV-FOSnI&callback=initMap">
 </script>
 <div id="Map" style="width: 500px; height: 500px">
+</div>
 <p>Click on the map icon to reveal postcode. Click on the Postcode to display grants for the program in that location</p>
 <div class='clear'></div>
