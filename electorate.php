@@ -180,7 +180,7 @@ echo"</tbody></table><br>";
 
 
   $total="SELECT sum(Funding),AVG(Funding) as AVE, count(Funding) as count FROM grants where Electorate='$electorate'
-  	 && Year='2015-16' group by Electorate";
+  	 && Year='2015-16' ";
   $result = mysqli_query($db, $total);
   @$num_results = mysqli_num_rows($result);
 

@@ -9,6 +9,16 @@
           <button type="submit" id='submit' value="Submit"> Find </button>
           <input type="text" name='Postcode' id='Postcode' placeholder="Postcode" required>
              </form>	
+        
+	           <form class='overlaid' action='recipient.php' target='_blank' method='GET'>
+	             <button type="submit" id='submit' value="Submit"> Find </button>
+	             <input type="text" name='ABN' id='ABN' placeholder="ABN" required>
+	                </form>               
+
+	           <form class='overlaid' action='recipient.php' target='_blank' method='GET'>
+	             <button type="submit" id='submit' value="Submit"> Find </button>
+	             <input type="text" name='Recipient' id='Recipient' placeholder="business name" required>
+	                </form>               
           <ul>
             <li><a href="index.php">Home</a></li>
             Find results by:
@@ -18,15 +28,9 @@
             <li><a href="recipient.php">Recipient</a></li>
 			<hr>
 			<li><a href="agency.php">Agency</a></li>
-			
-	           <form class='overlaid' action='recipient.php' target='_blank' method='GET'>
-	             <button type="submit" id='submit' value="Submit"> Find </button>
-	             <input type="text" name='ABN' id='ABN' placeholder="ABN" required>
-	                </form>               
+			 </ul>
 
-
-
-          </ul>
+         
 
         </div>
         

@@ -407,7 +407,7 @@ $result = mysqli_query($db, $grants );
 	                   <td>$".number_format($row['sum(Funding)'])."</td></tr>
 	                   ";
 
-	                    }echo"</tbody></table><br><hr class='short'><div class='source'>Grants data published at agency websites</div><br>"; 
+	                    }echo"</tbody></table><br><br>"; 
 	   
             
             
@@ -487,9 +487,9 @@ else
         ?>
 
  <?php
- if ( !isset($_GET['Postcode']) && isset($_GET['Program']))
+ if ( isset($_GET['Postcode']) && !isset($_GET['Program']))
  {
-	 include'locality_map.php';
+	// include'locality_map.php';
  }
  
 
@@ -503,7 +503,36 @@ else
 
 ?>
 
-  
+  <?php
+  if ( isset($_GET['Postcode']) && !isset($_GET['Program']))
+  {
+	  $totals = "SELECT *,sum(Value),AVG(Value) as AVE FROM tenders 
+	   WHERE Postcode ='$postcode'";
+	  $result = mysqli_query($db, $totals );
+	  @$num_results = mysqli_num_rows($result);
+	  echo"<hr><h3>Statistics for Commonwealth tenders to $postcode</h3><table class='stats'><tbody>";
+	     while ($row = $result->fetch_assoc()) 
+		 {
+			 echo"<tr><th>".number_format($num_results)." </th><th>$".number_format($row['AVE'])."</th><th>".number_format($row['sum(Value)'])."</th></tr>";
+		 }echo"</tbody></table><hr><br>";
+	  
+	  $grants = "SELECT * FROM tenders 
+	   WHERE Postcode ='$postcode'";
+	  $result = mysqli_query($db, $grants );
+	  echo"<div class='expand'>";
+	
+      if ($num_results>0)
+              { 
+	   while ($row = $result->fetch_assoc()) 
+	                {
+	          
+						include'tenders_table.php';
+					}
+				}echo"</div>";
+  }
+ 
+
+ ?> 
    
 
 </div></div>

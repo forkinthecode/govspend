@@ -2,7 +2,7 @@
 require'header.php';
 ?>
 
-
+<div id='chart'></div>
 
 <div class='left'>
 <h4>2015-16 FY Portfolio totals for General Government Spending </h4>

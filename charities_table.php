@@ -71,7 +71,7 @@
 <div class='issues'>".$row['Youth']."</div> </td>
         </tr>
         </tbody>
-        </table>";
+        </table><br>";
         
 		
 		?>

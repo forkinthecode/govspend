@@ -3,12 +3,12 @@
 <script type='text/javascript'>
     <?php
       
- if (  isset($_GET['Program']) && !isset($_GET['Postcode'])  )
+ if (  !isset($_GET['Program']) && isset($_GET['Postcode'])  )
  {
 $program=$_GET['Program'];
 $postcode=$_GET['Postcode'];
 $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where 
- Pcode IN (SELECT Postcode from grants where Program LIKE('%$program%') && Year='2015-16' ) ORDER BY Pcode ";
+ Pcode IN (SELECT Postcode from charities where Postcode  LIKE('%$postcode%')  ) ORDER BY Pcode ";
        $result = mysqli_query($db, $map);
  
     echo" var markers = [";
@@ -35,7 +35,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where
     function LoadMap() {
         var mapOptions = {
             center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 4,
+            zoom: 13,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("Map"), mapOptions);

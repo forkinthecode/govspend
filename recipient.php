@@ -46,25 +46,24 @@ if ( isset($_GET['Recipient']) )
  {
 $data = $_GET['Recipient']; 
 $recipient=mysqli_real_escape_string ( $db , $data );
-echo"<h4>Statistics for Commonwealth Grants received by $recipient</h4>
+
 	
-";
-$seifa = "SELECT sum(Funding),count(Funding) 
+
+$grants = "SELECT sum(Funding),count(Funding) 
 as count_ ,(sum(Funding)/count(Funding)) as Ave FROM grants WHERE Recipient ='$recipient'
  && Year='2015-16'  ";
-$result = mysqli_query($db, $seifa );
+$result = mysqli_query($db, $grants );
   @$num_results = mysqli_num_rows($result);
-  if ($num_results <1)
+  if ($row['count_']!=0 )
   {
-  echo"<h4>There are no Commonwealth grant recipients named $recipient</h4>";
-  }
-else{
-  echo"<table class='stats'><tbody><tr><th>Total value</th><th>Number</th><th>Average</th></tr>";
+ 
+  echo"<h4>Statistics for Commonwealth Grants received by $recipient</h4><hr><table class='stats'><tbody><tr>
+	  <th>Total value</th><th>Number</th><th>Average</th></tr>";
  while ($row = $result->fetch_assoc()) 
      {
 
      echo"<tr><th>$".number_format($row['sum(Funding)'])."</th><th>".$row['count_']."</th><th>".number_format($row['Ave'])."</th></tr>";
-     }echo"  </tbody></table><p>*With approval dates during the 2014-15 FY</p><br> ";
+     }echo"  </tbody></table><hr><p>*With approval dates during the 2014-15 FY</p><br> ";
     }
 }
 
@@ -78,11 +77,9 @@ $query="SELECT * FROM grants WHERE Recipient='$recipient' GROUP BY Recipient whe
 
 $result = mysqli_query($db, $query );
 @$num_results = mysqli_num_rows($result);
-  if ($num_results <1)
+  if ($num_results >0)
   {
-  //echo"<h4>There are no Commonwealth grant recipients named $recipient</h4>";
-  }
-else{
+ 
   echo"<H4>Commonwealth Grants data information for $recipient</h4><table class='stats'><tbody>";
  while ($row = $result->fetch_assoc()) 
      {
@@ -151,26 +148,26 @@ $result = mysqli_query($db, $charities );
 }
 
 ?>  
-<?php
+<?php/*
 if ( isset($_GET['Recipient']) )
  {
 $data = $_GET['Recipient']; 
 $recipient=mysqli_real_escape_string ( $db , $data );
+$test="SELECT id from grants where Recipient ='$recipient' && Year='2015-16' ";
+$result = mysqli_query($db, $test );
+  @$num_results = mysqli_num_rows($result);
+  if ($num_results >0)
+  {
+	  echo"$num_results test";
+$grants = "SELECT *,sum(Funding) FROM grants WHERE Recipient ='$recipient' && Year='2015-16' GROUP BY Program ";
+$result = mysqli_query($db, $grants );
+
 echo"<h4>Commonwealth Grants received by $recipient</h4>
 <p>(With approval dates within the 2015-16 financial year)</p><div class='source'>Source: Grants published at agency websites</div>";
-$seifa = "SELECT *,sum(Funding) FROM grants WHERE Recipient ='$recipient' && Year='2015-16' GROUP BY Program ";
-$result = mysqli_query($db, $seifa );
-  @$num_results = mysqli_num_rows($result);
-  if ($num_results <1)
-  {
-  echo"<h4>There are no Commonwealth grant recipients named $recipient</h4>";
-  }
-else{
  while ($row = $result->fetch_assoc()) 
      {
 
 echo"
-
 <table class='wide' ><tbody>
 <tr><td>Program</td>            <td><a href='recipient.php?Recipient=".$row['Recipient']."&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
 <tr><td>Portfolio:</td>         <td>".$row['Portfolio']."</td></tr>
@@ -180,7 +177,8 @@ echo"
 ";
      }echo" <p>Click on the Program name to display details of grants to $recipient for that program</p> ";
    }
-}
+
+}*/
 
 ?>
   <?php
@@ -220,7 +218,41 @@ echo"
  
  ?>
 
-   
+     <?php
+     if ( isset($_GET['Recipient']) )
+      {
+ 
+       $data = $_GET['Recipient']; 
+       $name=mysqli_real_escape_string ( $db , $data );
+ 
+   	$test="SELECT id FROM tenders where Name LIKE('$name')";
+       $result = mysqli_query($db, $test );
+         @$num_results = mysqli_num_rows($result);
+         if ($num_results >0)
+         {
+	
+ 
+    $tenders = "SELECT *,sum(Value),count(Value) as count,AVG(Value)  FROM tenders WHERE Name ='$name'   ";
+    $result = mysqli_query($db, $tenders );
+  
+
+	 
+   	 echo"<h3>Commonwealth Tenders received by $name</h3>
+    <p>(With approval dates within the 2015-16 financial year)</p>
+    <div class='source'>Source: Calculated using Historical Tenders data published at data.gov.au </div>
+   <hr><table class='stats' ><tbody><tr><th>Number</th><th>Ave Value</th><th>Total Value</th></tr>";
+     while ($row = $result->fetch_assoc()) 
+        {
+
+    echo"
+ 
+   <tr><th>".number_format($row['count'])."</th><th>".number_format($row['AVG(Value)'])."</th>  
+      <th>$".number_format($row['sum(Value)'])."</th></tr>";
+        }echo" </tbody></table><hr><br>";
+      }
+    }
+
+    ?>
    
   <?php
   if ( isset($_GET['ABN']) )
@@ -250,12 +282,41 @@ echo"
 
  echo"
  
-<tr><th>".number_format($row['count'])."</th><th>".number_format($row['AVG(Value)'])."</th>    <th>$".number_format($row['sum(Value)'])."</th></tr>";
+<tr><th>".number_format($row['count'])."</th><th>".number_format($row['AVG(Value)'])."</th>  
+   <th>$".number_format($row['sum(Value)'])."</th></tr>";
      }echo" </tbody></table><hr><br>";
    }
  }
 
  ?>
+ <?php
+ if ( isset($_GET['Recipient']) )
+  {
+
+   $data = $_GET['Recipient']; 
+   $name=mysqli_real_escape_string ( $db , $data );
+   $query="SELECT  Name,count(Name) as count FROM tenders where Name LIKE('$name%') GROUP BY Name ORDER BY count(Name) DESC";
+   $result = mysqli_query($db, $query );
+     @$num_results = mysqli_num_rows($result);
+     if ($num_results <1)
+     {
+     echo"<h4>There are no Commonwealth Tender recipients named $name</h4>";
+     }
+   else{
+	  
+		   echo"<h3>Names used by $name in Commonwealth Tenders</h3>
+			   <p>Name (No. Tenders using that name)</p>
+			   <div class='expand'>"; 
+		    while ($row = $result->fetch_assoc())
+	      {
+  	 echo"<p><a href='recipient.php?Recipient=".$row['Name']."'>".$row['Name']."</a> (".$row['count'].") </p>";
+           
+ 
+	       }echo"</div>";
+	   }
+	   
+ }
+   ?>
  <?php
  if ( isset($_GET['ABN']) )
   {
@@ -286,7 +347,7 @@ echo"
 <?php
  if ( isset($_GET['ABN']) )
       {
-	  include'tenders_map.php';
+	 // include'tenders_map.php';
 	  
 	  }
 	  
@@ -294,6 +355,54 @@ echo"
 
  </div>
  <div class='right'>
+      <?php
+      if ( isset($_GET['Recipient']) )
+       {
+ 
+        $data = $_GET['Recipient']; 
+        $name=mysqli_real_escape_string ( $db , $data );
+    	$test="SELECT id FROM tenders where Name LIKE('%$name%')";
+        $result = mysqli_query($db, $test );
+          @$num_results = mysqli_num_rows($result);
+          if ($num_results <4)
+          {
+	
+
+     echo"<h4>Commonwealth Tenders received by $name</h4>
+     <p>(With approval dates within the 2015-16 financial year)</p>
+  
+  
+     <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
+     $seifa = "SELECT *  FROM tenders WHERE Name LIKE('%$name%')   ";
+     $result = mysqli_query($db, $seifa );
+   
+
+      while ($row = $result->fetch_assoc()) 
+             {
+   		  include'tenders_table.php';
+  
+              }echo" <p>Click on the Agency name to display details of all Tenders to $name for that Agency</p> ";
+          }
+  
+   	   elseif ($num_results >3)
+   	   {
+   		   echo"<h4>Commonwealth Tenders received by $name</h4>
+     <p>(With approval dates within the 2015-16 financial year)</p>
+     <div class='source'>Source: Historical Tenders data published at data.gov.au </div><div class='expand'>";
+     $seifa = "SELECT *  FROM tenders WHERE Name LIKE('%$name%')   ";
+     $result = mysqli_query($db, $seifa );
+   
+   
+
+      while ($row = $result->fetch_assoc()) 
+             {
+   		  include'tenders_table.php';
+  
+              }echo"</div>Mouse over/Scroll for more results <p>Click on the Agency name to display details of all Tenders to $name for that Agency</p> ";
+          }
+     }
+
+     ?>
   
 
    <?php
@@ -305,12 +414,14 @@ echo"
  	$test="SELECT id FROM tenders where ABN='$ABN'";
      $result = mysqli_query($db, $test );
        @$num_results = mysqli_num_rows($result);
-       if ($num_results >0)
+       if ($num_results <4)
        {
 	
 
   echo"<h4>Commonwealth Tenders received by $ABN</h4>
   <p>(With approval dates within the 2015-16 financial year)</p>
+  
+  
   <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
   $seifa = "SELECT *  FROM tenders WHERE ABN ='$ABN'   ";
   $result = mysqli_query($db, $seifa );
@@ -321,6 +432,23 @@ echo"
 		  include'tenders_table.php';
   
            }echo" <p>Click on the Agency name to display details of all Tenders to $ABN for that Agency</p> ";
+       }
+  
+	   elseif ($num_results >3)
+	   {
+		   echo"<h4>Commonwealth Tenders received by $ABN</h4>
+  <p>(With approval dates within the 2015-16 financial year)</p>
+  <div class='source'>Source: Historical Tenders data published at data.gov.au </div><div class='expand'>";
+  $seifa = "SELECT *  FROM tenders WHERE ABN ='$ABN'   ";
+  $result = mysqli_query($db, $seifa );
+   
+   
+
+   while ($row = $result->fetch_assoc()) 
+          {
+		  include'tenders_table.php';
+  
+           }echo"</div>Mouse over/Scroll for more results <p>Click on the Agency name to display details of all Tenders to $ABN for that Agency</p> ";
        }
   }
 

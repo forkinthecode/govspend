@@ -1,5 +1,5 @@
    <style type="text/css">
-   body {font-family:Verdana; font-size:12px; color:#333; max-width:1500px;}
+   body {font-family:Verdana; font-size:12px; color:#333; max-width:1500px; }
  
  
    #submit {background:#cbdbd8; border:none; height:35px;}
@@ -51,8 +51,8 @@
 }
 @media (min-width: 701px)  {
  
-.right {float:right; width:40%; }
-.left  {float:left; width:52%; margin-left:2%; }
+.right {float:right; width:450px; }
+.left  {float:left; width:500px; margin-left:2%; }
 
       
 }
@@ -62,7 +62,7 @@
 }
 .description {width:300px; height:200px; overflow:scroll;}
 
-.page_width { max-width:1250px; }
+.page_width { max-width:1250px; margin:auto;}
 .clear { clear:both;}
 
 a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
