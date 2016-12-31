@@ -2,7 +2,7 @@
    body {font-family:Verdana; font-size:12px; color:#333; max-width:1500px; }
  
  
-   #submit {background:#cbdbd8; border:none; height:35px;}
+   #submit {background:#cbdbd8; border:none; height:30px;}
    
  .source {font-size:10px; width:85%; margin-left:2px; margin-right:2px; padding:5px; }
  .scroller {width:85%; height:15px; text-align:left; opacity:0.7; padding:5px;}
@@ -34,7 +34,7 @@
      
 
 @media (max-width: 519px) {
-
+.overlaid { position: relative; top: 0px;  left: 100px; width:300px; float:left;}
     .right {float:right; width:95%; }
     .left  {float:left; width:95%; margin-left:2%; }
     
@@ -53,7 +53,7 @@
  
 .right {float:right; width:450px; }
 .left  {float:left; width:500px; margin-left:2%; }
-
+.overlaid { position: relative; top: 0px;  left: 100px; width:300px; float:right;}
       
 }
 
@@ -80,9 +80,10 @@ a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
 .grants {width:95%; line-height:20px;}
 .grants td:nth-of-type(even) {   text-align:right;}
 
-.overlaid { position: relative; top: 80px;  left: 30px; }
+
 .overlaid input[type="text"] {
-  width:60%;
+	width:150px;
+	height:10px;
   padding: 10px;
   border: solid 1px #dcdcdc;
   transition: box-shadow 0.3s, border 0.3s;
