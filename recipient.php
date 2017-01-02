@@ -158,7 +158,7 @@ $result = mysqli_query($db, $test );
   @$num_results = mysqli_num_rows($result);
   if ($num_results >0)
   {
-	  echo"$num_results test";
+	 
 $grants = "SELECT *,sum(Funding) FROM grants WHERE Recipient ='$recipient' && Year='2015-16' GROUP BY Program ";
 $result = mysqli_query($db, $grants );
 
@@ -181,6 +181,42 @@ echo"
 }
 
 ?>
+  <?php
+  if ( isset($_GET['Recipient']) )
+   {
+  
+	   $data = $_GET['Recipient']; 
+	   $name=mysqli_real_escape_string ( $db , $data );
+	   
+  $query="SELECT * FROM `tax` WHERE Name like'%$name%'";
+  
+  $result = mysqli_query($db, $query );
+    @$num_results = mysqli_num_rows($result);
+ 
+  $num_results = mysqli_num_rows($result);
+    if ($num_results <1)
+    {
+    echo"<h4>The ATO has not provided Tax Transparency data for the companies matching $name</h4>";
+    }
+  else
+  { echo"<div class='source'>Source: From Tax Transparency data published at data.gov.au </div>";
+   while ($row = $result->fetch_assoc()) 
+      {
+
+  echo"
+   
+ <table class='wide' border='0'><tbody>
+ <tr><td width='150px'>Name            </td><td><a href='recipient.php?Recipient=".$row['Name']."'>".$row['Name']."</td></tr>
+ <tr><td>ABN             </td><td><a href='recipient.php?ABN=".$row['ABN']."'>".$row['ABN']."</td></tr>
+ <tr><td>Total Income    </td><td>$".number_format($row['Total_Income'])."</td></tr>
+ <tr><td>Taxable Income  </td><td>$".number_format($row['Taxable_Income'])."</td></tr>
+ <tr><td>Tax             </td><td>$".number_format($row['Tax'])."</td></tr>
+  </tbody></table><br> ";
+     }
+   }
+ }
+ 
+ ?>
   <?php
   if ( isset($_GET['ABN']) )
    {
@@ -302,9 +338,23 @@ echo"
      {
      echo"<h4>There are no Commonwealth Tender received by organisations matching $name</h4>";
      }
-   else{
+     elseif ($num_results<16)
+	 {
 	  
-		   echo"<h3>Names used by $name in Commonwealth Tenders</h3>
+  		   echo"<h3>$num_results Names matching $name in Commonwealth Tenders</h3>
+  			   <p>Name (No. Tenders using that name)</p>
+  			<table class='grants'>"; 
+  		    while ($row = $result->fetch_assoc())
+  	      {
+    	 echo"<tr><td><a href='recipient.php?Recipient=".$row['Name']."'>".$row['Name']."</a></td><td> (".$row['count'].")</td><td>$".number_format($row['sum(Value)'])."</td> </tr>";
+           
+ 
+  	       }echo"</table>";
+  	   }
+   elseif ($num_results>16)
+   {
+	  
+		   echo"<h3>$num_results Names matching $name in Commonwealth Tenders</h3>
 			   <p>Name (No. Tenders using that name)</p>
 			   <div class='expand'><table class='grants'>"; 
 		    while ($row = $result->fetch_assoc())
@@ -312,11 +362,40 @@ echo"
   	 echo"<tr><td><a href='recipient.php?Recipient=".$row['Name']."'>".$row['Name']."</a></td><td> (".$row['count'].")</td><td>$".number_format($row['sum(Value)'])."</td> </tr>";
            
  
-	       }echo"</table></div>";
+	       }echo"</table></div>Mouse/Scroll for more results";
 	   }
 	   
  }
    ?>
+   <?php
+   if ( isset($_GET['Recipient']) )
+    {
+
+     $data = $_GET['Recipient']; 
+     $name=mysqli_real_escape_string ( $db , $data );
+     $query="SELECT  ABN,Name,count(Name) as count,sum(Value) FROM tenders  WHERE MATCH(Name) 
+		 AGAINST('$name') GROUP BY Name,ABN ORDER BY count(ABN) DESC";
+     $result = mysqli_query($db, $query );
+       @$num_results = mysqli_num_rows($result);
+       if ($num_results <1)
+       {
+       echo"<h4>There are no Commonwealth Tender received by organisations matching $name</h4>";
+       }
+     else{
+	  
+  		   echo"<h3>ABN's for companies matching $name in Commonwealth Tenders</h3>
+  			   <p>ABN(No. Tenders for that ABN & Name combination)</p>
+  			   <div class='expand'><table class='grants'>"; 
+  		    while ($row = $result->fetch_assoc())
+  	      {
+    	 echo"<tr><td>".$row['Name']."</td><td><a href='recipient.php?Recipient=".$row['ABN']."'>".$row['ABN']."</a></td><td> (".$row['count'].")</td><td>$".number_format($row['sum(Value)'])."</td> </tr>";
+           
+ 
+  	       }echo"</table></div>";
+  	   }
+	   
+   }
+     ?>
  <?php
  if ( isset($_GET['ABN']) )
   {
@@ -356,7 +435,7 @@ echo"
  </div>
  <div class='right'>
       <?php
-      if ( isset($_GET['Recipient']) )
+      if ( isset($_GET['Recipient']) && !isset($_GET['Program']) )
        {
  
         $data = $_GET['Recipient']; 

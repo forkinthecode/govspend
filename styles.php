@@ -31,7 +31,7 @@
 .stats {width:95%; font-size:15px;}
 .stats td:nth-of-type(even) {   padding:10px; line-height:24px; background:#eee;}
 .stats td:nth-of-type(odd) {  padding:10px;  line-height:24px; background:#cbdbd8; }
-     
+.testimonial {padding:10px; background:#cbdbd8;}
 
 @media (max-width: 519px) {
 .overlaid { position: relative; top: 0px;  left: 100px; width:300px; float:left;}
@@ -65,7 +65,7 @@
 .page_width { max-width:1250px; margin:auto;}
 .clear { clear:both;}
 
-a { color:#759e34; padding:5px; border-radius:5px; text-decoration:none; }
+a { color:#759e34;  border-radius:5px; text-decoration:none; }
 
 .wide {width:95%; padding:10px; font-size:15px; line-height:20px; border: 1px; border-style: dashed;  } 
 .wide td:nth-of-type(even) {   background:#cbdbd8; text-align:right;}

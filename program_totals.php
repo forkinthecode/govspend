@@ -1,9 +1,10 @@
 
 
 <?php
- if( isset($_GET['Component'])  &&  isset($_GET['Program']))
+ if( isset($_GET['Component'])  )
  {
 $component=$_GET['Component'];
+echo"test1";
                             $total_current = "SELECT current,sum(current) FROM `budget_table15_16` ";
                                $result = mysqli_query($db, $total_current );
                                                         
@@ -11,14 +12,14 @@ $component=$_GET['Component'];
                             $total_current = $row['sum(current)'];//assigns this value to a variable.
                             ///////////////////////////////////////////
                             $query_total_last = "SELECT last,sum(last) FROM `budget_table15_16` 
-                            WHERE component='$component' GROUP BY component ";//calculates total fundingfor the prior budget year for agencies where search term forms part of their name
+                            WHERE component ='$component' GROUP BY component ";//calculates total fundingfor the prior budget year for agencies where search term forms part of their name
                             $result = mysqli_query($db, $query_total_last);
                                                          
                             while ($row = $result->fetch_assoc()) 
                             $query_total_last_year = $row['sum(last)'];//assigns this value to a variable.
                             ////////////////////////////////////////////////////////////////////
                             $query_total_current = "SELECT current,sum(current) FROM  `budget_table15_16`
-                               WHERE component='$component' GROUP BY component ";//calculates total fundingfor current year for agencies with search term in name
+                           WHERE component LIKE'%$component% GROUP BY component ";//calculates total fundingfor current year for agencies with search term in name
                             $result = mysqli_query($db, $query_total_current );
                                                          
                             while ($row = $result->fetch_assoc()) 
@@ -29,7 +30,7 @@ $component=$_GET['Component'];
                             //////////////////////////////////////////////////////////////////////////////////////////
 
                             $billion_ = "SELECT current,sum(current) FROM `budget_table15_16`
-                               WHERE component='$component' GROUP BY component ";
+                               WHERE component ='$component' GROUP BY component ";
                             $result = mysqli_query($db, $billion_ );
                                                          @$num_results = mysqli_num_rows($result);
                             while ($row = $result->fetch_assoc()) 
@@ -62,6 +63,7 @@ $component=$_GET['Component'];
  if( isset($_GET['Program']) &&  !isset($_GET['Component']) )
  {
 $program=$_GET['Program'];
+echo"test2";
                             $total_current = "SELECT current,sum(current) FROM `budget_table15_16` ";
                                $result = mysqli_query($db, $total_current );
                                                         
@@ -87,7 +89,7 @@ $program=$_GET['Program'];
                             //////////////////////////////////////////////////////////////////////////////////////////
 
                             $billion_ = "SELECT current,sum(current) FROM `budget_table15_16`
-                               WHERE program='$program' GROUP BY program ";
+                               WHERE program ='$program' GROUP BY program ";
                             $result = mysqli_query($db, $billion_ );
                                                          @$num_results = mysqli_num_rows($result);
                             while ($row = $result->fetch_assoc()) 

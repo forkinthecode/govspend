@@ -4,7 +4,7 @@ echo"
   <tr><td>Program:</td><td><a href='locality.php?Program=".trim($row['Program'])."'>".trim($row['Program'])."</a></td></tr>
   <tr><td>Component:</td><td>".trim($row['Component'])."</td></tr>
   <tr><td>Purpose:</td><td>".$row['Purpose']."</td></tr>
-  <tr><td>Recipient:</td><td>".$row['Recipient']."</td></tr>
+  <tr><td>Recipient:</td><td><a href='recipient.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
 
 <tr><td>Address</td><td><a href='https://www.google.com.au/maps/search/".$row['Locality']." Australia' 
         title='Locate in Google maps' target='_blank'><img src='map_icon.png'></img> ".$row['Locality']."</a></td></tr>

@@ -74,7 +74,7 @@ echo"
 	 if ( isset($_GET['Agency'])  )
 	 {
  $agency= $_GET['Agency'];
-	$agor = "SELECT Agency FROM `agencies` WHERE agency ='".$_GET['Agency']."'";
+	$agor = "SELECT Agency FROM `agencies` WHERE agency ='$agency'";
 	$result = mysqli_query($db, $agor );
 	 @$num_results = mysqli_num_rows($result);
     if ($num_results >0)
