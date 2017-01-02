@@ -16,14 +16,15 @@ $result = mysqli_query($db, $budget );
  echo"<h3>Budget totals for all Agencies</h3><div class='expand'>
 		<div class='source'>Source: Calculated using line item CSV 
 	Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
-	 <table class='basic' ><tbody> <tr><th>Program</th><th>Total Cost</th></tr>";
+	 <table class='grants' ><tbody> <tr><th>Program</th><th>Total Cost</th></tr>";
  while ($row = $result->fetch_assoc()) 
     {
       
    
 echo"
  
-<tr><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</a></td><td><a href='program.php?Program=".$row['Program']."'>".$row['Program']."</a></td><td>$".number_format($row['sum(current)']).",000</td></tr>
+<tr><!--<td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</a></td>-->
+<td><a href='program.php?Program=".$row['Program']."'>".$row['Program']."</a></td><td>$".number_format($row['sum(current)']).",000</td></tr>
   ";
     }echo"</tbody></table></div><div class='clear'></div>
 		<div class='scroller'>
@@ -35,190 +36,49 @@ echo"
 
 
 
+<?php 
+////////////////////////////////////////////////////////////
 
-	
-<?php/*
- if ( isset($_GET['Program'])  )
+ if ( isset($_GET['Portfolio']) && !isset($_GET['Program']) && !isset($_GET['Component']))
  {
-  
-$program=$_GET['Program'];
-$agor = "SELECT * 
-FROM  `AGOR` 
-WHERE Program =  '$program'";
-$result = mysqli_query($db, $agor );
-echo"<div class='source'>Source: <a href='http://www.finance.gov.au/resource-management/governance/agor/'>Australian Government Organisations Register</a></div>
-	<table class='basic'><tbody>";
- while ($row = $result->fetch_assoc()) 
-    {
-		echo"
-  <tr><td>Description</td>         <td><div class='description'>".$row['Description']."</div></td></tr>
-  <tr><td>GFS Sub-Functions</td>   <td>".$row['GFS_Function']."</td></tr>
-  <tr><td>Strategic Plan</td>      <td><a href='".$row['Strategic_Plan']."' target='_blank'>".$row['Strategic_Plan']."</a></td></tr>
-  <tr><td>Annual Report</td>       <td><a href='".$row['Annual_Reports']."' target='_blank'>".$row['Annual_Reports']."</a></td></tr>
-  <tr><td>Auditor</td>       <td>".$row['Auditor']."</td></tr>
-		  ";
-	 }echo"</tbody></table>";
-}mysqli_free_result($result);*/
-?>
- 
+	 
+$portfolio = $_GET['Portfolio']; 
+echo"<h4>Commonwealth Tender totals by ABN for Programs in the $portfolio Portfolio</h4>";
 
-    
-<?php/*
- if ( isset($_GET['Program'])  )
- {
-  
-                  
-
-$program=$_GET['Program'];
-$agor = "SELECT *,sum(current) FROM `budget_table15_16`
- WHERE Program LIKE'%$program%' GROUP BY Program ORDER BY Program,Program";
-$result = mysqli_query($db, $agor );
-@$num_results = mysqli_num_rows($result);
+$grants="SELECT Name,ABN,sum(Value),count(Value) as count FROM tenders where Portfolio='$portfolio' 
+	GROUP BY ABN ORDER BY sum(Value) DESC";
+$result = mysqli_query($db, $grants);
+ @$num_results = mysqli_num_rows($result);
 
 
-        if ($num_results <4 and $num_results>0)
-{
-echo"<h4>Programs administered by the $program Program</h2><div class='source'>Source: Calculated from Line item CSV 
-Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
-	";
- while ($row = $result->fetch_assoc()) 
-    {
-      
-   
-echo"<table class='wide'><tbody>
- 
-  <tr><td>".$row['Program']."</td>
-  <td>$".number_format($row['sum(current)']).",000</td></tr> </tbody></table>
-
-  ";
-}
-echo"
-<p>Commonwealth tenders data includes Program name but not the Program under which each Program is seeking tenders.</p><br>
-<!--<h4>Notes</h4><p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
-<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identical to Program name.</p>
-<p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
-<p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that criteria.</p>-->   ";
-
-}
-
-
-
-        if ($num_results >3)
-{
-echo"<h4>Programs administered by the $program</h2><div class='source'>Source: Calculated from Line item CSV 
-Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
-	<div class='expand'>";
- while ($row = $result->fetch_assoc()) 
-    {
-      
-   
-echo"<table class='wide'><tbody>
- 
-  <tr><td><a href='portfolio.php?Program=".$row['Program']."'>".$row['Program']."</a></td>
-  <td>$".number_format($row['sum(current)']).",000</td></tr> </tbody></table>
-
-  ";
-}
-echo"</div>Mouse/Scroll over for more results.
-<p>Commonwealth tenders data includes Program name but not the Program under which each Program is seeking tenders.</p><br>
-<!--<h4>Notes</h4><p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers.</p>
-<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identical to Program name.</p>
-<p>Some grants cover more than one location and/or cross political boundaries. Some grants apply state-wide or nationally. Where funding can not be attributed to a single location or electorate, these fields are left blank.</p>
-<p>Where funding is attributable to a single location (postcode) or political area (LGA or Federal Electorate) you can click on these fields to get results using that criteria.</p>-->   ";
-
-
-
-}
-
-    
-}mysqli_free_result($result);*/
-
-        ?>
-  
-    
-
- 
-
-    <?php/*
-    if ( isset($_GET['Program']) && !isset($_GET['Program']))
-    {
-  
-   $program = $_GET['Program']; 
-
-
-   $grants = "SELECT grants.Program,sum(Funding) FROM `grants` join budget_table15_16 on 
-   budget_table15_16.program=grants.program where budget_table15_16.agency='$program' && 
-   grants.Year='2015-16' group by grants.Program";
-   $result = mysqli_query($db, $grants);
-    @$num_results = mysqli_num_rows($result);
-
-
-           if ($num_results >0)
-           {
-              echo"<h4>Commonwealth Grant totals for Programs administered by $program </h4><div class='source'>Source: Grants data published at $program website</div>
-   			   <table class='grants' ><tbody>";
-    while ($row = $result->fetch_assoc()) 
-       {
-         echo"<tr>
-         <td><a href='program.php?Program=$program&Program=".$row['Program']."'>".$row['Program']."</a></td>
-   	  <td>$".number_format($row['sum(Funding)'])."</td></tr>";
-
-
-       }
-       echo" </tbody></table><br><hr class='short'><br><p>Click on the Program name for details</p> ";
-           }
-                
-
-   }mysqli_free_result($result);*/
-                    ?>
-    <?php
-    if ( isset($_GET['Program']) )
-    {
-  
-     $program = $_GET['Program']; 
-
-                   
-            
-
-   $grants = "SELECT *, DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
-            DATE_FORMAT(End,  '%D %b %Y' ) AS End,
-            DATEDIFF(END,APPROVED)/30 AS Term FROM grants 
-    WHERE Program LIKE'%$program%' && year='2015-16'  ORDER BY Postcode ";
-   $result = mysqli_query($db, $grants );
-    @$num_results = mysqli_num_rows($result);
-    if ($num_results <4)
-    {
-      echo"<h4>There are $num_results grants administered under the $program Program in the 15-16 FY:</h4><br>
-    		  ";
- 
-     while ($row = $result->fetch_assoc()) 
+        if ($num_results >0)
         {
-
-    include'grants_table.php';
-
-        }
-    }
-    elseif ($num_results >3)
+           echo"<div class='source'>Source: Historical Tenders data published at data.gov.au</div>
+			   <div class='expand'><table class='basic'><tbody><tr><th>Recipient</th><th>ABN</th><th>Number</th><th>Total Value</th></tr>";
+ while ($row = $result->fetch_assoc()) 
     {
+      echo"
+   <tr>    <td>".$row['Name']."</td> 
+  <td><a href='recipient.php?ABN=".$row['ABN']."'>".$row['ABN']."</a></td>
+  <td>(".number_format($row['count']).")</td>
+  <td>$".number_format($row['sum(Value)'])."</td>
+  </tr>";
 
-   	 echo"
-     <h4>There are $num_results grants administered under the $program Program in the 15-16 FY:</h4><br>
-   		<div class='expand'>";
-		 
-    while ($row = $result->fetch_assoc()) 
-       {
-      
-   include'grants_table.php';
 
-       }echo"</div><div class='scroller'><p>Mouse over/scroll for more results</p></div>";
-	
     }
-      
-		 
-   }mysqli_free_result($result);
+    echo" </tbody></table><br></div>Mouse/Scroll for more results. ";
+        }
+                 else 
+				 {
+                 }
 
-           ?>
-   
+}mysqli_free_result($result);
+                 ?>
+
+
+
+ 
+ 
 
  </div>
  <div class='right'>
@@ -322,9 +182,10 @@ echo"<tr><td><img style='height:15px; opacity:0.4' src='images/chevron.png'></im
 <?php
  if ( isset($_GET['Component']) && isset($_GET['Program']))
  {
-
+$component=$_GET['Component'];
+$program=$_GET['Program'];
       $sub_program = "SELECT * FROM `budget_table15_16`
- WHERE Program='".$_GET['Program']."' && Component ='".$_GET['Component']."' ";
+ WHERE Program='$program' && Component ='$component' ";
 $result = mysqli_query($db, $sub_program);
 while ($row = $result->fetch_assoc()) 
 {
