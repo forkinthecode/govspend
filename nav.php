@@ -11,11 +11,14 @@
 			 <li><a href="about.php">About</a></li>
 			  <li><a href="data.php">Data</a></li>
             Find results by:
-            <li><a href="locality.php">Locality</a></li>
-            <li><a href="council.php">Council</a></li>
-            <li><a href="electorate.php">Electorate</a></li>
-            <li><a href="recipient.php">Recipient</a></li>
+           
+			<li><a href="portfolio.php">Portfolio</a></li>
 			<li><a href="agency.php">Agency</a></li>
+			<li><a href="program.php">Program</a></li>
+			<li><a href="electorate.php">Electorate</a></li>
+			<li><a href="council.php">Council</a></li>
+		    <li><a href="locality.php">Locality</a></li>
+			 <li><a href="recipient.php">Recipient</a></li>
 			 </ul>
 
       
