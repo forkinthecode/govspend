@@ -6,7 +6,7 @@
         
         <div class="box">
                      
-          <ul>
+          <ul> <li><a href="search.php">Quick Search</a></li>
             <li><a href="index.php">Home</a></li>
 			 <li><a href="about.php">About</a></li>
 			  <li><a href="data.php">Data</a></li>
@@ -28,7 +28,7 @@
       </nav>
 	  <hr>  <div width='95%' height='12%'>
 		  
-    <form class='overlaid' action='topic.php' target='_blank' method='GET'>
+   <!-- <form class='overlaid' action='topic.php' target='_blank' method='GET'>
             <button type="submit" id='submit' value="Submit"> Find </button>
             <input type="text" name='Topic' id='Topic' placeholder="topic" required>
                </form>
@@ -37,17 +37,9 @@
 		     <form class='overlaid' action='locality.php' target='_blank' method='GET'>
           <button type="submit" id='submit' value="Submit"> Find </button>
           <input type="text" name='Postcode' id='Postcode' placeholder="Postcode" required>
-             </form>	
+             </form>	-->
         
-	           <form class='overlaid' action='recipient.php' target='_blank' method='GET'>
-	             <button type="submit" id='submit' value="Submit"> Find </button>
-	             <input type="text" name='ABN' id='ABN' placeholder="ABN" required>
-	                </form>               
-
-	           <form class='overlaid' action='recipient.php' target='_blank' method='GET'>
-	             <button type="submit" id='submit' value="Submit"> Find </button>
-	             <input type="text" name='Recipient' id='Recipient' placeholder="business name" required>
-	                </form>  </div>
+	         
 					
 <div class='clear'></div>
 	 

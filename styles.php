@@ -15,12 +15,23 @@
     -webkit-user-select: none;
     user-select: none;
 }
- 
- select {border:none; width:85%; font-size:20px; height:40px; padding:10px; }
-   
+input[type=text], select {
+    width: 80%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
 
- input { height:40px; width:10%; display:inline; font-size:20px ; outline:none; font-family:inherit; 
-             border-radius:5px;                         }
+
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+
 .council { margin-top:10px;width:95%; text-align:center;}
 .council td:nth-of-type(odd) {  background:#eee; margin:5px; }
 .council td:nth-of-type(even) {  background:#cbdbd8; margin:5px; }
@@ -51,8 +62,8 @@
 }
 @media (min-width: 701px)  {
  
-.right {float:right; width:450px; }
-.left  {float:left; width:500px; margin-left:2%; }
+.right {float:right; width:45%; }
+.left  {float:left; width:45%; margin-left:2%; }
 .overlaid { position: relative; top: 0px;  left: 100px; width:300px; float:right;}
       
 }
@@ -66,17 +77,21 @@
 .clear { clear:both;}
 
 a { color:#759e34;  border-radius:5px; text-decoration:none; }
-
+.large {background:#eee;}
 .wide {width:95%; padding:10px; font-size:15px; line-height:20px; border: 1px; border-style: dashed;  } 
 .wide td:nth-of-type(even) {   background:#cbdbd8; text-align:right;}
 .wide tr:nth-of-type(even) {   background:#eee; }
 
-
-.basic { width:90%;   border: solid 1px #dcdcdc; padding:10px;}
-.basic tr:nth-of-type(even) {  background:#cbdbd8; border-radius:5px; border: 1px; width:400px; line-height:20px; }
+.charities {width:95%; padding:10px; border: solid 1px #dcdcdc; }
+.charities td:nth-of-type(odd) {width:20%;}
+.charities tr:nth-of-type(even) {   background:#eee; }
+.charities td:nth-of-type(odd) {    padding:5px;}
+.charities td:nth-of-type(even) {    padding:5px;}
+.basic { width:95%;   border: solid 1px #dcdcdc; padding:10px;}
+.basic tr:nth-of-type(even) {  background:#cbdbd8; border-radius:5px; border: 1px;  line-height:20px; }
 .basic tr:nth-of-type(odd) {   border-radius:5px; line-height:20px;}
 .basic td:nth-of-type(odd) {  text-align:right;}
-.basic td {  padding:2px; margin-left:5px;margin-right:5px;}
+.basic td {  padding:2px; margin-left:5px; margin-right:5px;}
 .grants {width:95%; line-height:20px;}
 .grants td:nth-of-type(even) {   text-align:right;}
 

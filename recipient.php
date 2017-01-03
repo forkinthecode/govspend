@@ -18,7 +18,7 @@ echo"<h4>Total Commonwealth Grants by Recipient</h4>";
 $total = "SELECT Recipient,sum(Funding),count(Funding) as counts FROM `grants` WHERE 
   Year='2015-16' && Recipient!='' GROUP BY Recipient ORDER BY sum(Funding) DESC ";
  echo"<div class='expand'>
- <table class='wide'>
+ <table class='stats'>
  <tbody>
  <tr>
  <th>Total Value</th>
@@ -32,7 +32,7 @@ $result = mysqli_query($db, $total );
 echo"
 <tr> 
   <td>$".number_format($row['sum(Funding)'])."</td>
-  <td>(".number_format($row['counts']).")</td>
+  <td>".number_format($row['counts'])."</td>
   <td><a href='recipient.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td>
 </tr>
  ";
@@ -254,40 +254,30 @@ echo"
  
  ?>
 
-     <?php/*
-     if ( isset($_GET['Recipient']) )
+     <?php
+     if ( !isset($_GET['Recipient']) )
       {
  
-       $data = $_GET['Recipient']; 
-       $name=mysqli_real_escape_string ( $db , $data );
+      
  
-   	$test="SELECT id FROM tenders WHERE MATCH(Name) AGAINST('$name')";
-       $result = mysqli_query($db, $test );
-         @$num_results = mysqli_num_rows($result);
-         if ($num_results >0)
-         {
-	
- 
-    $tenders = "SELECT *,sum(Value),count(Value) as count,AVG(Value)  FROM tenders WHERE MATCH(Name) AGAINST('$name') GROUP BY '$name' ";
+    $tenders = "SELECT *,sum(Value),count(Value) as count  FROM tenders  GROUP BY name order by sum(Value)  DESC";
     $result = mysqli_query($db, $tenders );
   
 
 	 
-   	 echo"<h3>Commonwealth Tenders received by organisations matching $name</h3>
+   	 echo"<h4>Commonwealth Tenders Totalled by organisation</h3>
     <p>(With approval dates within the 2015-16 financial year)</p>
     <div class='source'>Source: Calculated using Historical Tenders data published at data.gov.au </div>
-   <hr><table class='stats' ><tbody><tr><th>Number</th><th>Ave Value</th><th>Total Value</th></tr>";
+   <hr><table class='stats' ><tbody><tr><th>Number</th><th>Number</th><th>Total Value</th></tr>";
      while ($row = $result->fetch_assoc()) 
         {
 
     echo"
  
-   <tr><th>".number_format($row['count'])."</th><th>".number_format($row['AVG(Value)'])."</th>  
-      <th>$".number_format($row['sum(Value)'])."</th></tr>";
+   <tr><td><a href='recipient.php?Recipient=".$row['Name']."'>".$row['Name']."</a></td>  <td>".number_format($row['count'])."</td>
+      <td>$".number_format($row['sum(Value)'])."</td></tr>";
         }echo" </tbody></table><hr><br>";
-      }
-    }
-*/
+	}
     ?>
    
   <?php
@@ -331,7 +321,8 @@ echo"
 
    $data = $_GET['Recipient']; 
    $name=mysqli_real_escape_string ( $db , $data );
-   $query="SELECT  Name,count(Name) as count,sum(Value) FROM tenders  WHERE MATCH(Name) AGAINST('$name') GROUP BY Name ORDER BY count(Name) DESC";
+   $query="SELECT  Name,count(Name) as count,sum(Value) FROM tenders 
+	    WHERE Name LIKE '%$name%' GROUP BY Name ORDER BY count(Name) DESC";
    $result = mysqli_query($db, $query );
      @$num_results = mysqli_num_rows($result);
      if ($num_results <1)
@@ -373,8 +364,8 @@ echo"
 
      $data = $_GET['Recipient']; 
      $name=mysqli_real_escape_string ( $db , $data );
-     $query="SELECT  ABN,Name,count(Name) as count,sum(Value) FROM tenders  WHERE MATCH(Name) 
-		 AGAINST('$name') GROUP BY Name,ABN ORDER BY count(ABN) DESC";
+     $query="SELECT  ABN,Name,count(Name) as count,sum(Value) FROM tenders  WHERE Name like'%$name%' 
+		GROUP BY Name,ABN ORDER BY count(ABN) DESC";
      $result = mysqli_query($db, $query );
        @$num_results = mysqli_num_rows($result);
        if ($num_results <1)
@@ -434,13 +425,53 @@ echo"
 
  </div>
  <div class='right'>
+	    <?php
+	  if ( !isset($_GET['Recipient'])  )
+	  {
+  
+	    $recipient = $_GET['Recipient']; 
+  
+	   echo"<h4>Politial donations paid in 2015-16</h4>";
+	 $total = "SELECT *,sum(Value) from donations GROUP BY name order by Value DESC
+	             ";
+	 $result = mysqli_query($db, $total );
+	  @$num_results = mysqli_num_rows($result);
+	 echo"
+	 <p>There are $num_results donations paid by organisations in the AEC data for 2015-16</p><div class='expand'><table class='stats'>";
+	  while ($row = $result->fetch_assoc()) 
+	     {
+
+	 echo"<tr><td><a href='recipient.php?Recipient=".trim($row['Name'])."'>".$row['Name']."</a></td><td>".$row['Party']."</td><td>$".number_format($row['sum(Value)'])."</td></tr>";
+	     }echo"</table></div>";
+	 }
+	 ?>
+	    <?php
+	  if ( isset($_GET['Recipient'])  )
+	  {
+  
+	    $recipient = $_GET['Recipient']; 
+  
+	   echo"<h4>Politial donations paid by  $recipient</h4>";
+	 $total = "SELECT * from donations where name  like'%$recipient%'
+	             ";
+	 $result = mysqli_query($db, $total );
+	  @$num_results = mysqli_num_rows($result);
+	 echo"
+	 <p>There are $num_results donations paid by organisations matching $name</p><table class='basic'>";
+	  while ($row = $result->fetch_assoc()) 
+	     {
+
+	 echo"<tr><td>".$row['Name']."</td><td>".$row['Party']."</td><td>$".number_format($row['Value'])."</td></tr>";
+	     }echo"</table>";
+	 }
+	 ?>
       <?php
       if ( isset($_GET['Recipient']) && !isset($_GET['Program']) )
        {
  
         $data = $_GET['Recipient']; 
         $name=mysqli_real_escape_string ( $db , $data );
-    	$test="SELECT id FROM tenders  WHERE MATCH(Name) AGAINST('$name')";
+    	$test="SELECT id FROM tenders  WHERE  Name like'%$name%'";
         $result = mysqli_query($db, $test );
           @$num_results = mysqli_num_rows($result);
           if ($num_results <4)
@@ -452,7 +483,7 @@ echo"
   
   
      <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
-     $seifa = "SELECT *  FROM tenders  WHERE MATCH(Name) AGAINST('$name')   ";
+     $seifa = "SELECT *  FROM tenders  WHERE Name LIKE'%$name%'  ";
      $result = mysqli_query($db, $seifa );
    
 
@@ -564,7 +595,7 @@ include'grants_table.php';
 }
 ?>
 
-
+  
          
         
 

@@ -5,24 +5,84 @@ require'header.php';
 <div id='chart'></div>
 
 <div class='left'>
-<h4>2015-16 FY Portfolio totals for General Government Spending </h4>
-<!--<div class='box'>
-<p>Click on <a class='button' href='#popup_search'>Quick Search</a> or click <img src='outcome_search_large.png' height='40px'></img> icons to drill down.</p> 
-</div>
-   <div id='popup_search'  class='overlay'>
-            <div class='popup_search'>
-                <div class='content' >
-              <h2>Welcome to Australia's budget transparency project</h2>
-              <p>Whack a postcode into the search box to find grants and tenders for that location or click<a class='close' href='#'>close</a></span>to display all budget data</p>
-              <form class='overlaid' action='locality.php' target='_blank' method='GET'>
-                                              <input type="text" name='Postcode' id='Postcode' placeholder="Search..." required>
-                                              <button type="submit" id='submit' value="Submit">Go</button>
+  	 <?php/*
+  	  if( !isset($_GET['Portfolio']) && !isset($_GET['Program']) && !isset($_GET['Component']) )
+  	  {
+  	 $portfolio=$_GET['Portfolio'];
+  	                             $total_current = "SELECT current,sum(current) FROM `budget_table15_16` ";
+  	                                $result = mysqli_query($db, $total_current );
+                                                   
+  	                             while ($row = $result->fetch_assoc()) 
+  	                             $total_current = $row['sum(current)'];//assigns this value to a variable.
+  	                             ///////////////////////////////////////////
+  	                             $query_total_last = "SELECT last,sum(last) FROM `budget_table15_16` 
+  	                             ";//calculates total fundingfor the prior budget year for agencies where search term forms part of their name
+  	                             $result = mysqli_query($db, $query_total_last);
+                                                    
+  	                             while ($row = $result->fetch_assoc()) 
+  	                             $query_total_last_year = $row['sum(last)'];//assigns this value to a variable.
+  	                             ////////////////////////////////////////////////////////////////////
+  	                             $query_total_current = "SELECT current,sum(current) FROM  `budget_table15_16`
+  	                              ";//calculates total fundingfor current year for agencies with search term in name
+  	                             $result = mysqli_query($db, $query_total_current );
+                                                    
+  	                             while ($row = $result->fetch_assoc()) 
+  	                             $query_total_current_year = $row['sum(current)'];//assign this value to a variable
 
-              </form>
-                </div>
-            </div>
-    </div>-->
+  	                             //////////////////////////////////////////////////////////////////////////////////////////
+  	                             $percent = (($query_total_current_year/$total_current)*100);//$percent variable is used in scripts/tax_totals.php and the Flot pie graph
+  	                             //////////////////////////////////////////////////////////////////////////////////////////
 
+  	                             $billion_ = "SELECT current,sum(current) FROM `budget_table15_16`
+  	                            ";
+  	                             $result = mysqli_query($db, $billion_ );
+  	                                                          @$num_results = mysqli_num_rows($result);
+  	                             while ($row = $result->fetch_assoc()) 
+  	                              $value = $row['sum(current)'];
+  	                              $billion = ($value/1000000); //divides this year's value by 1 m
+  	                             ///////////////////////////////////////////////////////////////////////
+
+
+  	                             $actual_PIT = $query_total_current_year * 0.00000048;           //divides current year's value into proportion that comes FROM personal income tax
+  	                             $PIT = ($actual_PIT/$total_current)*100/1;         //finds percentage actual_PIT is of the whole 
+  	                             $actual_TOS = $query_total_current_year * 0.00000052;           //divides current year value into proportion that comes FROM company tax etc
+  	                             $TOS = ($actual_TOS/$total_current)*100/1;
+  	                             ///////////////////////////////////////////////////////////////////
+  	                             {
+                       
+
+  	 						   	 echo"<h3>Total GSF Program Costs</h3><hr><table class='stats'>
+  	 						   	 <tr><th>Total</th><th>Corporate Taxes</th><th>Personal Taxes</th></tr>
+  	 						   	 <tr><th><h3>$".number_format($billion, 3)." B</h3></th>
+  	 						   	 <th><h3>$".number_format($actual_TOS,3)." B</h3></th>
+  	 						   	 <th><h3>$".number_format($actual_PIT, 3)." B</h3></th>
+
+  	 						   	</tr></table><hr><div class='source'>Source: Calculated based on figures in budget documents</div>";
+  	                                }
+  	 }*/
+  	                             ?>
+
+  <?php/*
+  $query="SELECT sum(Total_Income),sum(Taxable_Income),sum(Tax) FROM tax ";
+  $result = mysqli_query($db, $query );
+  echo"<br><br>
+ 	 <table class='stats' ><tbody><tr><th>Total Income</th><th>Taxable Income</th><th>Tax</th></tr>";
+   while ($row = $result->fetch_assoc()) 
+      {
+
+  echo"
+   
+
+ <tr><td>$".number_format($row['sum(Total_Income)'])."</td>
+ <td>$".number_format($row['sum(Taxable_Income)'])."</td>
+<td>$".number_format($row['sum(Tax)'])."</td></tr>
+
+   ";
+  }echo"</tbody></table><div class='source'>Source: Calculated from ATO tax transparency dataset </div><br>";
+ 
+ */
+  ?>
+<h3>2015-16 FY Portfolio totals for General Government Spending </h3>
 <?php
 $total = "SELECT *,sum(current) FROM `budget_table15_16` group by Portfolio ORDER BY sum(current) DESC ";
 $result = mysqli_query($db, $total );
@@ -45,28 +105,7 @@ echo"
  
  
 
-  <?php/*
-  $query="SELECT * FROM tax_transparency GROUP BY ABN";
-  $result = mysqli_query($db, $query );
-  echo"<div class='source'>Source: Calculated from Historical Tenders data and Tax Transparency data published at data.gov.au </div>
- 	 <div class='expand'>";
-   while ($row = $result->fetch_assoc()) 
-      {
-
-  echo"
-   
- <table class='wide' border='0'><tbody>
- <tr><td>Name            </td><td><a href='recipient.php?Recipient=".$row['Name']."' target='_blank'>".$row['Name']."</a></td></tr>
- <tr><td>ABN             </td><td><a href='recipient.php?ABN=".$row['ABN']."' target='_blank'>".$row['ABN']."</td></tr>
- <tr><td>Total Income    </td><td>$".number_format($row['Total_Income'])."</td></tr>
- <tr><td>Taxable Income  </td><td>$".number_format($row['Taxable_Income'])."</td></tr>
- <tr><td>Tax             </td><td>$".number_format($row['Tax'])."</td></tr>
- <tr><td>Value of Tenders</td><td>$".number_format($row['Value'])."</td> </tr>
-  </tbody></table><br> ";
-  }echo"< </div>";
- 
- */
-  ?>
+  
 
  
            
@@ -91,7 +130,49 @@ echo"
  </div>
  <div class='right'>
 
+	   
+  <?php/*
+  $query="SELECT * FROM revenue where id='24' ";
+  $result = mysqli_query($db, $query );
+  echo"<br><br>
+ 	 <table class='stats' ><tbody><tr><th>Taxation Revenue</th></tr>";
+   while ($row = $result->fetch_assoc()) 
+      {
 
+  echo"
+   
+
+ <tr>
+ <td>$".number_format($row['2015_16']).",000</td>
+</tr>
+
+   ";
+  }echo"</tbody></table><div class='source'>Source: Budget Paper 1: 
+  Statement 4-Supplementary Budget Tables 2015-16 on data.gov.au</div><br>";
+ 
+ 
+  ?>
+    <?php
+    $query="SELECT * FROM revenue where id='24' ";
+    $result = mysqli_query($db, $query );
+    echo"<br><br>
+   	 <table class='stats' ><tbody><tr><th>Taxation Revenue</th></tr>";
+     while ($row = $result->fetch_assoc()) 
+        {
+
+    echo"
+   
+
+   <tr>
+   <td>$".number_format($row['2015_16']).",000</td>
+  </tr>
+
+     ";
+    }echo"</tbody></table><div class='source'>Source: Budget Paper 1: 
+    Statement 4-Supplementary Budget Tables 2015-16 on data.gov.au</div><br>";
+ 
+ */
+    ?>
 <h4>2015-16 FY Portfolio totals for Commonwealth Grants Funding </h4>
 <?php
 $total = "SELECT Portfolio,sum(Funding) FROM `grants` WHERE Year='2015-16' && Portfolio !='' 

@@ -129,6 +129,8 @@ echo"
    <p> My submissions to the Open Government Partnership National Action Plan and the Productivity Commission's Data Inquiry seek
 	   the government's support in filling in some of the blanks. These submissions also ask the government to provide data for the purposes of transparency in government spending to organisations
 	   as opposed to focusing on data integration projects to focus on impoverished and vulnerable people.</p>
+	   <p>There are specifications set down for government agencies to follow in providing information for reporting purposes but these are not always followed to the T.</p>
+	   
 
 </div></div>
 <div class='clear'></div>

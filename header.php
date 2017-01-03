@@ -7,18 +7,20 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Rosie Williams">
-    </head>
-    <body>
-<?php
-
+	<?php
+	
+	//include'breakdown_by_program.php';
+	
 
 include('login.php');
-//include('../inclusions.php');
 
 include('styles.php');
+echo"
+</head>
+<body>";
 
  include('nav.php');
- //include'all_portfolios.php';
+ 
  
     
 

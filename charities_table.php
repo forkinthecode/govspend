@@ -1,5 +1,5 @@
        <?php     echo"
-          <table class='basic'><tbody>
+          <table class='charities'><tbody>
                
         <tr><td width='200px'>ABN </td><td><a href='recipient.php?ABN=".$row['ABN']."'>".$row['ABN']."</a></td></tr>       
          <tr>

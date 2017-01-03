@@ -13,7 +13,10 @@ require'header.php';
 $budget = "SELECT Portfolio,Program,sum(current) FROM `budget_table15_16` GROUP BY Program order by sum(current) DESC";
 $result = mysqli_query($db, $budget );
 @$num_results = mysqli_num_rows($result);
- echo"<h3>Budget totals for all Agencies</h3><div class='expand'>
+ echo"<br><h3>Budget totals for all Agencies</h3>
+	 <h4>There are $num_results programs in the 2015-16 Budget</h4>
+	 
+	 <div class='expand'>
 		<div class='source'>Source: Calculated using line item CSV 
 	Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
 	 <table class='grants' ><tbody> <tr><th>Program</th><th>Total Cost</th></tr>";

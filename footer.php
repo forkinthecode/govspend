@@ -1,6 +1,6 @@
 <?php
 
-echo"<a href='#top'>Top</a>
+echo"<div class='clear'></div><a href='#top'>Top</a>
 <hr>
 <p><a href='https://github.com/forkinthecode/govspend'>Code</a> and database design by <a href='https://twitter.com/Info_Aus'>Rosie Williams</a> | 
  <a href='data.php'>Data</a> provided by government |
