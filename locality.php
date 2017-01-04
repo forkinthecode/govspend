@@ -315,7 +315,7 @@ $result = mysqli_query($db, $grants );
 
 	               }
 
-	   elseif ($num_results >0)
+	elseif ($num_results >0)
 
 	         {
 	         $grants = "SELECT sum(Funding) as total FROM grants 
@@ -324,7 +324,7 @@ $result = mysqli_query($db, $grants );
 	         @$num_results = mysqli_num_rows($result);
         
       
-	            echo"<br><hr><h3>Statistics for 2015-16 Commonwealth Grants for $postcode</h3>
+	            echo"<br><h3>Statistics for 2015-16 Commonwealth Grants for $postcode</h3><hr>
 	   <table class='stats'><tbody><tr><th>Total value</th><th>Number</th><th>Average</th></tr>";
 	                while ($row = $result->fetch_assoc()) 
 	                     {
@@ -506,14 +506,14 @@ else
   <?php
   if ( isset($_GET['Postcode']) && !isset($_GET['Program']))
   {
-	  $totals = "SELECT *,sum(Value),AVG(Value) as AVE FROM tenders 
+	  $totals = "SELECT count(Value) as count,sum(Value),AVG(Value) as AVE FROM tenders 
 	   WHERE Postcode ='$postcode'";
 	  $result = mysqli_query($db, $totals );
 	  @$num_results = mysqli_num_rows($result);
-	  echo"<hr><h3>Statistics for Commonwealth tenders to $postcode</h3><table class='stats'><tbody>";
+	  echo"<h3>Statistics for Commonwealth tenders to $postcode</h3><hr><table class='stats'><tbody<tr><th>Number</th><th>Average Value</th><th>Total Value</th></tr>";
 	     while ($row = $result->fetch_assoc()) 
 		 {
-			 echo"<tr><th>".number_format($num_results)." </th><th>$".number_format($row['AVE'])."</th><th>".number_format($row['sum(Value)'])."</th></tr>";
+			 echo"<tr><th>".number_format($row['count'])." </th><th>$".number_format($row['AVE'])."</th><th>".number_format($row['sum(Value)'])."</th></tr>";
 		 }echo"</tbody></table><hr><br>";
 	  
 	  $grants = "SELECT * FROM tenders 

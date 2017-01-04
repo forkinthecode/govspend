@@ -18,7 +18,7 @@
 			<li><a href="electorate.php">Electorate</a></li>
 			<li><a href="council.php">Council</a></li>
 		    <li><a href="locality.php">Locality</a></li>
-			 <li><a href="recipient.php">Recipient</a></li>
+			
 			 </ul>
 
       
@@ -26,18 +26,8 @@
         </div>
         
       </nav>
-	  <hr>  <div width='95%' height='12%'>
-		  
-   <!-- <form class='overlaid' action='topic.php' target='_blank' method='GET'>
-            <button type="submit" id='submit' value="Submit"> Find </button>
-            <input type="text" name='Topic' id='Topic' placeholder="topic" required>
-               </form>
-		  
-		  
-		     <form class='overlaid' action='locality.php' target='_blank' method='GET'>
-          <button type="submit" id='submit' value="Submit"> Find </button>
-          <input type="text" name='Postcode' id='Postcode' placeholder="Postcode" required>
-             </form>	-->
+	  <hr>  
+
         
 	         
 					

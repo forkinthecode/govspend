@@ -35,7 +35,7 @@ input[type=submit]:hover {
 .council { margin-top:10px;width:95%; text-align:center;}
 .council td:nth-of-type(odd) {  background:#eee; margin:5px; }
 .council td:nth-of-type(even) {  background:#cbdbd8; margin:5px; }
-.expand {height:400px; overflow:scroll; padding:2%;}
+.expand {height:400px; overflow:scroll; padding:2%; }
 .issues {display:inline;}
 .mps {width:95%;}
 .reps {float:right; margin:1%; }
@@ -43,7 +43,8 @@ input[type=submit]:hover {
 .stats td:nth-of-type(even) {   padding:10px; line-height:24px; background:#eee;}
 .stats td:nth-of-type(odd) {  padding:10px;  line-height:24px; background:#cbdbd8; }
 .testimonial {padding:10px; background:#cbdbd8;}
-
+.component {width:95%;}
+.component td:nth-of-type(even) {   padding:10px; line-height:24px; background:#eee;}
 @media (max-width: 519px) {
 .overlaid { position: relative; top: 0px;  left: 100px; width:300px; float:left;}
     .right {float:right; width:95%; }

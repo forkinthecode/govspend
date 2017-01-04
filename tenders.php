@@ -6,7 +6,13 @@ require'header.php';
         <div class="left">
 
 
-
+ <form action="tenders.php">
+ 
+     <input type="text" id="ABN" name="ABN" placeholder="ABN" > <button type="submit" id='submit' value="Submit"> Find </button>
+ </form>
+     <form action="tenders.php">
+     <input type="text" id="Recipient" name="Recipient" placeholder="name" > <button type="submit" id='submit' value="Submit"> Find </button>
+ </form>
 
    
   <?php
@@ -144,9 +150,20 @@ require'header.php';
  }
    ?>
 <?php
- if ( isset($_GET['ABN']) )
+ //if ( isset($_GET['ABN']) || isset($_GET['Name']) || isset($_GET['Agency']) || isset($_GET['Recipient']) )
       {
-	 // include'tenders_map.php';
+	 echo"<h3>About Commonwealth Tenders data</h3>
+		 
+		 <p>The Commonwealth government has provided whole of government tender reporting for over a decade and a half at <a href='tenders.gov.au'>AusTender</a>.
+	 <p>Commonwealth tenders data requires ABN (unless exempt) but this data is not broken down by the program that is administering the tender, only by the agency.</p>
+	 <p>This means that while one can search Commonwealth grants by program, one can only search Commonwealth tenders by agency or other fields.</p>
+	 <p>Without program information in Commonwealth tenders this dataset can not be matched with other datsets that contain Program name such as
+	 Commonwealth budget data.</p>
+	 <p>An additional problem is that tender applicants are not required to provide their business name exactly as it appears on the Australian Register
+	 of Businesses. This results in multiple spellings & mis-spellings of the same company name. This makes totalling or searching by name difficult and can produce
+	 inexact results.</p>
+		 
+		 ";
 	  
 	  }
 	  

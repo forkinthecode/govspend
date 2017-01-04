@@ -95,20 +95,22 @@ echo"
 $agency=$_GET['Agency'];
 $agor = "SELECT * 
 FROM  `AGOR` 
-WHERE Agency =  '$agency'";
+WHERE Agency LIKE '%$agency%'";
 $result = mysqli_query($db, $agor );
-echo"<div class='source'>Source: <a href='http://www.finance.gov.au/resource-management/governance/agor/'>Australian Government Organisations Register</a></div>
-	<table class='basic'><tbody>";
+echo"<h3>Government Register of Organisations Results</h3><div class='source'>Source: <a href='http://www.finance.gov.au/resource-management/governance/agor/'>Australian Government
+ Organisations Register</a></div>
+	<div class='expand'>";
  while ($row = $result->fetch_assoc()) 
     {
-		echo"
+		echo"<table class='basic'><tbody>
   <tr><td>Description</td>         <td><div class='description'>".$row['Description']."</div></td></tr>
   <tr><td>GFS Sub-Functions</td>   <td>".$row['GFS_Function']."</td></tr>
   <tr><td>Strategic Plan</td>      <td><a href='".$row['Strategic_Plan']."' target='_blank'>".$row['Strategic_Plan']."</a></td></tr>
   <tr><td>Annual Report</td>       <td><a href='".$row['Annual_Reports']."' target='_blank'>".$row['Annual_Reports']."</a></td></tr>
   <tr><td>Auditor</td>       <td>".$row['Auditor']."</td></tr>
 		  ";
-	 }echo"</tbody></table>";
+		  echo"</tbody></table>";
+	 }echo"</div>Mouse/Scroll for more results<br>";
 }mysqli_free_result($result);
 ?>
  
@@ -129,7 +131,8 @@ $result = mysqli_query($db, $agor );
 
         if ($num_results <4 and $num_results>0)
 {
-echo"<h4>Programs administered by the $agency Agency</h2><div class='source'>Source: Calculated from Line item CSV 
+echo"<h3>Commonwealth Budget 2015-16 Results</h3>
+	<h4>Programs administered by the $agency Agency</h2><div class='source'>Source: Calculated from Line item CSV 
 Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
 	";
  while ($row = $result->fetch_assoc()) 
@@ -156,7 +159,7 @@ echo"
 
         if ($num_results >3)
 {
-echo"<h4>Programs administered by the $agency</h2><div class='source'>Source: Calculated from Line item CSV 
+echo"<br><h3>Commonwealth Budget 2015-16 Results</h3><h4>Programs administered by the $agency</h2><div class='source'>Source: Calculated from Line item CSV 
 Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
 	<div class='expand'>";
  while ($row = $result->fetch_assoc()) 
@@ -246,7 +249,7 @@ echo"</div>Mouse/Scroll over for more results.
  echo"<h3>Commonwealth Tenders awarded by $agency</h3>
  <p>(With approval dates within the 2015-16 financial year)</p>
  <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
- $seifa = "SELECT *,sum(Value),count(Value) as count,AVG(Value)  FROM tenders WHERE Agency ='$agency'   ";
+ $seifa = "SELECT *,sum(Value),count(Value) as count,AVG(Value)  FROM tenders WHERE Agency LIKE'%$agency%'   ";
  $result = mysqli_query($db, $seifa );
    @$num_results = mysqli_num_rows($result);
    if ($num_results <1)
@@ -282,7 +285,7 @@ echo"</div>Mouse/Scroll over for more results.
 	  echo"
 	  
 	  <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
-	  $seifa = "SELECT Name,ABN,sum(Value),count(Value) as count  FROM tenders WHERE Agency ='$agency' GROUP BY ABN ORDER BY sum(Value) DESC ";
+	  $seifa = "SELECT Name,ABN,sum(Value),count(Value) as count  FROM tenders WHERE Agency LIKE'%$agency%' GROUP BY ABN ORDER BY sum(Value) DESC ";
 	  $result = mysqli_query($db, $seifa );
 	    @$num_results = mysqli_num_rows($result);
 	    if ($num_results <1)
@@ -319,11 +322,11 @@ echo"</div>Mouse/Scroll over for more results.
         $data = $_GET['ABN']; 
         $ABN=mysqli_real_escape_string ( $db , $data );
 
- 	   $query = "SELECT *  FROM tenders WHERE Agency ='$agency'  && ABN='$ABN' ";
+ 	   $query = "SELECT *  FROM tenders WHERE Agency LIKE'%$agency%'  && ABN='$ABN' ";
  	   $result = mysqli_query($db, $query);
 	    @$num_results = mysqli_num_rows($result);
 	
-	   echo"<p>$agency awarded $num_results tenders to $ABN in the 2015-16 FY <div class='expand'>";
+	   echo"<h3>$agency awarded $num_results tenders to $ABN in the 2015-16 FY </h3> <div class='expand'>";
  	   while ($row = $result->fetch_assoc()) 
  	      {
  			  include'tenders_table.php';

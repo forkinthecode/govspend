@@ -13,13 +13,19 @@ require'header.php';
 
 
 
-
+ <form action="tax.php">
+ 
+     <input type="text" id="ABN" name="ABN" placeholder="ABN without spaces" > <button type="submit" id='submit' value="Submit"> Find </button>
+ </form>
+     <form action="tax.php">
+     <input type="text" id="Name" name="Name" placeholder="business name key word eg woolworths" > <button type="submit" id='submit' value="Submit"> Find </button>
+ </form>
 
 
 
 
   <?php
-  if ( !isset($_GET['Name']) )
+  //if ( !isset($_GET['Name']) )
    {
   
 	   $data = $_GET['Name']; 
@@ -36,14 +42,14 @@ require'header.php';
     echo"<h4>The ATO has not provided Tax Transparency data for the companies matching $name</h4>";
     }
   else
-  { echo"<h3>All ATO Tax Transparency results by tax paid (least paid first)</h3><div class='source'>Source: From Tax Transparency data published at data.gov.au </div><div class='expand'>";
+  { echo"<h3>All ATO 2014-15 Tax Transparency results by tax paid (least paid first)</h3><div class='source'>Source: From Tax Transparency data published at data.gov.au </div><div class='expand'>";
    while ($row = $result->fetch_assoc()) 
       {
 
   echo"
    
  <table class='wide' border='0'><tbody>
- <tr><td width='150px'>Name            </td><td><a href='tax.php?Recipient=".$row['Name']."'>".$row['Name']."</td></tr>
+ <tr><td width='150px'>Name            </td><td><a href='tax.php?Name=".$row['Name']."'>".$row['Name']."</td></tr>
  <tr><td>ABN             </td><td><a href='tax.php?ABN=".$row['ABN']."'>".$row['ABN']."</td></tr>
  <tr><td>Total Income    </td><td>$".number_format($row['Total_Income'])."</td></tr>
  <tr><td>Taxable Income  </td><td>$".number_format($row['Taxable_Income'])."</td></tr>
@@ -55,6 +61,14 @@ require'header.php';
  
  ?>
  
+	   <h3>About the dataset</h3>
+	   <div class='source'>Source: From Tax Transparency data published at <a href='http://data.gov.au/dataset/corporate-transparency'>data.gov.au</a> </div>
+	 <p>  
+These reports contain the name, ABN, total income, taxable income and tax payable for • Australian public and foreign-owned corporate tax entities with a total income of $100 million or more; and • Australian-owned resident private companies with a total income of $200 million or more.
+</p><p>
+They also contain the name, ABN and tax payable for any entity that has a minerals resource rent tax (MRRT) or petroleum resource rent tax (PRRT) payable amount.
+</p>
+  <p>More info about this dataset is available at the <a href='https://www.ato.gov.au/Business/Large-business/In-detail/Tax-transparency/Corporate-tax-transparency-report-for-the-2013-14-income-year/'>ATO</a>.</p>
 
     
  
@@ -78,20 +92,20 @@ require'header.php';
 	      echo"<h4>The ATO has not provided Tax Transparency data for the companies matching $name</h4>";
 	      }
 	    else
-	    { echo"<div class='source'>Source: From Tax Transparency data published at data.gov.au </div><div class='expand'>";
+	    { echo"<div class='source'>Source: From Tax Transparency 2014-15 data published at data.gov.au </div>";
 	     while ($row = $result->fetch_assoc()) 
 	        {
 
 	    echo"
    
 	   <table class='wide' border='0'><tbody>
-	   <tr><td width='150px'>Name            </td><td><a href='tax.php?Recipient=".$row['Name']."'>".$row['Name']."</td></tr>
+	   <tr><td width='150px'>Name            </td><td><a href='tax.php?Name=".$row['Name']."'>".$row['Name']."</td></tr>
 	   <tr><td>ABN             </td><td><a href='tax.php?ABN=".$row['ABN']."'>".$row['ABN']."</td></tr>
 	   <tr><td>Total Income    </td><td>$".number_format($row['Total_Income'])."</td></tr>
 	   <tr><td>Taxable Income  </td><td>$".number_format($row['Taxable_Income'])."</td></tr>
 	   <tr><td>Tax             </td><td>$".number_format($row['Tax'])."</td></tr>
 	    </tbody></table><br> ";
-	       }echo"</div>";
+	       }echo"";
 	     }
 	   }
  
@@ -114,14 +128,14 @@ require'header.php';
 	      echo"<h4>The ATO has not provided Tax Transparency data for the ABN $ABN</h4>";
 	      }
 	    else
-	    { echo"<div class='source'>Source: From Tax Transparency data published at data.gov.au </div>";
+	    { echo"<div class='source'>Source: From Tax Transparency 2014-15 data published at <a href='http://data.gov.au/dataset/corporate-transparency'>data.gov.au</a> </div>";
 	     while ($row = $result->fetch_assoc()) 
 	        {
 
 	    echo"
    
 	   <table class='wide' border='0'><tbody>
-	   <tr><td width='150px'>Name            </td><td><a href='tax.php?Recipient=".$row['Name']."'>".$row['Name']."</td></tr>
+	   <tr><td width='150px'>Name            </td><td><a href='tax.php?Name=".$row['Name']."'>".$row['Name']."</td></tr>
 	   <tr><td>ABN             </td><td><a href='tax.php?ABN=".$row['ABN']."'>".$row['ABN']."</td></tr>
 	   <tr><td>Total Income    </td><td>$".number_format($row['Total_Income'])."</td></tr>
 	   <tr><td>Taxable Income  </td><td>$".number_format($row['Taxable_Income'])."</td></tr>
@@ -132,100 +146,10 @@ require'header.php';
 	   }
  
 	   ?>
+       <a class="twitter-timeline"  href="https://twitter.com/search?q=tax%20australia" data-widget-id="816435976503296000">Tweets about tax australia</a>
+       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 	   
-
-
-
-  
-  
-         
-        
-
-   <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?sensor=false'></script>
-<script type='text/javascript'>
-
-
-    <?php
-      
- if (  isset($_GET['Recipient']) && !isset($_GET['Program'])  )
- {
-
-$map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN 
-(SELECT Postcode from grants where Recipient ='$recipient' && Year='2015-16' 
-  && Locality !=',') ORDER BY Pcode ";
-       $result = mysqli_query($db, $map);
- 
-    echo" var markers = [";
-      while ($row = $result->fetch_assoc())
-          
- {
-       echo
-       " {
-        \"title\": \"".$row['Locality']."\",
-        \"lat\": \"".$row['Lat']."\",
-        \"lng\": \"".$row['Lon']."\",
-        \"description\": \"".$row['Locality']." <a href='locality.php?Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
-      },
-       ";
-}
-   echo"];";
-   mysqli_free_result($result);
-}
-?>
-
-
-    window.onload = function () {
-        LoadMap();
-    }
-
-
-     
-
-
-
-    function LoadMap() {
-        var mapOptions = {
-            center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 14,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("Map"), mapOptions);
- 
-        //Create and open InfoWindow.
-        var infoWindow = new google.maps.InfoWindow();
- 
-        for (var i = 0; i < markers.length; i++) {
-            var data = markers[i];
-            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map,
-                title: data.title,
-
-                icon:'map_icon.png'
-            });
- 
-            //Attach click event to the marker.
-
-         
-            (function (marker, data) {
-                google.maps.event.addListener(marker, "click", function (e) {
-                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
-                    infoWindow.setContent("<div style = 'width:px;min-height:40px'>" + data.description + "</div>");
-                    infoWindow.open(map, marker);
-                });
-            })(marker, data);
-        }
-    }
-</script>
-<script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi_5tk-gJ3wLBKhYh95OKsfTxWV-FOSnI&callback=initMap">
-</script>
-<div id="Map" style="width: 500px; height: 500px">
-</div>
-<div class='clear'></div>
-   
-
+	 
 </div></div>
 <div class='clear'></div>
  <?php 

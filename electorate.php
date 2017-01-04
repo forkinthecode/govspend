@@ -172,53 +172,7 @@ echo"</tbody></table><br>";
     }
 
   ?>
-  <?php
-   if (isset($_GET['Electorate']))
-   {
-  
-
-
-
-  $total="SELECT sum(Funding),AVG(Funding) as AVE, count(Funding) as count FROM grants where Electorate='$electorate'
-  	 && Year='2015-16' ";
-  $result = mysqli_query($db, $total);
-  @$num_results = mysqli_num_rows($result);
-
-
-
-        
-  echo"<br><hr><table class='stats'><tbody><th>Number</td><th>Average Value</th><th>Total</td></tr>";
-  while ($row = $result->fetch_assoc()) 
-     {echo"<tr><th>".number_format($row['count'])."</th><th>$".number_format($row['AVE'])."</th><th>$".number_format($row['sum(Funding)'])."</th></tr>";
-	   
-     }
-     echo"<tbody></table><hr>	";
-   
-  }
-  
-  ?>
- <?php
- if ( isset($_GET['Electorate']) )
- {
-  
- $data = $_GET['Electorate']; 
-$electorate=mysqli_real_escape_string ( $db , $data );
-  echo"<h4>All Commonweatlh Grants for recpients in the Federal Electorate of $electorate</h4>";
-$total = "SELECT Program,sum(Funding) FROM `grants` WHERE  Year='2015-16' && Electorate ='$electorate'  Group by Program  ";
-$result = mysqli_query($db, $total );
-echo"<div class='source'>Source: Grants data published at agency websites</div> <table class='basic' ><tbody>";
- while ($row = $result->fetch_assoc()) 
-    {
-
-echo"<tr><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td>
-	<td><a href='electorate.php?Electorate=$electorate&Program=".$row['Program']."'>".$row['Program']."</a></td>
-  </tr>";
-}echo" </tbody></table><br><p>Click on the Program name to see details of grants in $electorate for that Program</p>
-	<hr class='short'><br> ";
-}
-?>
-
-
+ 
 
   
            
@@ -419,7 +373,7 @@ echo"<table class='basic'><tbody>
   <tr><td>Program:</td>         <td><a href='electorate.php?Program=".$row['Program']."&electorate=$electorate'>".$row['Program']."</a></td></tr>
   <tr><td>Component:</td>       <td>".$row['Component']."</td></tr>
   <tr><td>Purpose:</td>         <td>".$row['Purpose']."</td></tr>
-  <tr><td>Recipient:</td>       <td><a href='recipient.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
+  <tr><td>Recipient:</td>       <td><a href='search.php?Name=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
   <tr><td>Address:</td>         <td>".$row['Locality'].", <a href='locality.php?Postcode=".$row['Postcode']."'>".$row['Postcode']."</a></td></tr>
   <tr><td>Dates:</td>           <td>".$row['Approved']."-".$row['End']." (".number_format($row['Term'])."months) <span style='float:right'>Month:$".number_format($row['Funding']/$row['Term'])."</span></td></tr>
   <tr><td></td>                 <td><span style='float:right'>Total: $".number_format($row['Funding'])."</span></td></tr>
@@ -430,7 +384,7 @@ echo"<table class='basic'><tbody>
 ?>
 
 
-
+  
 
    <?php
  if ( isset($_GET['Electorate']) && isset($_GET['Program'])  )
@@ -439,7 +393,7 @@ echo"<table class='basic'><tbody>
    $electorate = $_GET['Electorate']; 
    $program = $_GET['Program']; 
    $details = "SELECT Portfolio,Agency,Program  FROM `grants` where 
-             Year='2015-16' && Electorate ='$electorate'&& Program like'%$program%' GROUP BY Program ";
+             Year='2015-16' && Electorate ='$electorate' && Program like'%$program%' GROUP BY Program ";
    
    $result = mysqli_query($db, $details );
    while ($row = $result->fetch_assoc()) 
@@ -456,14 +410,14 @@ $total = "SELECT *, DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
           Year='2015-16' && Electorate ='$electorate'&& Program like'%$program%'  ";
 $result = mysqli_query($db, $total );
  @$num_results = mysqli_num_rows($result);
- echo"<h4>There are ".number_format($num_results)." grants for $program in $electorate</h4>";
+ echo"<br><h3>There are ".number_format($num_results)." grants for $program in the Electorate of $electorate</h3>";
  while ($row = $result->fetch_assoc()) 
     {
 echo"<table class='basic'><tbody>";
 echo"
   <tr><td>Component:</td>   <td>".$row['Component']."</td></tr>
   <tr><td>Purpose:</td>     <td>".$row['Purpose']."</td></tr>
-  <tr><td>Recipient:</td>   <td><a href='recipient.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
+  <tr><td>Recipient:</td>   <td><a href='search.php?Name=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
   <tr><td>Address:</td>     <td>".$row['Locality'].", <a href='locality.php?Postcode=".$row['Postcode']."'>".$row['Postcode']."</a></td></tr>
   <tr><td>Dates:</td>       <td>".$row['Approved']."-".$row['End']." (".number_format($row['Term'])."months) <span style='float:right'>Month:$".number_format($row['Funding']/$row['Term'])."</span></td></tr>
   <tr><td></td>             <td><span style='float:right'>Total: $".number_format($row['Funding'])."</span></td></tr>
@@ -487,7 +441,7 @@ echo"
 
  
  <?php
-if  ( isset($_GET['Electorate'])  )
+if  ( isset($_GET['Electorate']) &&  !isset($_GET['Program']))
 
 {
 	$query="SELECT * FROM `tenders` WHERE Postcode IN (SELECT postcode from locality_CED where electorate='$electorate' )";
@@ -504,6 +458,56 @@ if  ( isset($_GET['Electorate'])  )
 echo"</div>Mouse over/scroll for more results<div class='clear'></div>";
 }
 ?>
+
+  <?php
+   if (isset($_GET['Electorate']) && !isset($_GET['Program']) )
+   {
+  
+
+
+
+  $total="SELECT sum(Funding),AVG(Funding) as AVE, count(Funding) as count FROM grants where Electorate='$electorate'
+  	 && Year='2015-16' ";
+  $result = mysqli_query($db, $total);
+  @$num_results = mysqli_num_rows($result);
+
+
+
+        
+  echo"<br><h3>Commonwealth Grant totals for the Electorate of $electorate</h3><hr><table class='stats'><tbody><th>Number</td><th>Average Value</th><th>Total</td></tr>";
+  while ($row = $result->fetch_assoc()) 
+     {echo"<tr><th>".number_format($row['count'])."</th>
+		 <th>$".number_format($row['AVE'])."</th>
+		 <th>$".number_format($row['sum(Funding)'])."</th></tr>";
+	   
+     }
+     echo"<tbody></table><hr>	";
+   
+  }
+  
+  ?>
+ <?php
+ if ( isset($_GET['Electorate']) && !isset($_GET['Program']) )
+ {
+  
+ $data = $_GET['Electorate']; 
+$electorate=mysqli_real_escape_string ( $db , $data );
+  echo"<h4>All Commonweatlh Grants for recpients in the Federal Electorate of $electorate</h4>";
+$total = "SELECT Program,sum(Funding) FROM `grants` WHERE  Year='2015-16' && Electorate ='$electorate'  Group by Program  ";
+$result = mysqli_query($db, $total );
+echo"<div class='source'>Source: Grants data published at agency websites</div> <table class='wide' ><tbody>";
+ while ($row = $result->fetch_assoc()) 
+    {
+
+echo"<tr>
+	<td><a href='electorate.php?Electorate=$electorate&Program=".$row['Program']."'>".$row['Program']."</a></td><td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td>
+  </tr>";
+}echo" </tbody></table><br><p>Click on the Program name to see details of grants in $electorate for that Program</p>
+	<hr class='short'><br> ";
+}
+?>
+
+
 </div></div>
 <div class='clear'></div>
 <?php 

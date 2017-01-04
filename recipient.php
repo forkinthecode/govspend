@@ -11,7 +11,7 @@ require'header.php';
 
 
 
-<?php
+<?php/*
  if ( !isset($_GET['Recipient']) && !isset($_GET['ABN']))
  { 
 echo"<h4>Total Commonwealth Grants by Recipient</h4>";
@@ -37,7 +37,7 @@ echo"
 </tr>
  ";
     }echo" </tbody></table><br></div>";
-}
+}*/
 ?>
 
  
@@ -414,18 +414,11 @@ echo"
  
  }
    ?>
-<?php
- if ( isset($_GET['ABN']) )
-      {
-	 // include'tenders_map.php';
-	  
-	  }
-	  
-	  ?>
+
 
  </div>
  <div class='right'>
-	    <?php
+	    <?php/*
 	  if ( !isset($_GET['Recipient'])  )
 	  {
   
@@ -511,7 +504,7 @@ echo"
               }echo"</div>Mouse over/Scroll for more results <p>Click on the Agency name to display details of all Tenders to $name for that Agency</p> ";
           }
      }
-
+*/
      ?>
   
 

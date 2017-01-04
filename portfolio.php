@@ -216,14 +216,7 @@ echo"
      
 
 
-  <?php
-      
-  if (  isset($_GET['Program']) && !isset($_GET['Postcode'])  )
-  {
- //include'map.php';
-  }
-
-  ?>
+ 
 
 
  <?php
@@ -271,7 +264,8 @@ echo"
 								 $portfolio = $_GET['Portfolio']; 
 
 
-								 $total="SELECT Portfolio,sum(Value),AVG(Value) as AVE, count(Value) as count FROM tenders where Portfolio='$portfolio'
+								 $total="SELECT Portfolio,sum(Value),AVG(Value) as AVE, count(Value) as count 
+									 FROM tenders where Portfolio='$portfolio'
 								 	  GROUP BY Portfolio";
 								 $result = mysqli_query($db, $total);
 								 @$num_results = mysqli_num_rows($result);
@@ -318,7 +312,8 @@ $agor = "SELECT * FROM `budget_table15_16`
  WHERE Program LIKE'%$program%' group by Program";
 $result = mysqli_query($db, $agor );
 echo"  <div class='source'>Source: Line item CSV 
-Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div><div class='expand'>";
+Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>";
+//<div class='expand'>";
  while ($row = $result->fetch_assoc()) 
     {
        echo" 
@@ -328,7 +323,8 @@ Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/bud
   <tr><td>Program</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
   <tr><td>Outcome</td><td>".$row['Outcome']."</td></tr></tbody><table><br>";
 
-}echo"</div>";
+    }
+	//echo"</div>testing";
 }
 
 ?>
@@ -364,14 +360,15 @@ Portfolio Budget Statements published at
          echo" 
 			 <div class='source'>Source: Line item CSV 
 			 Portfolio Budget Statements published at 
-			 <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div><table class='basic'><tbody>
+			 <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
+			 <table class='basic'><tbody>
     <tr><td>Portfolio</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."' target='_blank'>".$row['Portfolio']."</a></td></tr>
     <tr><td>Agency</td><td><a href='portfolio.php?Agency=".$row['Agency']."' target='_blank'>".$row['Agency']."</a></td></tr>
     <tr><td>Program</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
     <tr><td>Outcome</td><td>".$row['Outcome']."</td></tr>";
 	echo"</tbody><table>";
 	
-	 echo"<h4>Component Details</h4><table class='basic'><tbody>
+	 echo"<h4>Component Details</h4><table class='component'><tbody>
 
 	   <tr><td>Component</td><td>".$row['Component']."</td></tr>
 
@@ -397,10 +394,10 @@ $result = mysqli_query($db, $component );
 
         if ($num_results >0)
         {
-          echo"Click on the Component name (below) to show distribution of recpients by Federal electorate (income support payments only)<h4>
+          echo"Click on the Component name (below) to show further details<h4>
 			  ($num_results) Components:</h4>
         
-          <table class='component'><tbody>";
+          <table><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 echo"<tr><td><img style='height:15px; opacity:0.4' src='images/chevron.png'></img></td>
@@ -442,7 +439,8 @@ echo"<h4>Commonwealth Grant totals for Programs in the $portfolio Portfolio</h4>
 ";
 echo"<table class='stats'><tbody><th>Number</td><th>Average Value</th><th>Total</td></tr>";
 while ($row = $result->fetch_assoc()) 
-   {echo"<tr><th>".number_format($row['count'])."</th><th>$".number_format($row['AVE'])."</th><th>$".number_format($row['sum(Funding)'])."</th></tr>";
+   {echo"<tr><th>".number_format($row['count'])."</th><th>$".number_format($row['AVE'])."</th>
+	   <th>$".number_format($row['sum(Funding)'])."</th></tr>";
 	   
    }
    echo"<tbody></table><hr>	<br>";
@@ -485,7 +483,7 @@ $result = mysqli_query($db, $grants);
 
 <?php 
 ////////////////////////////////////////////////////////////
-
+/*
  if ( isset($_GET['Portfolio']) && !isset($_GET['Program']) && !isset($_GET['Component']))
  {
 	 
@@ -498,12 +496,13 @@ $result = mysqli_query($db, $grants);
  @$num_results = mysqli_num_rows($result);
        if ($num_results <4 && $num_results>0)
        {
-          echo"<h4>Commonwealth Grant totals by Recipient for Programs in the $portfolio Portfolio</h4><div class='source'>Source: Historical Tenders data published at data.gov.au</div>
+          echo"<h4>Commonwealth Grant totals by Recipient for Programs in the $portfolio Portfolio</h4>
+			  <div class='source'>Source: Historical Tenders data published at data.gov.au</div>
 		 <table class='basic'><tbody><tr><th>Recipient</th><th>Number</th><th>Total Value</th></tr>";
 while ($row = $result->fetch_assoc()) 
    {
      echo"
-  <tr>    <td><a href='recipient.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td> 
+  <tr>    <td><a href='search.php?Name=".$row['Recipient']."'>".$row['Recipient']."</a></td> 
  <td>(".number_format($row['count']).")</td>
  <td>$".number_format($row['sum(Funding)'])."</td>
  </tr>";
@@ -515,12 +514,13 @@ while ($row = $result->fetch_assoc())
 
         if ($num_results >4)
         {
-           echo"<h4>Commonwealth Grant totals by Recipient for Programs in the $portfolio Portfolio</h4><div class='source'>Source: Historical Tenders data published at data.gov.au</div>
+           echo"<h4>Commonwealth Grant totals by Recipient for Programs in the $portfolio Portfolio</h4>
+			   <div class='source'>Source: Historical Tenders data published at data.gov.au</div>
 			   <div class='expand'><table class='basic'><tbody><tr><th>Recipient</th><th>Number</th><th>Total Value</th></tr>";
  while ($row = $result->fetch_assoc()) 
     {
       echo"
-   <tr>    <td><a href='recipient.php?Recipient=".$row['Recipient']."'>".$row['Recipient']."</a></td> 
+   <tr>    <td><a href='search.php?Name=".$row['Recipient']."'>".$row['Recipient']."</a></td> 
   <td>(".number_format($row['count']).")</td>
   <td>$".number_format($row['sum(Funding)'])."</td>
   </tr>";
@@ -533,13 +533,13 @@ while ($row = $result->fetch_assoc())
 				 {
                  }
 
-}mysqli_free_result($result);
+}mysqli_free_result($result);*/
                  ?>
 
 
 <?php 
 ////////////////////////////////////////////////////////////
-
+/*
  if ( isset($_GET['Portfolio']) && !isset($_GET['Program']) && !isset($_GET['Component']))
  {
 	 
@@ -560,7 +560,7 @@ $result = mysqli_query($db, $grants);
     {
       echo"
    <tr>    <td>".$row['Name']."</td> 
-  <td><a href='recipient.php?ABN=".$row['ABN']."'>".$row['ABN']."</a></td>
+  <td><a href='search.php?ABN=".$row['ABN']."'>".$row['ABN']."</a></td>
   <td>(".number_format($row['count']).")</td>
   <td>$".number_format($row['sum(Value)'])."</td>
   </tr>";
@@ -571,9 +571,10 @@ $result = mysqli_query($db, $grants);
         }
                  else 
 				 {
+					 
                  }
 
-}mysqli_free_result($result);
+}mysqli_free_result($result);*/
                  ?>
 
 
@@ -594,9 +595,11 @@ $result = mysqli_query($db, $grants);
 
          if ($num_results >0)
          {
-           echo"
+           echo"<h3>Breakdown of grant value by federal electorate</h3>
    <h4>There are ".number_format($num_results)." grants administered under the $program Program in the 15-16 FY:</h4><br>
- 		 <div class='source'>Source: Grants data published at agency websites</div> <table class='basic'><tbody>";
+ 		 <div class='source'>Source: Grants data published at agency websites</div>
+		 <div class='expand'>
+		  <table class='basic'><tbody>";
   while ($row = $result->fetch_assoc()) 
      {
 		
@@ -608,7 +611,7 @@ $result = mysqli_query($db, $grants);
 
  
 
-     }echo"</tbody></table><p>Mouse over/scroll for more results</p>";
+     }echo"</tbody></table></div>";
         }
         if ($num_results <1)
         {echo"<h4>There are no grants matching $program</h4>";

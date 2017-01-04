@@ -149,15 +149,21 @@ if ( isset($_GET['Council']) )
  {
 $data = $_GET['Council']; 
 $council=mysqli_real_escape_string ( $db , $data );
-echo"<br><hr><h4>Commonwealth Grants totalled by Program</h4> <div class='source'>Source: Grants data published at agency websites</div> ";
-$seifa = "SELECT *,sum(Funding) FROM grants WHERE Council ='$council' && Year='2015-16' GROUP BY Program ";
-$result = mysqli_query($db, $seifa );
+echo"<br><hr><h4>Commonwealth Grants totalled by Program</h4> 
+	<div class='source'>Source: Grants data published at agency websites</div> ";
+
+$council_result = "SELECT *,sum(Funding) FROM grants WHERE Council LIKE'%$council%' && Year='2015-16' GROUP BY Program ";
+$result = mysqli_query($db, $council_result );
   @$num_results = mysqli_num_rows($result);
   if ($num_results <1)
   {
   echo"<h4>There are no Commonwealth grant recipients with addresses in the $council council area</h4>";
 	  }
-echo"<table class='basic'><tbody>";
+
+  if ($num_results >0)
+	  echo"<table class='basic'><tbody>";
+  {
+
  while ($row = $result->fetch_assoc()) 
     {
 
@@ -174,6 +180,7 @@ echo"<tr>
   </tr>
 ";
 }echo" </tbody></table><br>";
+}
 }
 
 ?>

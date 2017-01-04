@@ -8,32 +8,12 @@ require'header.php';
  
 
 
-	    <?php
-	  if ( !isset($_GET['Donor']) && !isset($_GET['Name']) && !isset($_GET['Party'])   )
-	  {
-  
-	    $donor = $_GET['Donor']; 
-  
-	   echo"<h4>Politial donations paid in 2015-16</h4>";
-	 $total = "SELECT *,sum(Value),count(Name) from donations GROUP BY name order by sum(Value) DESC
-	             ";
-	 $result = mysqli_query($db, $total );
-	  @$num_results = mysqli_num_rows($result);
-	 echo"
-	 <p>There are $num_results donations paid by organisations in the AEC data for 2015-16</p><div class='expand'><table class='wide'>";
-	  while ($row = $result->fetch_assoc()) 
-	     {
-
-	 echo"<tr><td><a href='donations.php?Donor=".trim($row['Name'])."'>".$row['Name']."</a></td><td><a href='donations.php?Party=".$row['Party']."'>".$row['Party']."</a></td><td>$".number_format($row['sum(Value)'])."</td></tr>";
-	     }echo"</table></div>";
-	 }
-	 ?>
-	   
+	    
     
 
 
 
-    <?php
+    <?php/*
   if ( !isset($_GET['Donor']) && !isset($_GET['Name']) &&  !isset($_GET['Party'])   )
   {
 
@@ -51,7 +31,7 @@ require'header.php';
 
  echo"<tr><td><a href='donations.php?Donor=".trim($row['Name'])."'>".$row['Name']."</a></td><td><a href='donations.php?Party=".$row['Party']."'>".$row['Party']."</a></td><td>$".number_format($row['sum(Value)'])."</td></tr>";
      }echo"</table></div>";
- }
+ }*/
  ?>
  
 
@@ -75,12 +55,17 @@ require'header.php';
 	     {
 
 	 echo"<tr><td><a href='donations.php?Party=".trim($row['Party'])."'>".$row['Party']."</a></td><td>".$row['count']."</td><td>$".number_format($row['sum(Value)'])."</td></tr>";
-	     }echo"</table></div>";
+	     }echo"</table></div>Mouse/Scroll for more results<br>";
 	 }
 	 ?>
     
-
-
+<h3>About AEC political donations data</h3>
+<p>AEC donations data does not require ABN/ACN in declarations or does not publish it if it is collected from donors. </p>
+<p>Without a unique identifier such as ABN or ACN it is difficult to match political donations data with other datasets. The use of name as an identifier which is
+	often the subject of multiple spellings within each dataset (if free text input is used) limits the usability of this data 
+	in transparency investigations (or makes it more onerous).</p>
+	<p>The lack of standardisation of party names also makes the data more onerous to interact with as calculations based on inexact matches require follow up searches to get a proper
+		total.</p>
 
 
    

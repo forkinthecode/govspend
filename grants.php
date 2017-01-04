@@ -4,12 +4,56 @@ require'header.php';
 
 
         <div class="left">
+ <form action="grants.php">
+ 
+     <input type="text" id="Program" name="Program" placeholder="Program key word eg Indigenous" > <button type="submit" id='submit' value="Submit"> Find </button>
+ </form>
+     <form action="grants.php">
+     <input type="text" id="Recipient" name="Recipient" placeholder="name" > <button type="submit" id='submit' value="Submit"> Find </button>
+ </form>
 
+ <?php
+ if ( isset($_GET['Program']) )
+  {
+ $data = $_GET['Program']; 
+ $program=mysqli_real_escape_string ( $db , $data );
+
+ $test="SELECT id from grants WHERE Program  LIKE'%$program%' 
+	 || Component LIKE'%$component%' && Year='2015-16' && Program !=''";
+ $result = mysqli_query($db, $test );
+   @$num_results = mysqli_num_rows($result);
+   if ($num_results >0)
+   {
+	 
+ $grants = "SELECT *,count(Funding) as count FROM grants WHERE Program LIKE'%$program%' 
+	 || Component LIKE'%$component%' && Year='2015-16' GROUP BY Component ORDER BY count(Funding) DESC ";
+ $result = mysqli_query($db, $grants );
+
+ echo"<h4>Commonwealth Grants with Program and/or Component name matching: $program</h4>
+ <p>(With approval dates within the 2015-16 financial year)</p><div class='source'>Source: Grants published at agency websites</div><div class='expand'> <table class='wide' ><tbody>
+ <tr><th>Program</th><th>Component</th><th>Number</th></tr>";
+  while ($row = $result->fetch_assoc()) 
+      {
+
+ echo"
+
+ <tr><td><a href='grants.php?Program=$program&Program_Name=".$row['Program']."&Component=".$row['Component']."'>".$row['Program']."</a></td>       
+  <td>".$row['Component']."</td>
+
+<td><span style='float:right'>".number_format($row['count'])."</span></td></tr>
+
+ ";
+      }echo"</tbody></table><br></div>Mouse/Scroll for more results or Click on the Program name to display details of grants to $recipient for that program ";
+    }
+
+ }
+
+ ?>
  
 
 
  <?php
- if ( isset($_GET['Recipient'])  )
+ if ( isset($_GET['Recipient']) && !isset($_GET['Program_Name'])  )
   {
 	
    $data = $_GET['Recipient']; 
@@ -38,7 +82,7 @@ require'header.php';
    elseif ($num_results>16)
    {
 	  
-		   echo"<h3>$num_results Names matching $recipient in Commonwealth Grants</h3>
+		   echo"<h3>".number_format($num_results)." Names matching $recipient in Commonwealth Grants</h3>
 			   <p>Name (No. Grants using that name)</p>
 			   <div class='expand'><table class='grants'>"; 
 		    while ($row = $result->fetch_assoc())
@@ -52,39 +96,6 @@ require'header.php';
  }
    ?>
   
-<?php/*
-if ( isset($_GET['Name']) )
- {
-$data = $_GET['Name']; 
-$name=mysqli_real_escape_string ( $db , $data );
-$test="SELECT id from grants where Recipient ='$name' && Year='2015-16' ";
-$result = mysqli_query($db, $test );
-  @$num_results = mysqli_num_rows($result);
-  if ($num_results >0)
-  {
-	 
-$grants = "SELECT *,sum(Funding) FROM grants WHERE Recipient ='$name' && Year='2015-16' GROUP BY Program ";
-$result = mysqli_query($db, $grants );
-
-echo"<h4>Commonwealth Grants received by $name</h4>
-<p>(With approval dates within the 2015-16 financial year)</p><div class='source'>Source: Grants published at agency websites</div>";
- while ($row = $result->fetch_assoc()) 
-     {
-
-echo"
-<table class='wide' ><tbody>
-<tr><td>Program</td>            <td><a href='grants.php?Name=".$row['Recipient']."&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
-<tr><td>Portfolio:</td>         <td>".$row['Portfolio']."</td></tr>
-<tr><td>Agency:</td>            <td>".$row['Agency']."</td></tr>
-<tr><td>Total Value:</td>       <td><span style='float:right'>$".number_format($row['sum(Funding)'])."</span></td></tr>
- </tbody></table><br>
-";
-     }echo" <p>Click on the Program name to display details of grants to $recipient for that program</p> ";
-   }
-
-}
-*/
-?>
 
 
 
@@ -119,99 +130,6 @@ echo"
 ?>
 
 
-
-
- <br><br> <br><br>
-
-   <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?sensor=false'></script>
-<script type='text/javascript'>
-
-
-    <?php
-      
- if (  isset($_GET['Name']) && !isset($_GET['Program'])  )
- {
-
-$map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN 
-(SELECT Postcode from grants where Recipient ='$name' && Year='2015-16' 
-  && Locality !=',') ORDER BY Pcode ";
-       $result = mysqli_query($db, $map);
- 
-    echo" var markers = [";
-      while ($row = $result->fetch_assoc())
-          
- {
-       echo
-       " {
-        \"title\": \"".$row['Locality']."\",
-        \"lat\": \"".$row['Lat']."\",
-        \"lng\": \"".$row['Lon']."\",
-        \"description\": \"".$row['Locality']." <a href='locality.php?Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
-      },
-       ";
-}
-   echo"];";
-   mysqli_free_result($result);
-}
-?>
-
-
-    window.onload = function () {
-        LoadMap();
-    }
-
-
-     
-
-
-
-    function LoadMap() {
-        var mapOptions = {
-            center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 11,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("Map"), mapOptions);
- 
-        //Create and open InfoWindow.
-        var infoWindow = new google.maps.InfoWindow();
- 
-        for (var i = 0; i < markers.length; i++) {
-            var data = markers[i];
-            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map,
-                title: data.title,
-
-                icon:'map_icon.png'
-            });
- 
-            //Attach click event to the marker.
-
-         
-            (function (marker, data) {
-                google.maps.event.addListener(marker, "click", function (e) {
-                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
-                    infoWindow.setContent("<div style = 'width:px;min-height:40px'>" + data.description + "</div>");
-                    infoWindow.open(map, marker);
-                });
-            })(marker, data);
-        }
-    }
-</script>
-<script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi_5tk-gJ3wLBKhYh95OKsfTxWV-FOSnI&callback=initMap">
-</script>
-<div id="Map" style="width: 500px; height: 500px">
-</div>
-<div class='clear'></div>
-   
-  
- 
-
- </div>
- <div class='right'>
       <?php
       if ( isset($_GET['Recipient']) )
        {
@@ -237,13 +155,13 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN
 
       ?>
 	  <?php
-	   if ( !isset($_GET['Recipient']) && !isset($_GET['Name']))
+	   if ( !isset($_GET['Recipient']) && !isset($_GET['Name']) && !isset($_GET['Program_Name'])  )
 	   { 
 	  echo"<h4>Total Commonwealth Grants by Recipient</h4>";
 	  $total = "SELECT Recipient,sum(Funding),count(Funding) as counts FROM `grants` WHERE 
 	    Year='2015-16' && Recipient!='' GROUP BY Recipient ORDER BY sum(Funding) DESC ";
 	   echo"<div class='expand'>
-	   <table class='stats'>
+	   <table class='wide'>
 	   <tbody>
 	   <tr>
 	   <th>Total Value</th>
@@ -264,7 +182,108 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN
 	      }echo" </tbody></table><br></div>";
 	  }
 	  ?>
+
+
+ <br><br> 
+   <?php
+ if ( isset($_GET['Program']) || isset($_GET['Program_Name']) ||  isset($_GET['Recipient']) ||  isset($_GET['Name']))
+ {
  
+	 echo"
+          <h3>About Commonwealth Grants data</h3>
+    <p>Commonwealth grants data has been collected from multiple agency sites for inclusion in the GovSpend prototype. There is no guarantee this data is correct and is only included
+ 	when the grant report in question was published in a manner able to be transformed into usable data.</p> <p>Some grants will be missing from some agencies in GovSpend even if they are
+ 	on the agency website.</p>
+ 	<p>There is a specification for the information that should be collected from Commonwealth grant applicants for inclusion in grant reports. This specification is 
+ 	<a href='http://www.finance.gov.au/sites/default/files/resource-management-guide-no-412.pdf'>Resource Management Guide 412</a> (See the summary on page 16). Some agencies follow this
+ 	specification well, others do not. This specification requires a postcode be specified for where the grant money in question will be spent by each grant recipient (as opposed to where the grant recipient's headquarters are).
+ 				</p>
+   <p>Some grants will be applied to a specific postcode, others will cover a larger area. Some grants are state-wide or national. Where this occurs it is difficult
+ 	to provide breakdown for how much of each of these grants applies to a single postcode. I have avoided including these amounts in totals by postcode.</p>
+ 	<p>For some time the government has been working on a new grants portal to provide whole of government grant reporting in a similar fashion to AusTenders
+ 	providing whole of government Commonwealth tender reporting. This new grants portal should have come online at grants.gov.au in December 2016.</p>
+ 
+   <p>Please note that despite inclusion in Resource Management Guide 412, Commonwealth grants data (pre grants.gov.au) 
+	does not include ABN which means that recipients of Commonwealth grants can not be easily matched with
+	Commonwealth tender recipients or other datasets which contain this unique identifyer, nor can grant recipients be searched by ABN.</p>";
+	
+}
+?>
+ </div>
+ <div class='right'>
+	 <br><br>
+	    <?php
+	  if ( !isset($_GET['Program']) && !isset($_GET['Program_Name']) && !isset($_GET['Recipient']) && !isset($_GET['Name']))
+	  {
+ 
+	 	 echo"
+	           <h3>About Commonwealth Grants data</h3>
+	     <p>Commonwealth grants data has been collected from multiple agency sites for inclusion in the GovSpend prototype. There is no guarantee this data is correct and is only included
+	  	when the grant report in question was published in a manner able to be transformed into usable data.</p> <p>Some grants will be missing from some agencies in GovSpend even if they are
+	  	on the agency website.</p>
+	  	<p>There is a specification for the information that should be collected from Commonwealth grant applicants for inclusion in grant reports. This specification is 
+	  	<a href='http://www.finance.gov.au/sites/default/files/resource-management-guide-no-412.pdf'>Resource Management Guide 412</a> (See the summary on page 16). Some agencies follow this
+	  	specification well, others do not. This specification requires a postcode be specified for where the grant money in question will be spent by each grant recipient (as opposed to where the grant recipient's headquarters are).
+	  				</p>
+	    <p>Some grants will be applied to a specific postcode, others will cover a larger area. Some grants are state-wide or national. Where this occurs it is difficult
+	  	to provide breakdown for how much of each of these grants applies to a single postcode. I have avoided including these amounts in totals by postcode.</p>
+	  	<p>For some time the government has been working on a new grants portal to provide whole of government grant reporting in a similar fashion to AusTenders
+	  	providing whole of government Commonwealth tender reporting. This new grants portal should have come online at grants.gov.au in December 2016.</p>
+ 
+	    <p>Please note that despite inclusion in Resource Management Guide 412, Commonwealth grants data (pre grants.gov.au) 
+	 	does not include ABN which means that recipients of Commonwealth grants can not be easily matched with
+	 	Commonwealth tender recipients or other datasets which contain this unique identifyer.</p>";
+	
+	 }
+	 ?>
+	    <?php
+	  if ( isset($_GET['Recipient']) && isset($_GET['Program_Name'])  )
+	  {
+  
+	    $recipient = $_GET['Recipient']; 
+	    $program = $_GET['Program']; 
+	   echo"<h4>$program grants for $recipient</h4>";
+	 $total = "SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
+	          DATE_FORMAT(End,  '%D %b %Y' ) AS End,
+	          DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` 
+	          WHERE Program like'%$program%' && Year='2015-16' && Recipient ='$recipient'
+	             ";
+	 $result = mysqli_query($db, $total );
+	  @$num_results = mysqli_num_rows($result);
+	 echo"<h3>Results for $recipient</h3>
+	 <p>There are ".number_format($num_results)." grants received by organisations matching $name</p><div class='expand'>";
+	  while ($row = $result->fetch_assoc()) 
+	     {
+
+	 include'grants_table.php';
+	     }echo"</div>";
+	 }
+	 ?>
+ 
+	   <?php
+	 if ( !isset($_GET['Recipient']) && isset($_GET['Program_Name'])  && isset($_GET['Component'])  )
+	 {
+  
+   
+	   $program = $_GET['Program_Name']; 
+       $component = $_GET['Component']; 
+	  
+	$total = "SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
+	         DATE_FORMAT(End,  '%D %b %Y' ) AS End,
+	         DATEDIFF(END,APPROVED)/30 AS Term  FROM `grants` 
+	         WHERE Program ='$program' && Component='$component' && Year='2015-16' 
+	            ";
+	$result = mysqli_query($db, $total );
+	 @$num_results = mysqli_num_rows($result);
+	echo"
+	<h3>There are $num_results grants for Program: $program with Component: $component </h3><div class='expand'>";
+	 while ($row = $result->fetch_assoc()) 
+	    {
+
+	include'grants_table.php';
+	    }echo"</div>";
+	}
+	?>
 <?php
 if ( isset($_GET['Name']) )
  {
@@ -305,7 +324,7 @@ $result = mysqli_query($db, $grants );
        if ($num_results >0)
        {
  
-       echo"
+       echo"<h3>Commonwealth Grants for $name</h3>
   		 <div class='expand'><table class='grants'><tbody>";
       while ($row = $result->fetch_assoc()) 
           {
@@ -330,7 +349,7 @@ $result = mysqli_query($db, $grants );
      if ($num_results >0)
      {
  
-     echo"
+     echo"<h3>Commonwealth Grants for $recipient</h3>
 		 <div class='expand'><table class='grants'><tbody>";
     while ($row = $result->fetch_assoc()) 
         {
@@ -370,10 +389,7 @@ include'grants_table.php';
 ?>
 
   
-         
-        
-
-
+      
 </div></div>
 <div class='clear'></div>
  <?php 
