@@ -5,13 +5,15 @@
         <label id="toggle-nav-label" for="toggle-nav"><i class="icon-reorder"></i>Menu</label>
         
         <div class="box">
-                     
-          <ul> <li><a href="search.php">Quick Search</a></li>
-            <li><a href="index.php">Home</a></li>
+			 <ul>
+		     <li><a href="tax.php">Tax Data</a></li>
+		  	 <li><a href="donations.php">Political Donations</a></li>
+             <li><a href="search.php">Quick Search</a></li>
+             <li><a href="index.php">Home</a></li>
 			 <li><a href="about.php">About</a></li>
-			  <li><a href="data.php">Data</a></li>
-            Find results by:
-           
+			 <li><a href="data.php">Data</a></li>
+          
+		     Find results by:
 			<li><a href="portfolio.php">Portfolio</a></li>
 			<li><a href="agency.php">Agency</a></li>
 			<li><a href="program.php">Program</a></li>

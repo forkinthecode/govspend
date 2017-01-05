@@ -122,12 +122,70 @@ $result = mysqli_query($db, $grants);
 	 	?>
  
 	 
-     
+	 <?php
+	  if ( isset($_GET['Component']) )
+	  {
+  
+	 $component = $_GET['Component']; 
 
-	  
+	 $test="SELECT id from budget_table15_16 where Component LIKE'%$component%'";
+	 $result = mysqli_query($db, $test);
+	 @$num_results = mysqli_num_rows($result);
+
+
+	        if ($num_results >0)
+	        {
+	 $total="SELECT sum(current),AVG(current) as AVE, count(current) as count FROM budget_table15_16 where Component LIKE'%$component%'
+	 	";
+	 $result = mysqli_query($db, $total);
+	 @$num_results = mysqli_num_rows($result);
+
+
+       
+	 echo"<h4>Commonwealth Budget totals for Program Components matching $component</h4>
+	 ";
+	 echo"<table class='stats'><tbody><th>Number</td><th>Average Value</th><th>Total</td></tr>";
+	 while ($row = $result->fetch_assoc()) 
+	    {echo"<tr><th>".number_format($row['count'])."</th><th>$".number_format($row['AVE'])."</th>
+	 	   <th>$".number_format($row['sum(current)'])."</th></tr>";
+	   
+	    }
+	    echo"<tbody></table><hr>	<br>";
+	       }
+   
+	 }
+
+	 ?>
+
+	  <?php
+	   if ( isset($_GET['Component']) )
+	   {
+	  $component=$_GET['Component'];
+	 
+	        $sub_program = "SELECT * FROM `budget_table15_16`
+	   WHERE  Component LIKE'%$component%' ";
+			echo"<h4>Component Details</h4><div class='expand'>";
+	  $result = mysqli_query($db, $sub_program);
+	  while ($row = $result->fetch_assoc()) 
+	  {
+	  echo"<table class='basic'><tbody>
+        <tr><td>Program</td><td><a href='program.php?Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
+	    <tr><td>Component</td><td>".$row['Component']."</td></tr>
+ 
+	    <tr><td>Appropriation Type</td><td> ".$row['Appropriation_Type']."</td></tr>
+	    <tr><td>Cost</td><td>$".number_format($row['current']).",000</td></tr>
+	    <tr><td>".$row['Source_Table']."</td><td> ".$row['Source']."</td></tr>
+  
+
+	   </tbody></table><br><br> ";
+
+	  }echo"</div>";
+	  }mysqli_free_result($result);
+
+	  ?>
 
  <?php
- if ( isset($_GET['Program']) || isset($_GET['Component']))
+ if ( isset($_GET['Program']) )
  {
   
                    $program = $_GET['Program']; 

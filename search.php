@@ -29,8 +29,6 @@ require'header.php';
    </form>
 			<br>
 
- 
-
 
  </div>
  <div class='left'>
@@ -113,7 +111,7 @@ require'header.php';
 		   @$num_results = mysqli_num_rows($result);
 		   //if ($num_results <1)
 		   {
-		 	  echo"<tr><td><a href='charities.php?Name=$name' target='_blank'>ACNC charities data for $name</a></td><td> $num_results</td> </tr>";
+		 	  echo"<tr><td><a href='charities.php?Name=$name' target='_blank'>ACNC charities data for matching charities</a></td><td> $num_results</td> </tr>";
 		 }
 		 }
 
@@ -129,7 +127,7 @@ require'header.php';
 		   @$num_results = mysqli_num_rows($result);
 		   //if ($num_results <1)
 		   {
-	 echo"<tr><td><a href='charities.php?Name=$ABN' target='_blank'>ACNC charities data for $ABN</a><td> $num_results</td> </tr>";
+	 echo"<tr><td><a href='charities.php?Name=$ABN' target='_blank'>ACNC charities data for matching ABN</a><td> $num_results</td> </tr>";
   
 		 }
 		 }
@@ -147,7 +145,7 @@ require'header.php';
 		   //if ($num_results >0)
 		   {
 	 
-		 	  echo"<tr><td><a href='grants.php?Recipient=$name' target='_blank'>Commonwealth Grants for $name</a></td><td> $num_results</td> </tr>";
+		 	  echo"<tr><td><a href='grants.php?Recipient=$name' target='_blank'>Commonwealth Grants for matching recipients</a></td><td> $num_results</td> </tr>";
 		 }
 		 }
 
@@ -165,7 +163,7 @@ require'header.php';
 		    @$num_results = mysqli_num_rows($result);
 
 
-		    { echo"<tr><td><a href='donations.php?Donor=$name' target='_blank'>AEC donations data for $name</a></td><td> $num_results</td> </tr>";
+		    { echo"<tr><td><a href='donations.php?Donor=$name' target='_blank'>Political donations data for matching donors </a></td><td> $num_results</td> </tr>";
 		    }
 
 		 }
@@ -186,7 +184,7 @@ require'header.php';
     @$num_results = mysqli_num_rows($result);
 
 
-    { echo"<tr><td><a href='tax.php?Name=$name' target='_blank'>Tax Transparency data for $name</a></td><td> $num_results</td> </tr>";
+    { echo"<tr><td><a href='tax.php?Name=$name' target='_blank'>Tax Transparency data for matching companies</a></td><td> $num_results</td> </tr>";
     }
 
  }
@@ -208,7 +206,7 @@ require'header.php';
 		   //if ($num_results >0)
 		   {
 		
-		  echo"<tr><td><a href='tax.php?ABN=$ABN' target='_blank'>Tax Transparency data for $ABN</a></td><td> $num_results</td> </tr>";
+		  echo"<tr><td><a href='tax.php?ABN=$ABN' target='_blank'>Tax Transparency data for matching ABN</a></td><td> $num_results</td> </tr>";
  
 		  }
 		  }
@@ -226,7 +224,7 @@ require'header.php';
          
 
 
-		 		 echo"<tr><td><a href='tenders.php?Recipient=$name' target='_blank'>Commonwealth tenders for $name</a></td><td> $num_results</td> </tr>";
+		 		 echo"<tr><td><a href='tenders.php?Recipient=$name' target='_blank'>Commonwealth tenders received by matching suppliers</a></td><td> $num_results</td> </tr>";
              
 		     }
 
@@ -244,7 +242,7 @@ require'header.php';
 		       @$num_results = mysqli_num_rows($result);
       
 		       {
-		  echo"<tr><td><a href='tenders.php?ABN=$ABN' target='_blank'>Commonwealth tenders for $ABN</a></td><td> $num_results</td> </tr>";
+		  echo"<tr><td><a href='tenders.php?ABN=$ABN' target='_blank'>Commonwealth tenders with matching suppliers</a></td><td> $num_results</td> </tr>";
 
  
 		    }
@@ -262,7 +260,7 @@ require'header.php';
 		       @$num_results = mysqli_num_rows($result);
       
 		       {
-		  echo"<tr><td><a href='electorate.php?Electorate=$electorate' target='_blank'>Commonwealth Grants for $electorate</a></td><td> ".number_format($num_results)."</td> </tr>";
+		  echo"<tr><td><a href='electorate.php?Electorate=$electorate' target='_blank'>Commonwealth Grants for matching federal electorates</a></td><td> ".number_format($num_results)."</td> </tr>";
 
  
 		    }
@@ -280,7 +278,7 @@ require'header.php';
 		       @$num_results = mysqli_num_rows($result);
       
 		       {
-		  echo"<tr><td><a href='council.php?Council=$council' target='_blank'>Commonwealth Grants for $council</a></td><td> ".number_format($num_results)."</td> </tr>";
+		  echo"<tr><td><a href='council.php?Council=$council' target='_blank'>Commonwealth Grants for matching councils</a></td><td> ".number_format($num_results)."</td> </tr>";
 
  
 		    }
@@ -298,7 +296,7 @@ require'header.php';
 		       @$num_results = mysqli_num_rows($result);
       
 		       {
-		  echo"<tr><td><a href='locality.php?Postcode=$postcode' target='_blank'>Commonwealth Grants for $postcode</a></td><td> ".number_format($num_results)."</td> </tr>";
+		  echo"<tr><td><a href='locality.php?Postcode=$postcode' target='_blank'>Commonwealth Grants for matching recipients</a></td><td> ".number_format($num_results)."</td> </tr>";
 
  
 		    }
@@ -316,7 +314,7 @@ require'header.php';
 		       @$num_results = mysqli_num_rows($result);
       
 		       {
-		  echo"<tr><td><a href='locality.php?Postcode=$postcode' target='_blank'>Commonwealth Tenders for $postcode</a></td><td> ".number_format($num_results)."</td> </tr>";
+		  echo"<tr><td><a href='locality.php?Postcode=$postcode' target='_blank'>Commonwealth Tenders for matching postcode</a></td><td> ".number_format($num_results)."</td> </tr>";
 
  
 		    }

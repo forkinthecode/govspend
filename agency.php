@@ -74,14 +74,14 @@ echo"
 	 if ( isset($_GET['Agency'])  )
 	 {
  $agency= $_GET['Agency'];
-	$agor = "SELECT Agency FROM `agencies` WHERE agency ='$agency'";
+	$agor = "SELECT Agency FROM `agencies` WHERE agency LIKE'%$agency%' group by Agency";
 	$result = mysqli_query($db, $agor );
 	 @$num_results = mysqli_num_rows($result);
     if ($num_results >0)
     {
 	 while ($row = $result->fetch_assoc()) 
 	    {
-			echo"<h3>Privacy Alert:<a href='../snitch/datasets.php' target='_blank'> $agency has applied for warrentless access to telecommunications metadata</a></h3>
+			echo"<div class='privacy' style='background:#eee;padding:10px'>Privacy Alert:<a href='../snitch/datasets.php' target='_blank'> ".$row['Agency']." has applied for warrentless access to telecommunications metadata</a></div>
 	
 			  ";
 		 }

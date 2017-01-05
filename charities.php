@@ -25,12 +25,12 @@ $result = mysqli_query($db, $charities );
   {
 	  echo"<h3>Results from the ACNC database for $recipient</h3>
 		    <h4>".number_format($num_results)." Results for $recipient</h4>
-		  <table class='grants'>";
+		  <table class='grants'><tr><th>Legal Name</th><th>ABN/ACN</th></tr>";
      while ($row = $result->fetch_assoc())
            {
 			   echo"<tr><td><a href='charities.php?Name=$recipient&Legal_Name=".$row['Legal_Name']."'>".$row['Legal_Name']."</a></td><td><a href='charities.php?Name=$recipient&Legal_Name=".$row['Legal_Name']."&ABN=".$row['ABN']."'>".$row['ABN']."</a><td></tr>";
 
-          }echo"</table>";
+          }echo"</table>Click on the name or ABN for details";
    }
   elseif ($num_results >16)
   {
@@ -41,7 +41,7 @@ $result = mysqli_query($db, $charities );
            {
 			   echo"<tr><td><a href='charities.php?Name=$recipient&Legal_Name=".$row['Legal_Name']."'>".$row['Legal_Name']."</a></td><td><a href='charities.php?Name=$recipient&Legal_Name=".$row['Legal_Name']."&ABN=".$row['ABN']."'>".$row['ABN']."</a><td></tr>";
 
-            }echo"</table></div>Mouse/Scroll for more results";
+            }echo"</table></div>Mouse/Scroll for more results. Click on name or ABN for details";
      }
     
 }
@@ -51,8 +51,9 @@ $result = mysqli_query($db, $charities );
 
 <h3>About ACNC charities data</h3>
 
-<p>There are over 50,000 registered charities in Australia. The dataset used in the GovSpend prototype is not currently up to date. For up to the week 
-	information on a particular charity please search the Australian Charities and Not for Profit Commission site.</p>
+<p>There are over 50,000 registered charities in Australia. The dataset used in the GovSpend prototype is not the latest data </p
+	<p>For up to the week 
+	information on whether a particular charity is still a registered charity please search the <a href='http:acnc.gov.au'>Australian Charities and Not for Profit Commission</a> site.</p>
 	
  
 
@@ -108,100 +109,16 @@ $result = mysqli_query($db, $charities );
   }
 
   ?>
- 
-  
+  <?php
+  if ( !isset($_GET['Legal_Name']) && !isset($_GET['ABN']))
+   {
+	   echo"
+<a class='twitter-timeline' data-height='600' href='https://twitter.com/@acnc_gov_au'>Tweets by ACNC</a> <script async src='//platform.twitter.com/widgets.js' charset='utf-8'></script>
+";
 
-
-
-  
-         
-        
-
-   <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?sensor=false'></script>
-<script type='text/javascript'>
-
-
-    <?php
-      
- if (  isset($_GET['Recipient']) && !isset($_GET['Program'])  )
- {
-
-$map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where Pcode IN 
-(SELECT Postcode from grants where Recipient ='$recipient' && Year='2015-16' 
-  && Locality !=',') ORDER BY Pcode ";
-       $result = mysqli_query($db, $map);
- 
-    echo" var markers = [";
-      while ($row = $result->fetch_assoc())
-          
- {
-       echo
-       " {
-        \"title\": \"".$row['Locality']."\",
-        \"lat\": \"".$row['Lat']."\",
-        \"lng\": \"".$row['Lon']."\",
-        \"description\": \"".$row['Locality']." <a href='locality.php?Postcode=".$row['Pcode']."'>".$row['Pcode']."</a> \"
-      },
-       ";
 }
-   echo"];";
-   mysqli_free_result($result);
-}
+
 ?>
-
-
-    window.onload = function () {
-        LoadMap();
-    }
-
-
-     
-
-
-
-    function LoadMap() {
-        var mapOptions = {
-            center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 14,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("Map"), mapOptions);
- 
-        //Create and open InfoWindow.
-        var infoWindow = new google.maps.InfoWindow();
- 
-        for (var i = 0; i < markers.length; i++) {
-            var data = markers[i];
-            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map,
-                title: data.title,
-
-                icon:'map_icon.png'
-            });
- 
-            //Attach click event to the marker.
-
-         
-            (function (marker, data) {
-                google.maps.event.addListener(marker, "click", function (e) {
-                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
-                    infoWindow.setContent("<div style = 'width:px;min-height:40px'>" + data.description + "</div>");
-                    infoWindow.open(map, marker);
-                });
-            })(marker, data);
-        }
-    }
-</script>
-<script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi_5tk-gJ3wLBKhYh95OKsfTxWV-FOSnI&callback=initMap">
-</script>
-<div id="Map" style="width: 500px; height: 500px">
-</div>
-<div class='clear'></div>
-   
-
 </div></div>
 <div class='clear'></div>
  <?php 
