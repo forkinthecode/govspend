@@ -6,9 +6,11 @@ require'header.php';
 
         <div class="left">
 
- 
+     <form action="electorate.php">
+  <input type="text" id="Electorate" name="Electorate" placeholder="Federal Electorate" > <button type="submit" id='submit' value="Submit"> Find </button>
+ </form>
 
-<?php
+<?php/*
  if ( isset($_GET['Electorate']) )
  {
 	 
@@ -18,7 +20,7 @@ $total = "SELECT * FROM `lga_pcode_electorate`  where Electorate ='$electorate' 
 $result = mysqli_query($db, $total );
 
 include'electorate_details.php';
-}
+}*/
 ?>
 <div class='clear'></div>
 
@@ -100,9 +102,9 @@ echo"<a href='council.php?Council=".$row['council']."'>".$row['council']."</a> |
 
 echo"<h4>Total Commonwealth Grants by Electorate</h4> <div class='source'>Source: DSS Payment by Demographic published at 
 	<a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div> ";
-$total = "SELECT Electorate,sum(Funding) FROM `grants` where electorate !='' && Year='2015-16' Group by electorate ";
+$total = "SELECT Electorate,sum(Funding) FROM `grants` WHERE electorate !='' && Year='2015-16' GROUP BY electorate ";
 $result = mysqli_query($db, $total );
-echo"<div class='expand'><table class='grants' ><tbody>";
+echo"<div class='expand'><table class='wide' ><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 
@@ -187,11 +189,11 @@ echo"</tbody></table><br>";
  <div class='right'>
   
 
-    <h2>Electorate Search</h2>
+
   
-    <div class='content'>
+    <div class=''>
      <form action='electorate.php' class='search' method='GET'>
-		   <lable for='submit'><input type='submit' name='submit' value='Go' id='submit' /></lable>
+		   <lable for='submit'><button type="submit" id='submit' value="Submit">Find</button></lable>
     <lable for='electorate'>
       <select name='Electorate' >
     

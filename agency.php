@@ -238,14 +238,96 @@ echo"</div>Mouse/Scroll over for more results.
 
  </div>
  <div class='right'>
+	   <?php
+	   if ( isset($_GET['Agency']) )
+	    {
+
+	     $data = $_GET['Agency']; 
+	     $agency=mysqli_real_escape_string ( $db , $data );
+	     $tenders = "SELECT id FROM grants WHERE Agency LIKE'%$agency%'   ";
+	     $result = mysqli_query($db, $tenders );
+      
+
+	  @$num_results = mysqli_num_rows($result);
+	    if ($num_results >0)
+	    {
+	  echo"<h3>Commonwealth Grants awarded by $agency</h3>
+	  <p>(With approval dates within the 2015-16 financial year)</p>
+	  <div class='source'>Source: published at agency websites </div>";
+	  $seifa = "SELECT *,sum(Funding),count(Funding) as count,AVG(Funding)   FROM grants WHERE Agency LIKE'%$agency%' && Year='2015-16'  ";
+	  $result = mysqli_query($db, $seifa );
+	    @$num_results = mysqli_num_rows($result);
+	    if ($num_results <1)
+	    {
+	    echo"<h4>There are no Commonwealth Grants made by $agency</h4>";
+	    }
+	  else{
+	 	 echo"<hr>
+
+	 	 <table class='stats' ><tbody><tr><th>Number</th><th>Ave Value</th><th>Total Value</th></tr>";
+	   while ($row = $result->fetch_assoc()) 
+	      {
+
+	  echo"
+
+	    <tr><th>".number_format($row['count'])."</th><th>".number_format($row['AVG(Funding)'])."</th>    <th>$".number_format($row['sum(Funding)'])."</th></tr>
+
+	  ";
+	  }echo" </tbody></table><hr><br>";
+	 }
+	  }
+	  }
+
+	  ?>
+ 	   <?php
+ 	   if ( isset($_GET['Agency']) )
+ 	    {
+
+ 	     $data = $_GET['Agency']; 
+ 	     $agency=mysqli_real_escape_string ( $db , $data );
+
+
+ 	
+ 	  $seifa = "SELECT Recipient,sum(Funding),count(Funding) as count  FROM grants 
+		  WHERE Agency LIKE'%$agency%' && Year='2015-16' GROUP BY Recipient ORDER BY sum(Funding) DESC ";
+ 	  $result = mysqli_query($db, $seifa );
+ 	    @$num_results = mysqli_num_rows($result);
+ 	    if ($num_results <1)
+ 	    {
+ 	    echo"<h4>There are no Commonwealth Grants made by $agency</h4>";
+ 	  }
+ 	  else{
+ 	 	 echo"
+ 	 <div class='expand'>
+ 	 ";
+ 	   while ($row = $result->fetch_assoc()) 
+ 	      {
+
+ 	  echo"
+ 	 	 <table class='basic' ><tbody>
+ 	    <tr><td width='150px'>Name</td><td><a href='search.php?Name=".$row['Recipient']."'>".$row['Recipient']."</a></td></tr>
+ 	 <tr><td>Number</td><td>(".number_format($row['count']).") <span class='right'>$".number_format($row['sum(Funding)'])."</span></td>    </tr>
+
+ 	 </tbody></table>
+ 	  ";
+ 	  }echo" <hr><br></div>Mouse/Scroll over for more results. <p>Click on the Name to display details (below)</p><hr><br>";
+ 	  }
+ 	  }
+
+ 	  ?>
   <?php
   if ( isset($_GET['Agency']) )
    {
 
     $data = $_GET['Agency']; 
     $agency=mysqli_real_escape_string ( $db , $data );
+    $tenders = "SELECT id FROM tenders WHERE Agency LIKE'%$agency%'   ";
+    $result = mysqli_query($db, $tenders );
+      
 
-
+ @$num_results = mysqli_num_rows($result);
+   if ($num_results >0)
+   {
  echo"<h3>Commonwealth Tenders awarded by $agency</h3>
  <p>(With approval dates within the 2015-16 financial year)</p>
  <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
@@ -269,6 +351,7 @@ echo"</div>Mouse/Scroll over for more results.
 
  ";
  }echo" </tbody></table><hr><br>";
+}
  }
  }
 
@@ -281,10 +364,7 @@ echo"</div>Mouse/Scroll over for more results.
 	     $agency=mysqli_real_escape_string ( $db , $data );
 
 
-	  //echo"<h3>Commonwealth Tenders awarded by $agency</h3>	  <p>(With approval dates within the 2015-16 financial year)</p>";
-	  echo"
-	  
-	  <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
+	 
 	  $seifa = "SELECT Name,ABN,sum(Value),count(Value) as count  FROM tenders WHERE Agency LIKE'%$agency%' GROUP BY ABN ORDER BY sum(Value) DESC ";
 	  $result = mysqli_query($db, $seifa );
 	    @$num_results = mysqli_num_rows($result);
@@ -293,7 +373,7 @@ echo"</div>Mouse/Scroll over for more results.
 	    echo"<h4>There are no Commonwealth Tenders made by $agency</h4>";
 	  }
 	  else{
-	 	 echo"<hr>
+	 	 echo"
 	 <div class='expand'>
 	 ";
 	   while ($row = $result->fetch_assoc()) 

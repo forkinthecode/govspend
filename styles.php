@@ -24,13 +24,13 @@ input[type=text], select {
     border-radius: 4px;
     box-sizing: border-box;
 }
-
+button {width:50px;}
 
 
 input[type=submit]:hover {
     background-color: #45a049;
 }
-
+select {height:30px;}
 
 .council { margin-top:10px;width:95%; text-align:center;}
 .council td:nth-of-type(odd) {  background:#eee; margin:5px; }

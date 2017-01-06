@@ -9,18 +9,19 @@ require'header.php';
  
      <input type="text" id="ABN" name="ABN" placeholder="ABN" > <button type="submit" id='submit' value="Submit"> Find </button>
  </form>
+ 
      <form action="search.php">
      <input type="text" id="Name" name="Name" placeholder="organisation key word eg woolworths" > <button type="submit" id='submit' value="Submit"> Find </button>
  </form>
+ 
       <form action="search.php">
 	  <input type="text" id="Program" name="Program" placeholder="program key word eg health" > <button type="submit" id='submit' value="Submit"> Find </button>
-    
-
+  </form>
   
-   </form>
       <form action="search.php">
 	  <input type="text" id="Electorate" name="Electorate" placeholder="Federal Electorate" > <button type="submit" id='submit' value="Submit"> Find </button>
   </form>
+  
       <form action="search.php">
 	  <input type="text" id="Council" name="Council" placeholder="Council" > <button type="submit" id='submit' value="Submit"> Find </button>
    </form>
@@ -28,7 +29,15 @@ require'header.php';
 	  <input type="text" id="Postcode" name="Postcode" placeholder="Postcode" > <button type="submit" id='submit' value="Submit"> Find </button>
    </form>
 			<br>
-
+<?php
+$program = $_GET['Program']; 
+$name = $_GET['Name']; 
+$recipient = $_GET['Recipient']; 
+$ABN = $_GET['ABN']; 
+echo"	Searching for:
+<h3>$program $name $recipient $ABN</h3>";
+	
+?>
 
  </div>
  <div class='left'>
@@ -96,7 +105,7 @@ require'header.php';
    @$num_results = mysqli_num_rows($result);
    //if ($num_results <1)
    {
- 	  echo"<tr><td><a href='portfolio.php?Component=$program' target='_blank'>2015-16 budget data Components matching $program</a></td><td> $num_results</td> </tr>";
+ 	  echo"<tr><td><a href='program.php?Component=$program' target='_blank'>2015-16 budget data Components matching $program</a></td><td> $num_results</td> </tr>";
  }
  }
 
@@ -224,7 +233,7 @@ require'header.php';
          
 
 
-		 		 echo"<tr><td><a href='tenders.php?Recipient=$name' target='_blank'>Commonwealth tenders received by matching suppliers</a></td><td> $num_results</td> </tr>";
+		 		 echo"<tr><td><a href='tenders.php?Recipient=$name' target='_blank'>Commonwealth Tenders received by matching suppliers</a></td><td> $num_results</td> </tr>";
              
 		     }
 
@@ -242,7 +251,7 @@ require'header.php';
 		       @$num_results = mysqli_num_rows($result);
       
 		       {
-		  echo"<tr><td><a href='tenders.php?ABN=$ABN' target='_blank'>Commonwealth tenders with matching suppliers</a></td><td> $num_results</td> </tr>";
+		  echo"<tr><td><a href='tenders.php?ABN=$ABN' target='_blank'>Commonwealth Tenders with matching suppliers</a></td><td> $num_results</td> </tr>";
 
  
 		    }
