@@ -26,7 +26,7 @@
         </tr>
         <tr>
         <td>Operating Countries</td>     
-        <td> ".$row['Countries']."</td>
+        <td><div class='source'>".$row['Countries']."</div></td>
         </tr>
         <tr>
         <td>Operating States</td>    

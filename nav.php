@@ -6,12 +6,14 @@
         
         <div class="box">
 			 <ul>
+				   <li><a href="index.php">Home</a></li>
+				     <li><a href="search.php">Quick Search</a></li>
 		     <li><a href="tax.php">Tax Data</a></li>
 		  	 <li><a href="donations.php">Political Donations</a></li>
-             <li><a href="search.php">Quick Search</a></li>
-             <li><a href="index.php">Home</a></li>
+           
+           
 			 <li><a href="about.php">About</a></li>
-			 <li><a href="data.php">Data</a></li>
+			 <li><a href="data.php">Data Used</a></li>
           
 		     Find results by:
 			<li><a href="portfolio.php">Portfolio</a></li>
@@ -23,7 +25,7 @@
 			
 			 </ul>
 
-      
+
        
         </div>
         

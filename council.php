@@ -14,14 +14,14 @@ if ( isset($_GET['Council']) )
  {
 $data = $_GET['Council']; 
 $council=mysqli_real_escape_string ( $db , $data );
-echo"<h3>Socio Economic (SEIFA) Data for LGA: $council</h3>
-<table class='council'><tbody><tr><td>National Rank</td><td>National Decile</td><td>Usual Resident Pop</td></tr>";
-$seifa = "SELECT * FROM SEIFA_LGA WHERE Council ='$council' ";
+
+$seifa = "SELECT * FROM SEIFA_LGA WHERE Council='$council'";
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
   if ($num_results >0)
 {
-  //echo"<tr><td>No SEIFA results</td><td>for $council</td><td></td></tr>";
+	echo"<h3>Socio Economic (SEIFA) Data for LGA: $council</h3>
+	<table class='council'><tbody><tr><td>National Rank</td><td>National Decile</td><td>Usual Resident Pop</td></tr>";
  while ($row = $result->fetch_assoc()) 
     {
       echo"<tr>
@@ -40,20 +40,24 @@ if ( isset($_GET['Council']) )
  {
 $data = $_GET['Council']; 
 $council=mysqli_real_escape_string ( $db , $data );
+  if ($num_results >0)
+{
+
 echo"<tr><td></td><td>";
-$seifa = "SELECT Nat_Decile FROM SEIFA_LGA WHERE Council ='$council' ";
+$seifa = "SELECT Nat_Decile FROM SEIFA_LGA WHERE Council='$council'";
 $result = mysqli_query($db, $seifa );
  while ($row = $result->fetch_assoc()) 
     {
       $iterations=$row['Nat_Decile'];
     }
  $i=0;
-while ($i <= $iterations-1)
+while ($i <= $iterations)
 {
  echo "<img height='15px' src='icon.png'></img>";
    $i++;
     }
   }echo"</td><td></td></tr></tbody></table>";
+}
 ?>
 <?php
 if ( isset($_GET['Council']) )
@@ -61,15 +65,17 @@ if ( isset($_GET['Council']) )
 $data = $_GET['Council']; 
 $council=mysqli_real_escape_string ( $db , $data );
 $query="SELECT sum(Age_pension+PPP+PPS+Newstart+DSP+Austudy+Carer_Payment+YA_SA+YAO) as total
- FROM lga_welfare where council='$council'";
+ FROM lga_welfare where council LIKE'%$council%'";
 $result = mysqli_query($db, $query);
+  if ($num_results >0)
+{
  while ($row = $result->fetch_assoc())
  {
 $total_on_welfare=$row['total'];
 //echo"$total_on_welfare<br>";
   }
 $query="SELECT URP FROM SEIFA_LGA
-where council='$council'";
+where council LIKE'%$council%'";
 $result = mysqli_query($db, $query);
 echo"<br><table class='council'><tbody><tr><td><span class='tiny'>Population</span></td><td><span class='tiny'>Welfare Recipients</span></td><td><span class='tiny'>Perecentage</span></td></tr>";
  while ($row = $result->fetch_assoc())
@@ -81,25 +87,27 @@ $URP=$row['URP'];
 echo"</tbody></table><div class='source'><a href=http://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/2033.0.55.0012011?OpenDocument'>SEIFA data</a> calculated by the ABS from 2011 Census data</div><br>";
 
 }
-
+}
 ?>
 <?php
 if ( isset($_GET['Council']) )
  {
 $data = $_GET['Council']; 
 $council=mysqli_real_escape_string ( $db , $data );
-echo"<h3>Breakdown by Payment Type</h3> <div class='source'>Source: DSS Payment by Demographic published at 
-	<a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div> 
-<table class='council'><tbody><tr><td>Payment Name</td><td>Number in Receipt</td></tr>";
-$seifa = "SELECT * FROM lga_welfare WHERE Council LIKE'%$council%' ";
+
+$seifa = "SELECT * FROM lga_welfare WHERE Council='$council'";
 $result = mysqli_query($db, $seifa );
   @$num_results = mysqli_num_rows($result);
-  if ($num_results <1)
-  echo"<tr><td>No SEIFA results</td><td>for $council</td><td></td></tr>";
+  if ($num_results >0)
+  {
+  echo"<h3>Breakdown by Payment Type</h3> <div class='source'>Source: DSS Payment by Demographic published at 
+	<a href='http://data.gov.au/dataset/dss-payment-demographic-data'>data.gov.au</a></div> 
+  
+<table class='council'><tbody><tr><td>Payment Name</td><td>Number in Receipt</td></tr>";
  while ($row = $result->fetch_assoc()) 
     {
        echo"
-      <tr><td>Age Pension</td><td>".number_format($row['Age_Pension'])." </td></tr>
+      <tr><td>Age Pension</td><td>".number_format($row['Age_Pension'])."</td></tr>
       <tr><td>FTB A</td><td>".number_format($row['FTB_A'])." </td></tr>
       <tr><td>FTB B</td><td>".number_format($row['FTB_B'])." </td></tr>
       <tr><td>Parent Payment Partnered</td><td>".number_format($row['PPP'])." </td></tr>
@@ -115,6 +123,7 @@ $result = mysqli_query($db, $seifa );
 
     }
     echo"</tbody></table>";
+}
   }
 
 ?>
@@ -124,7 +133,7 @@ $result = mysqli_query($db, $seifa );
 <?php
  if ( !isset($_GET['Council']) )
  { 
-echo"<h4>Total Commonwealth Grants by Council Area</h4><div class='source'>Source: Grants data published at agency websites</div><table class='basic' ><tbody> ";
+echo"<h4>Total Commonwealth Grants by Council Area</h4><div class='source'>Source: Grants data published at agency websites</div><div class='expand'><table class='basic' ><tbody> ";
 $total = "SELECT *,sum(Funding) FROM `grants` WHERE  Year='2015-16' && Council!=''
  GROUP BY Council ORDER BY sum(Funding) DESC ";
 
@@ -140,7 +149,7 @@ echo"
   <td ><a href='council.php?Council=".$row['Council']."'>".$row['Council']."</a></td>
     </tr>
  ";
-    }echo"</tbody></table><br>";
+    }echo"</tbody></table><br></div>Mouse/Scroll for more results";
 }
 ?>
  
@@ -149,21 +158,18 @@ if ( isset($_GET['Council']) )
  {
 $data = $_GET['Council']; 
 $council=mysqli_real_escape_string ( $db , $data );
-echo"<br><hr><h4>Commonwealth Grants totalled by Program</h4> 
-	<div class='source'>Source: Grants data published at agency websites</div> ";
 
-$council_result = "SELECT *,sum(Funding) FROM grants WHERE Council LIKE'%$council%' && Year='2015-16' GROUP BY Program ";
+
+$council_result = "SELECT *,sum(Funding),count(Funding) FROM grants WHERE Council='$council' && Year='2015-16' GROUP BY Program ";
 $result = mysqli_query($db, $council_result );
   @$num_results = mysqli_num_rows($result);
-  if ($num_results <1)
-  {
-  echo"<h4>There are no Commonwealth grant recipients with addresses in the $council council area</h4>";
-	  }
+ 
 
   if ($num_results >0)
-	  echo"<table class='basic'><tbody>";
+	 
   {
-
+	  echo"<br><hr><h4>Commonwealth Grants totalled by Program</h4> 
+	  	<div class='source'>Source: Grants data published at agency websites</div> <table class='basic'><tbody>";
  while ($row = $result->fetch_assoc()) 
     {
 
@@ -173,14 +179,18 @@ echo"<tr>
   </td>
   <td>
       <a href='council.php?Council=$council&Program=".$row['Program']."'>".$row['Program']."</a>
-  </td>
+  </td><td>".number_format($row['count(Funding)'])."</td>
   <td>
         $".number_format($row['sum(Funding)'])."
   </td>
   </tr>
-";
-}echo" </tbody></table><br>";
-}
+        ";
+    }echo" </tbody></table><br>";
+  }
+  elseif ($num_results <1)
+     {
+  echo"<h4>There are no Commonwealth grant recipients with addresses in the $council council area approved during the 2015-16 FY</h4>";
+	  }
 }
 
 ?>
@@ -197,7 +207,7 @@ echo"<tr>
  </div>
  <div class='right'>
   <?php
-  echo" <h2>Council Search</h2>
+  echo" 
   <div class='content'>
      <form action='council.php'  method='GET'>
     <lable for='council'>
@@ -254,7 +264,7 @@ $welfare_total = "SELECT council,sum(Age_pension+PPP+PPS+Newstart+DSP+Austudy+Ca
 FROM lga_welfare GROUP BY council ORDER BY 
  sum(Age_pension+PPP+PPS+Newstart+DSP+Austudy+Carer_Payment+YA_SA+YAO) DESC ";
 $result = mysqli_query($db, $welfare_total );
-echo"<table class='council'><tbody><tr><td>Council</td><td>Welfare Recipients</td></tr>";
+echo"<div class='expand'><table class='council'><tbody><tr><td>Council</td><td>Welfare Recipients</td></tr>";
   @$num_results = mysqli_num_rows($result);
   if ($num_results >0)
   
@@ -268,7 +278,7 @@ echo"<table class='council'><tbody><tr><td>Council</td><td>Welfare Recipients</t
       
 
     }
-    echo"</tbody></table>";
+    echo"</tbody></table><div>Mouse/Scroll for more results";
   }
 
 ?>

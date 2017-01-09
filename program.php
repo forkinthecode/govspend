@@ -4,7 +4,10 @@ require'header.php';
 
 
         <div class="left">
-
+      <form action="program.php">
+	  <input type="text" id="Program" name="Program" placeholder="program key word eg health" > <button type="submit" id='submit' value="Submit"> Find </button>
+  </form>
+  
    
 <?php
  //if ( !isset($_GET['Program'])  )
@@ -86,12 +89,42 @@ $result = mysqli_query($db, $grants);
  </div>
  <div class='right'>
 	 <?php
+	  if ( isset($_GET['Program']))
+	  {
+
+	 $program= $_GET['Program']; 
+
+
+	 $total="SELECT Program,sum(current),AVG(current) as AVE, count(current) as count 
+		 FROM budget_table15_16 where Program LIKE'%$program%' 
+	 	  GROUP BY '$program'";
+	 $result = mysqli_query($db, $total);
+	 @$num_results = mysqli_num_rows($result);
+
+
+
+	 echo"<hr><h4>Commonwealth Budget totals for Programs matching $program</h4>
+	 ";
+	 echo"<table class='stats'><tbody><th>Number</td><th>Average Value</th><th>Total</td></tr>";
+	 while ($row = $result->fetch_assoc()) 
+	    {
+			echo"<tr><th>".number_format($row['count'])."</th><th>$".number_format($row['AVE'])."</th>
+				<th>$".number_format($row['sum(current)'])."</th></tr>";
+
+	    }
+	    echo"<tbody></table><hr>	<br>";
+
+
+	 }
+
+	 ?>
+	 <?php
 	  if ( isset($_GET['Program'])  )
 	  {
 	 $program=$_GET['Program'];
 	
 	 $budget_test = "SELECT Program FROM `budget_table15_16`
-	  WHERE Program ='$program'";
+	  WHERE Program like'%$program%'";
 	 $result = mysqli_query($db, $budget_test );
 	 @$num_results = mysqli_num_rows($result);
 
@@ -99,7 +132,7 @@ $result = mysqli_query($db, $grants);
 	         {
 
 	 $budget = "SELECT sum(last),sum(current),sum(plus1) FROM `budget_table15_16`
-	  WHERE Program ='$program' ";
+	  WHERE Program like'%$program%' ";
 	 $result = mysqli_query($db, $budget );
 	 @$num_results = mysqli_num_rows($result);
 	  echo"<h3>Budget totals for $program</h3>
@@ -194,25 +227,28 @@ $result = mysqli_query($db, $grants);
 
  echo"<h4>Details for Commonwealth budget Program: $program </h2>";
 $agor = "SELECT * FROM `budget_table15_16`
- WHERE Program='$program' group by Program";
+ WHERE Program like'%$program%' group by Program";
 $result = mysqli_query($db, $agor );
-echo"  <div class='source'>Source: Line item CSV 
-Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div><table class='basic'><tbody>";
+@$num_results = mysqli_num_rows($result);
+
+echo" <div class='source'>Source: Line item CSV 
+Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
+<div class='expand'>";
  while ($row = $result->fetch_assoc()) 
     {
        echo" 
-  
+  <table class='basic'><tbody>
   <tr><td>Portfolio</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."' target='_blank'>".$row['Portfolio']."</a></td></tr>
   <tr><td>Program</td><td><a href='portfolio.php?Program=".$row['Program']."' target='_blank'>".$row['Program']."</a></td></tr>
   <tr><td>Program</td><td><a href='portfolio.php?Portfolio=".$row['Portfolio']."&Program=".$row['Program']."'>".$row['Program']."</a></td></tr>
-  <tr><td>Outcome</td><td>".$row['Outcome']."</td></tr>";
+  <tr><td>Outcome</td><td>".$row['Outcome']."</td></tr></tbody><table><br>";
 
-}echo"</tbody><table>";
+}echo"</div>";
 
 
 
 $component = "SELECT Component,Outcome,Program FROM `budget_table15_16`
- WHERE Program='$program' ";
+ WHERE Program like'%$program%' ";
 $result = mysqli_query($db, $component );
 
  @$num_results = mysqli_num_rows($result);
@@ -246,7 +282,7 @@ echo"<tr><td><img style='height:15px; opacity:0.4' src='images/chevron.png'></im
 $component=$_GET['Component'];
 $program=$_GET['Program'];
       $sub_program = "SELECT * FROM `budget_table15_16`
- WHERE Program='$program' && Component ='$component' ";
+ WHERE Program like'%$program%' && Component ='$component' ";
 $result = mysqli_query($db, $sub_program);
 while ($row = $result->fetch_assoc()) 
 {
@@ -283,7 +319,7 @@ echo"<h4>Component Details</h4><table class='basic'><tbody>
   $program=$_GET['Program'];
 
  $grants = "SELECT *,sum(Funding) FROM grants 
-  WHERE Program ='$program' && Year='2015-16' GROUP BY Electorate  ORDER BY sum(Funding) DESC ";
+  WHERE Program like'%$program%' && Year='2015-16' GROUP BY Electorate  ORDER BY sum(Funding) DESC ";
  $result = mysqli_query($db, $grants );
   @$num_results = mysqli_num_rows($result);
 
@@ -315,7 +351,21 @@ echo"<h4>Component Details</h4><table class='basic'><tbody>
  ?>
 
 
-
+<?php
+if ( !isset($_GET['Program']) )
+{
+	echo"<h3>About Program Data</h3>
+	    <p>The term Component and Sub-Program are used interchangeably by the government to refer to the smallest financial grain in the federal budget papers. GovSpend uses the term Component.</p>
+	<p>Sometimes the Program and Component/Sub-Program name are identical in the budget documents or left blank in the open dataset. Where it is left blank it is assumed to be identical to Program name.</p>
+	 <p>The number of Programs and their names in the Commonwealth budget stay relatively stable from year to year while Agencies and
+	 Portfolios are split or merged depending
+	 on government priorities.</p>
+	 <p>Such a change is known as a change to the <a href='http://www.apsc.gov.au/publications-and-media/current-publications/machinery-of-government'>machinery of government</a> (MoG) which is undertaken through an <a href='http://www.naa.gov.au/information-management/information-governance/aao/index.aspx'>Administrative Arrangements Order</a> is issued. Where Programs are moved from one Portfolio to another, 
+	 the funding they recieved moves with them to the new Agency or Portfolio. It is such changes that make it difficult to track totals between budget years as if there are significant
+	 MoG change what is being compared from one budget to the next can change.</p>
+		";
+}
+?>
 
 
 </div></div>

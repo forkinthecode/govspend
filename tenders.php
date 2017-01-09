@@ -5,7 +5,10 @@ require'header.php';
 
         <div class="left">
 
-
+ <form action="tenders.php">
+ 
+     <input type="text" id="Portfolio" name="Portfolio" placeholder="Portfolio key word eg immigration" > <button type="submit" id='submit' value="Submit"> Find </button>
+ </form>
  <form action="tenders.php">
  
      <input type="text" id="ABN" name="ABN" placeholder="ABN" > <button type="submit" id='submit' value="Submit"> Find </button>
@@ -13,6 +16,8 @@ require'header.php';
      <form action="tenders.php">
      <input type="text" id="Recipient" name="Recipient" placeholder="name" > <button type="submit" id='submit' value="Submit"> Find </button>
  </form>
+
+
 
    
   <?php
@@ -152,48 +157,63 @@ require'header.php';
 <?php
  if ( !isset($_GET['ABN']) && !isset($_GET['Name']) && !isset($_GET['Agency']) && !isset($_GET['Recipient']) )
       {
-	 echo"<h3>About Commonwealth Tenders data</h3>
-		 
-		 <p>The Commonwealth government has provided whole of government tender reporting for over a decade and a half at <a href='tenders.gov.au'>AusTender</a>.
-	 <p>Commonwealth tenders data requires ABN (unless exempt) but this data is not broken down by the program that is administering the tender, only by the agency.</p>
-	 <p>This means that while one can search Commonwealth grants by program, one can only search Commonwealth tenders by agency or other fields.</p>
-	 <p>Without program information in Commonwealth tenders this dataset can not be matched with other datsets that contain Program name such as
-	 Commonwealth budget data.</p>
-	 <p>An additional problem is that tender applicants are not required to provide their business name exactly as it appears on the Australian Register
-	 of Businesses. This results in multiple spellings & mis-spellings of the same company name. This makes totalling or searching by name difficult and can produce
-	 inexact results.</p>
-		 
-		 ";
-	  
-	  }
-	  
-	  ?>
+		  $qery=" SELECT Portfolio,sum(Value) FROM tenders WHERE Portfolio!='' group by Portfolio order by sum(Value) DESC";
+		  $result = mysqli_query($db, $qery );
+		  echo"<h4>2015-16 FY Portfolio totals for Commonwealth Tenders Funding </h4> <table class='grants' ><tbody><tr><th>Portfolio</th><th>Value</th></tr>";
+		   while ($row = $result->fetch_assoc()) 
+		      {
 
+
+
+		     echo"
+
+		     <tr> <td><a href='tenders.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</a></td>
+		     <td width='150px'><span style='float:right'>$".number_format($row['sum(Value)'])."</span></td>
+		    </tr>
+   
+		     ";
+
+
+		        }echo" </tbody></table><br>";
+				
+			}
+			
+			?>
+		  
+	
  </div>
  <div class='right'>
-					
-	
-	
-	    <?php/*
-	  if ( isset($_GET['Recipient'])  )
-	  {
-  
-	    $recipient = $_GET['Recipient']; 
-  
-	   echo"<h4>Politial donations paid by  $recipient</h4>";
-	 $total = "SELECT * from donations where name  like'%$recipient%'
-	             ";
-	 $result = mysqli_query($db, $total );
-	  @$num_results = mysqli_num_rows($result);
-	 echo"
-	 <p>There are $num_results donations paid by organisations matching $name</p><table class='basic'>";
-	  while ($row = $result->fetch_assoc()) 
-	     {
+				 <?php
+				  if ( isset($_GET['Portfolio']) && !isset($_GET['Program']) && !isset($_GET['Component']))
+				  {
 
-	 echo"<tr><td>".$row['Name']."</td><td>".$row['Party']."</td><td>$".number_format($row['Value'])."</td></tr>";
-	     }echo"</table>";
-	 }*/
-	 ?>
+				 $portfolio = $_GET['Portfolio']; 
+
+
+				 $total="SELECT Portfolio,sum(Value),AVG(Value) as AVE, count(Value) as count 
+					 FROM tenders where Portfolio LIKE'%$portfolio%'
+				 	  GROUP BY Portfolio";
+				 $result = mysqli_query($db, $total);
+				 @$num_results = mysqli_num_rows($result);
+
+
+
+				 echo"<hr><h4>Commonwealth Tender totals for Programs in the $portfolio Portfolio</h4>
+				 ";
+				 echo"<table class='stats'><tbody><th>Number</td><th>Average Value</th><th>Total</td></tr>";
+				 while ($row = $result->fetch_assoc()) 
+				    {
+						echo"<tr><th>".number_format($row['count'])."</th><th>$".number_format($row['AVE'])."</th>
+							<th>$".number_format($row['sum(Value)'])."</th></tr>";
+
+				    }
+				    echo"<tbody></table><hr>	<br>";
+
+
+				 }
+
+				 ?>
+	
       <?php
       if ( isset($_GET['Recipient']) && !isset($_GET['Program']) )
        {
@@ -298,7 +318,7 @@ require'header.php';
  
  
   <?php
-   if ( isset($_GET['ABN']) || isset($_GET['Name']) || isset($_GET['Agency']) || isset($_GET['Recipient']) )
+   if ( isset($_GET['ABN']) || isset($_GET['Name']) || isset($_GET['Agency']) || isset($_GET['Recipient'])  )
         {
   	 echo"<h3>About Commonwealth Tenders data</h3>
 		 
@@ -318,7 +338,28 @@ require'header.php';
   	  ?>
 
 
+	
+	
+	    <?php
+	  if ( isset($_GET['Portfolio'])  )
+	  {
+  
+	    $portfolio = $_GET['Portfolio']; 
+        
+        $portfolio=mysqli_real_escape_string ( $db , $portfolio );
+	 $total = "SELECT * from tenders where Portfolio  like'%$portfolio%'
+	             ";
+	 $result = mysqli_query($db, $total );
+	  @$num_results = mysqli_num_rows($result);
+	 echo"
+	 <div class='source'>Source: Historical tenders data published at data.gov.au</div><div class='expand'>";
+	  while ($row = $result->fetch_assoc()) 
+	     {
 
+include'tenders_table.php';
+	     }echo"</div>Mouse/Scroll for more results";
+	 }
+	 ?>
   
          
         

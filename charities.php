@@ -53,7 +53,7 @@ $result = mysqli_query($db, $charities );
 
 <p>There are over 50,000 registered charities in Australia. The dataset used in the GovSpend prototype is not the latest data </p
 	<p>For up to the week 
-	information on whether a particular charity is still a registered charity please search the <a href='http:acnc.gov.au'>Australian Charities and Not for Profit Commission</a> site.</p>
+	information on whether a particular organisation is still a registered charity please search the <a href='http:acnc.gov.au'>Australian Charities and Not for Profit Commission</a> site.</p>
 	
  
 

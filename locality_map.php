@@ -35,7 +35,7 @@ $map = "SELECT Lat, Lon, Pcode,State,Locality FROM coordinates where
     function LoadMap() {
         var mapOptions = {
             center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-            zoom: 13,
+            zoom: 7,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("Map"), mapOptions);

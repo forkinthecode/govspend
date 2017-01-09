@@ -41,7 +41,7 @@ echo"
 $agency=$_GET['Agency'];
 	
 $budget_test = "SELECT Agency FROM `budget_table15_16`
- WHERE Agency ='$agency'";
+ WHERE Agency LIKE'%$agency%'";
 $result = mysqli_query($db, $budget_test );
 @$num_results = mysqli_num_rows($result);
 
@@ -49,7 +49,7 @@ $result = mysqli_query($db, $budget_test );
         {
 
 $budget = "SELECT sum(last),sum(current),sum(plus1) FROM `budget_table15_16`
- WHERE Agency ='$agency' ";
+ WHERE Agency LIKE'%$agency%' ";
 $result = mysqli_query($db, $budget );
 @$num_results = mysqli_num_rows($result);
  echo"<h3>Budget totals for $agency</h3>
@@ -97,20 +97,25 @@ $agor = "SELECT *
 FROM  `AGOR` 
 WHERE Agency LIKE '%$agency%'";
 $result = mysqli_query($db, $agor );
-echo"<h3>Government Register of Organisations Results</h3><div class='source'>Source: <a href='http://www.finance.gov.au/resource-management/governance/agor/'>Australian Government
+ @$num_results = mysqli_num_rows($result);
+echo"<h3>Government Register of Organisations Results</h3>
+	<h4>$num_results organisations matching $agency</h4>
+<div class='source'>Source: <a href='http://www.finance.gov.au/resource-management/governance/agor/'>Australian Government
  Organisations Register</a></div>
 	<div class='expand'>";
  while ($row = $result->fetch_assoc()) 
     {
-		echo"<table class='basic'><tbody>
-  <tr><td>Description</td>         <td><div class='description'>".$row['Description']."</div></td></tr>
-  <tr><td>GFS Sub-Functions</td>   <td>".$row['GFS_Function']."</td></tr>
-  <tr><td>Strategic Plan</td>      <td><a href='".$row['Strategic_Plan']."' target='_blank'>".$row['Strategic_Plan']."</a></td></tr>
-  <tr><td>Annual Report</td>       <td><a href='".$row['Annual_Reports']."' target='_blank'>".$row['Annual_Reports']."</a></td></tr>
-  <tr><td>Auditor</td>       <td>".$row['Auditor']."</td></tr>
-		  ";
-		  echo"</tbody></table>";
-	 }echo"</div>Mouse/Scroll for more results<br>";
+		echo"<table class='wide' ><tbody>
+			 <tr><th>Organisation</th>  </tr><tr>       <td><a href='agency.php?Agency=".$row['Agency']."'>".$row['Agency']."</a></td></tr>
+		 <tr><th>Portfolio</th>  </tr><tr>       <td><a href='portfolio.php?Portfolio=".$row['Portfolio']."'>".$row['Portfolio']."</a></td></tr>
+  <tr><th>Description</th>  </tr><tr>       <td><div class='description'>".$row['Description']."</div></td></tr>
+  <tr><th>GFS Sub-Functions</th> </tr><tr>     <td>".$row['GFS_Function']."</td></tr>
+  <tr><th>Strategic Plan</th>   </tr><tr>      <td><div class='source'><a href='".$row['Strategic_Plan']."' target='_blank'>".$row['Strategic_Plan']."</a></div></td></tr>
+  <tr><th>Annual Report</th>    </tr><tr>      <td><div class='source'><a href='".$row['Annual_Reports']."' target='_blank'>".$row['Annual_Reports']."</a></div></td></tr>
+  <tr><th>Auditor</th>    </tr><tr>      <td>".$row['Auditor']."</td></tr>
+		</tbody></table><br>  ";
+		  echo"";
+	 }echo"</div>Mouse/Scroll for more results<br><hr><br>";
 }mysqli_free_result($result);
 ?>
  
@@ -415,7 +420,14 @@ echo"</div>Mouse/Scroll over for more results.
  	  }
  	   ?>
 
-	  
+	  <h3>About Agency Data</h3>
+	  <div class='source'> Source <a href='http://www.finance.gov.au/sites/default/files/guide-to-register-fields.pdf'>Guide to Fields</a> (Department of Finance)</div>
+	  <p>Portfolio Budget Statements (and the open data derived from them) only contain spending 
+		  information for organisations with the General Financial Statistics classification General Government Services. </p>
+		  <p>Organisations that are not General Government Serivces do not derive their funding through the appropriation bills that authorise 
+			  budget spending through the parliamentary process.</p>
+			  <p>An organisation can be General Government Service (GGS), a Public Non-Financial Corporation (PNFC),a Public Financial Corporation (PFC), 
+				  or unclassifed.</p>
 	 
 	    <?php/*
 	    if ( isset($_GET['Agency']) )
@@ -428,7 +440,7 @@ echo"</div>Mouse/Scroll over for more results.
 	   echo"<h4>Commonwealth Tenders administered by $agency</h4>
 	   <p>(With approval dates within the 2015-16 financial year)</p>
 	   <div class='source'>Source: Historical Tenders data published at data.gov.au </div>";
-	   $agency_results = "SELECT *  FROM tenders WHERE Agency ='$agency'   ";
+	   $agency_results = "SELECT *  FROM tenders WHERE Agency LIKE'%$agency%'   ";
 	   $result = mysqli_query($db, $agency_results );
 	     @$num_results = mysqli_num_rows($result);
 	     if ($num_results <1)

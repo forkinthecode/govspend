@@ -71,14 +71,14 @@ require'header.php';
 	                             $total_current = $row['sum(current)'];//assigns this value to a variable.
 	                             ///////////////////////////////////////////
 	                             $query_total_last = "SELECT last,sum(last) FROM `budget_table15_16` 
-	                             WHERE Portfolio='$portfolio' GROUP BY Portfolio ";//calculates total fundingfor the prior budget year for agencies where search term forms part of their name
+	                             WHERE Portfolio LIKE'%$portfolio%' GROUP BY Portfolio ";//calculates total fundingfor the prior budget year for agencies where search term forms part of their name
 	                             $result = mysqli_query($db, $query_total_last);
                                                          
 	                             while ($row = $result->fetch_assoc()) 
 	                             $query_total_last_year = $row['sum(last)'];//assigns this value to a variable.
 	                             ////////////////////////////////////////////////////////////////////
 	                             $query_total_current = "SELECT current,sum(current) FROM  `budget_table15_16`
-	                               WHERE Portfolio='$portfolio' GROUP BY Portfolio ";//calculates total fundingfor current year for agencies with search term in name
+	                               WHERE Portfolio LIKE'%$portfolio%' GROUP BY Portfolio ";//calculates total fundingfor current year for agencies with search term in name
 	                             $result = mysqli_query($db, $query_total_current );
                                                          
 	                             while ($row = $result->fetch_assoc()) 
@@ -89,7 +89,7 @@ require'header.php';
 	                             //////////////////////////////////////////////////////////////////////////////////////////
 
 	                             $billion_ = "SELECT current,sum(current) FROM `budget_table15_16`
-	                             WHERE Portfolio='$portfolio' GROUP BY Portfolio ";
+	                             WHERE Portfolio LIKE'%$portfolio%' GROUP BY Portfolio ";
 	                             $result = mysqli_query($db, $billion_ );
 	                                                          @$num_results = mysqli_num_rows($result);
 	                             while ($row = $result->fetch_assoc()) 
@@ -144,7 +144,7 @@ require'header.php';
 $portfolio=$_GET['Portfolio'];
     
    $agor = "SELECT Agency,sum(current) FROM `budget_table15_16`
-    WHERE Portfolio ='$portfolio' GROUP BY Agency ORDER BY sum(current) DESC ";
+    WHERE Portfolio LIKE'%$portfolio%' GROUP BY Agency ORDER BY sum(current) DESC ";
    $result = mysqli_query($db, $agor );
    @$num_results = mysqli_num_rows($result);
 
@@ -180,10 +180,17 @@ Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/bud
  {
   
 $portfolio=$_GET['Portfolio'];
- echo"<h4>Programs administered by the $portfolio Portfolio</h2>";
+$get_name="SELECT DISTINCT Portfolio from budget_table15_16 where Portfolio LIKE'%$portfolio%'";
+$result = mysqli_query($db, $get_name );
+while ($row = $result->fetch_assoc()) 
+   {
+echo"<h3>Programs administered by the ".$row['Portfolio']." Portfolio</h3>";
+ }
+ 
 $agor = "SELECT sum(current),Portfolio,Program FROM `budget_table15_16`
  WHERE Portfolio LIKE'%$portfolio%' GROUP BY Program ORDER BY sum(current) DESC ";
 $result = mysqli_query($db, $agor );
+
 echo"<div class='source'>Source: Calculated using line item CSV 
 Portfolio Budget Statements published at <a href='http://data.gov.au/dataset/budget-2015-16-tables-and-data'>data.gov.au</a></div>
 <div class='clear'></div><table class='wide'><tbody>";
@@ -265,7 +272,7 @@ echo"
 
 
 								 $total="SELECT Portfolio,sum(Value),AVG(Value) as AVE, count(Value) as count 
-									 FROM tenders where Portfolio='$portfolio'
+									 FROM tenders where Portfolio LIKE'%$portfolio%'
 								 	  GROUP BY Portfolio";
 								 $result = mysqli_query($db, $total);
 								 @$num_results = mysqli_num_rows($result);
@@ -330,7 +337,7 @@ $program=$_GET['Program'];
 $component=$_GET['Component'];
 
 	       $sub_program = "SELECT * FROM `budget_table15_16`
-	  WHERE Portfolio='$portfolio' && Component ='$component' ";
+	  WHERE Portfolio LIKE'%$portfolio%' && Component ='$component' ";
 	 $result = mysqli_query($db, $sub_program);
 	 while ($row = $result->fetch_assoc()) 
 	 {
@@ -398,14 +405,14 @@ echo"<tr><td><img style='height:15px; opacity:0.4' src='images/chevron.png'></im
   
 $portfolio = $_GET['Portfolio']; 
 
-$test="SELECT id from grants where Portfolio='$portfolio'";
+$test="SELECT id from grants where Portfolio LIKE'%$portfolio%'";
 $result = mysqli_query($db, $test);
 @$num_results = mysqli_num_rows($result);
 
 
        if ($num_results >0)
        {
-$total="SELECT sum(Funding),AVG(Funding) as AVE, count(Funding) as count FROM grants where Portfolio='$portfolio' 
+$total="SELECT sum(Funding),AVG(Funding) as AVE, count(Funding) as count FROM grants where Portfolio LIKE'%$portfolio%' 
 	&& Year='2015-16'";
 $result = mysqli_query($db, $total);
 @$num_results = mysqli_num_rows($result);
@@ -433,7 +440,7 @@ while ($row = $result->fetch_assoc())
 $portfolio = $_GET['Portfolio']; 
 
 
-$grants="SELECT Electorate,sum(Funding) FROM grants where Year='2015-16' && Portfolio ='$portfolio'
+$grants="SELECT Electorate,sum(Funding) FROM grants where Year='2015-16' && Portfolio LIKE'%$portfolio%'
 && Electorate !='None' GROUP BY Electorate ORDER BY sum(Funding) DESC ";
 $result = mysqli_query($db, $grants);
  @$num_results = mysqli_num_rows($result);

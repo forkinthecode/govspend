@@ -11,6 +11,9 @@ require'header.php';
      <form action="grants.php">
      <input type="text" id="Recipient" name="Recipient" placeholder="name" > <button type="submit" id='submit' value="Submit"> Find </button>
  </form>
+    <form action="grants.php">
+  <input type="text" id="Locality" name="Locality" placeholder="Suburb" > <button type="submit" id='submit' value="Submit"> Find </button>
+ </form>
 
  <?php
  if ( isset($_GET['Program']) )
@@ -26,7 +29,7 @@ require'header.php';
    {
 	 
  $grants = "SELECT *,count(Funding) as count FROM grants WHERE Program LIKE'%$program%' 
-	 || Component LIKE'%$component%' && Year='2015-16' GROUP BY Component ORDER BY count(Funding) DESC ";
+	 || Component LIKE'%$program%' && Year='2015-16' GROUP BY Component ORDER BY count(Funding) DESC ";
  $result = mysqli_query($db, $grants );
 
  echo"<h4>Commonwealth Grants with Program and/or Component name matching: $program</h4>
@@ -99,39 +102,34 @@ require'header.php';
 
 
 
- 
-<?php
-if ( isset($_GET['Name']) )
- {
-$data = $_GET['Name']; 
-$name=mysqli_real_escape_string ( $db , $data );
-$query="SELECT * FROM grants WHERE Recipient='$name' && Year='2015-16' GROUP BY Recipient where Electorate!=''";
+  <?php
+  if ( isset($_GET['Locality']))
+   {
+  $data = $_GET['Locality']; 
+  $locality=mysqli_real_escape_string ( $db , $data );
+  $grants = "SELECT sum(Funding),count(Funding) 
+ as count_ ,(sum(Funding)/count(Funding)) as Ave FROM grants WHERE Locality LIKE'%$locality%'
+   && Year='2015-16'  ";
+  $result = mysqli_query($db, $grants );
+    @$num_results = mysqli_num_rows($result);
+    if ($num_results>0)
+    {
 
-$result = mysqli_query($db, $query );
-@$num_results = mysqli_num_rows($result);
-  if ($num_results >0)
-  {
- 
-  echo"<H4>Commonwealth Grants data information for $name</h4><table class='stats'><tbody>";
- while ($row = $result->fetch_assoc()) 
-     {
-echo"
+    echo"<h4>Statistics for Commonwealth Grants matching $locality</h4><hr><table class='stats'><tbody><tr>
+  	  <th>Total value</th><th>Number</th><th>Average</th></tr>";
+   while ($row = $result->fetch_assoc()) 
+       {
 
+       echo"<tr><th>$".number_format($row['sum(Funding)'])."</th><th>".$row['count_']."</th><th>".number_format($row['Ave'])."</th></tr>";
+       }echo"  </tbody></table><hr><p>*With approval dates during the 2015-16 FY</p><br> ";
+      }
+  }
 
-  <tr><td>Recipient:</td><td><a href='grants.php?Recipient=".$row['Recipient']."'>".trim($row['Recipient'])."</a></td></tr>
-  <tr><td>Address:</td><td>".$row['Locality']." <a href='locality.php?Postcode=".$row['Postcode']."'>".$row['Postcode']."</a></td></tr>
-  <tr><td>Electorate:</td><td><a href='electorate.php?Electorate=".$row['Electorate']."'>".$row['Electorate']."</a></td></tr>
-  <tr><td>Council:</td><td> <a href='council.php?Council=".$row['Council']."'>".$row['Council']."</a></td></tr>";
-
-     }echo"</tbody></table>";
-   }
-
-}
-?>
+  ?>
 
 
       <?php
-      if ( isset($_GET['Recipient']) )
+      if ( isset($_GET['Recipient']))
        {
       $data = $_GET['Recipient']; 
       $recipient=mysqli_real_escape_string ( $db , $data );
@@ -155,7 +153,7 @@ echo"
 
       ?>
 	  <?php
-	   if ( !isset($_GET['Recipient']) && !isset($_GET['Name']) && !isset($_GET['Program_Name'])  )
+	   if ( !isset($_GET['Recipient']) && !isset($_GET['Name']) && !isset($_GET['Program_Name']) && !isset($_GET['Locality']) )
 	   { 
 	  echo"<h4>Total Commonwealth Grants by Recipient</h4>";
 	  $total = "SELECT Recipient,sum(Funding),count(Funding) as counts FROM `grants` WHERE 
@@ -186,7 +184,7 @@ echo"
 
  <br><br> 
    <?php
- if ( isset($_GET['Program']) || isset($_GET['Program_Name']) ||  isset($_GET['Recipient']) ||  isset($_GET['Name']))
+ if ( isset($_GET['Program']) || isset($_GET['Program_Name']) ||  isset($_GET['Recipient']) ||  isset($_GET['Name']) || isset($_GET['Locality']))
  {
  
 	 echo"
@@ -213,7 +211,7 @@ echo"
  <div class='right'>
 	 <br><br>
 	    <?php
-	  if ( !isset($_GET['Program']) && !isset($_GET['Program_Name']) && !isset($_GET['Recipient']) && !isset($_GET['Name']))
+	  if ( !isset($_GET['Program']) && !isset($_GET['Program_Name']) && !isset($_GET['Recipient']) && !isset($_GET['Name']) && !isset($_GET['Locality']))
 	  {
  
 	 	 echo"
@@ -311,7 +309,82 @@ $result = mysqli_query($db, $grants );
 }
 
 ?>
-  
+     <?php
+     if ( isset($_GET['Locality']) )
+      {
+     $data = $_GET['Locality']; 
+     $locality=mysqli_real_escape_string ( $db , $data );
+     $query="SELECT *,count(Funding) as count FROM grants WHERE Locality LIKE'%$locality%' && Year='2015-16' GROUP BY Postcode ";
+
+     $result = mysqli_query($db, $query );
+     @$num_results = mysqli_num_rows($result);
+       if ($num_results >0)
+       {
+ 
+      while ($row = $result->fetch_assoc()) 
+          {
+ 
+
+echo" <a href='grants.php?Locality=".$row['Locality']."&Postcode=".$row['Postcode']."'>".$row['Locality'].", ".$row['Postcode'].", ".$row['State']."</a> (".$row['count'].") <br>  ";
+
+          }
+        }
+
+     }
+     ?>
+     <?php
+     if ( isset($_GET['Locality']) &&  !isset($_GET['Postcode']))
+      {
+     $data = $_GET['Locality']; 
+     $locality=mysqli_real_escape_string ( $db , $data );
+     $query="SELECT * FROM grants WHERE Locality LIKE'%$locality%' && Year='2015-16' ";
+
+     $result = mysqli_query($db, $query );
+     @$num_results = mysqli_num_rows($result);
+       if ($num_results >0)
+       {
+ 
+       echo"<h3>Commonwealth Grants for $locality</h3>
+  		 <div class='expand'><table class='grants'><tbody>";
+      while ($row = $result->fetch_assoc()) 
+          {
+ 
+
+  include'grants_table.php';
+
+          }echo"</tbody></table></div>Mouse/Scroll for more results";
+        }
+
+     }
+     ?>
+        <?php
+        if ( isset($_GET['Locality']) &&  isset($_GET['Postcode']))
+         {
+	         $data = $_GET['Postcode']; 
+	         $postcode=mysqli_real_escape_string ( $db , $data );
+        $data = $_GET['Locality']; 
+        $locality=mysqli_real_escape_string ( $db , $data );
+        $query="SELECT * FROM grants WHERE Locality LIKE'%$locality%' && Postcode='$postcode' && Year='2015-16' ";
+
+        $result = mysqli_query($db, $query );
+        @$num_results = mysqli_num_rows($result);
+          if ($num_results >0)
+          {
+ 
+          echo"<h3>Drill down $num_results Commonwealth Grants for $locality $postcode</h3>
+     		 <div class='expand'><table class='grants'><tbody>";
+         while ($row = $result->fetch_assoc()) 
+             {
+ 
+
+     include'grants_table.php';
+
+             }echo"</tbody></table></div>Mouse/Scroll for more results";
+           }
+
+        }
+        ?>
+	 
      <?php
      if ( isset($_GET['Name']) )
       {
@@ -342,14 +415,18 @@ $result = mysqli_query($db, $grants );
     {
    $data = $_GET['Recipient']; 
    $recipient=mysqli_real_escape_string ( $db , $data );
-   $query="SELECT * FROM grants WHERE Recipient LIKE'%$recipient%' && Year='2015-16' ";
+   $query="SELECT *,DATE_FORMAT( Approved,  '%D %b %Y' ) AS Approved,
+         DATE_FORMAT(End,  '%D %b %Y' ) AS End,
+         DATEDIFF(END,APPROVED)/30 AS Term 
+
+    FROM grants WHERE Recipient LIKE'%$recipient%' && Year='2015-16' ";
 
    $result = mysqli_query($db, $query );
    @$num_results = mysqli_num_rows($result);
      if ($num_results >0)
      {
  
-     echo"<h3>Commonwealth Grants for $recipient</h3>
+     echo"<h3>$num_results Commonwealth Grants for $recipient</h3>
 		 <div class='expand'><table class='grants'><tbody>";
     while ($row = $result->fetch_assoc()) 
         {
